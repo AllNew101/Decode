@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
-@Autonomous(name = "AutoSample_All_Round")
+@Autonomous(name = "AutoSample_All_Roundd")
     public class Autonomous_Read extends OpMode {
 
         private DcMotor rightRear;
