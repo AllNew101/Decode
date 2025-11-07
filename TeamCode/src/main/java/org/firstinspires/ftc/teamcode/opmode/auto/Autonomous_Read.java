@@ -129,12 +129,13 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                 case 101:
                     if (!follower.isBusy()){
                         follower.followPath(scorePreload);
-                      Thread.sleep(300);
+                      Thread.sleep(500);
+
                       for (int i = 0;i < 3;i++){
                           switch (i) {
                               case 0:
-                                  shooter1.setPower(0.52);
-                                  shooter2.setPower(0.52);
+                                  shooter1.setPower(0.55);
+                                  shooter2.setPower(0.55);
                                   break;
                               case 1:
                                   shooter1.setPower(0.42);
