@@ -133,7 +133,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                       for (int i = 0;i < 3;i++){
 //                          switch (i) {
 //                              case 0:
-//                                  shooter1.setPower(0.72);
+//                                  shooter1.setPower(0.72);t
 //                                  shooter2.setPower(0.72);
 //                                  break;
 //                              case 1:
