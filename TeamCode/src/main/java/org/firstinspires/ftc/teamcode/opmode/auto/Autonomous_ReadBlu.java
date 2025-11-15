@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmode.auto; // make sure this aligns with class location
 
-import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.configurables.PanelsConfigurables;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -13,13 +11,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.opmode.auto.camera;
 
-@Configurable
-@Autonomous(name = "AutoSample_All_Roundlong")
-    public class Autonomous_Readlong extends OpMode {
+
+@Autonomous(name = "AutoSample_All_Blue")
+    public class Autonomous_ReadBlu extends OpMode {
 
         private DcMotor rightRear;
         private DcMotor rightFront;
@@ -36,18 +32,16 @@ import org.firstinspires.ftc.teamcode.opmode.auto.camera;
         private Follower follower;
         private Timer pathTimer, actionTimer, opmodeTimer;
         private int pathState;
-        public double Cof = 0.1;
-        private camera Camera;
-        double angular = 0;
 
-        private final Pose startPose = new Pose(0, 0, Math.toRadians(0)); // Start Pose of our robot.
-        private final Pose scorePose = new Pose(11, -2, Math.toRadians(-66)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-        private final Pose P_keep1 = new Pose(43, -16, Math.toRadians(-105));
-        private final Pose keep1 = new Pose(43, -46, Math.toRadians(-90));
-        private final Pose scorePose2 = new Pose(18, 2, Math.toRadians(-16));
-        private final Pose P_keep2 = new Pose(62, -8, Math.toRadians(-110));
-        private final Pose keep2 = new Pose(62, -46, Math.toRadians(-90));
-        private final Pose scorePose3 = new Pose(18, 2, Math.toRadians(-10));
+
+        private final Pose startPose = new Pose(0, 0, Math.toRadians(-45)); // Start Pose of our robot.
+        private final Pose scorePose = new Pose(-20, 20, Math.toRadians(-45)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+        private final Pose P_keep1 = new Pose(-36.8, 16, Math.toRadians(-89));
+        private final Pose keep1 = new Pose(-39.8, -14, Math.toRadians(-89));
+        private final Pose scorePose2 = new Pose(-20, 20, Math.toRadians(-48));
+        private final Pose P_keep2 = new Pose(-59, 10, Math.toRadians(-87));
+        private final Pose keep2 = new Pose(-59, -17, Math.toRadians(-87));
+        private final Pose scorePose3 = new Pose(-22, 22, Math.toRadians(-48));
         private final Pose P_keep3 = new Pose(-82, 10, Math.toRadians(-88));
         private final Pose keep3 = new Pose(-82, -17, Math.toRadians(-88));
         private final Pose scorePose4 = new Pose(-22, 22, Math.toRadians(-46));
@@ -57,12 +51,8 @@ import org.firstinspires.ftc.teamcode.opmode.auto.camera;
 
 
 
-
-
-
-
-    private Path scorePreload,Turn;
-        private PathChain  Pre_keep1, keep_1, scoring2, Pre_keep2, keep_2, scoring3,Pre_keep3,keep_3,scoring4,Finale;
+    private Path scorePreload;
+        private PathChain Pre_keep1, keep_1, scoring2, Pre_keep2, keep_2, scoring3,Pre_keep3,keep_3,scoring4,Finale;
 
         public void buildPaths() {
             /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
@@ -110,6 +100,10 @@ import org.firstinspires.ftc.teamcode.opmode.auto.camera;
                     .setLinearHeadingInterpolation(scorePose4.getHeading(),Final.getHeading())
                     .build();
 
+    /*
+    /* Here is an example for Constant Interpolation
+    scorePreload.setConstantInterpolation(startPose.getHeading()); */
+            /* This is our grabPickup1 PathChain. We are using a single path with a BezierLine, which is a straight line. */
 
         }
 
@@ -117,38 +111,13 @@ import org.firstinspires.ftc.teamcode.opmode.auto.camera;
         public void autonomousPathUpdate() throws InterruptedException {
             switch (pathState) {
                 case 0:
-
-                    angular = Camera.telemetryAprilTag(300);
-                    if (angular > 0.1){
-
-                    }
-                    else {
-                        if (angular < -0.1){
-
-                    }
-                    else{
-
-                    }}
-                    break;
-                case 1:
-                    if (!follower.isBusy()){
-
-                        follower.followPath(Turn);
-
-                    }
-                    setPathState(-1);
-                    break;
-
-
-                /*case 0:
                     front_motor.setPower(0.75);
                     center_motor.setPower(1);
-                    shooter1.setPower(0.59);
-                    shooter2.setPower(0.59);
-                    // ค่ายิงไกลคือ 0.61
+                    shooter1.setPower(0.55);
+                    shooter2.setPower(0.55);
                     araise.setPosition(0.48);
-                    angle_1.setPosition(0.8);
-                    angle_2.setPosition(0.8);
+//                    angle_1.setPosition(0);
+//                    angle_2.setPosition(0);
                     follower.setMaxPower(1);
                     follower.followPath(scorePreload);
                     setPathState(101);
@@ -156,38 +125,52 @@ import org.firstinspires.ftc.teamcode.opmode.auto.camera;
 
 
                 case 101:
-                    if (!follower.isBusy()) {
+                    if (!follower.isBusy()){
                         follower.followPath(scorePreload);
-                        Thread.sleep(2400);
+                      Thread.sleep(500);
 
-                        for (int i = 0; i < 3; i++) {
+                      for (int i = 0;i < 3;i++){
+                          switch (i) {
+                              case 0:
+                                  shooter1.setPower(0.55);
+                                  shooter2.setPower(0.55);
+                                  break;
+                              case 1:
+                                  shooter1.setPower(0.42);
+                                  shooter2.setPower(0.42);
+                                  break;
+                              case 2:
+                                  shooter1.setPower(0.42);
+                                  shooter2.setPower(0.42);
+                                  break;
+                          }
 
-                            araise.setPosition(0.78);
-                            front_motor.setPower(0.25);
-                            center_motor.setPower(0.6);
-                            Thread.sleep(460);
-                            araise.setPosition(0.48);
-                            front_motor.setPower(0.75);
-                            center_motor.setPower(1);
-                            Thread.sleep(640);
+                          araise.setPosition(0.78);
+                          front_motor.setPower(0.25);
+                          center_motor.setPower(0.6);
+                          Thread.sleep(460);
+                          araise.setPosition(0.48);
+                          front_motor.setPower(0.75);
+                          center_motor.setPower(1);
+                          Thread.sleep(640);
 
 
-                        }
-                        setPathState(1);
-                        break;
+                      }
+                      setPathState(1);
+                      break;
                     }
                 case 1:
-                    if (!follower.isBusy()) {
-                        follower.setMaxPower(0.8);
-                        follower.followPath(Pre_keep1);
-                        shooter1.setPower(0.58);
-                        shooter2.setPower(0.58);
-                        setPathState(2);
-                        break;
+                    if (!follower.isBusy()){
+                    follower.setMaxPower(1);
+                    follower.followPath(Pre_keep1);
+                    shooter1.setPower(0.45);
+                    shooter2.setPower(0.45);
+                    setPathState(2);
+                    break;
                     }
 
                 case 2:
-                    if (!follower.isBusy()) {
+                    if (!follower.isBusy()){
 //                    if ((follower.getPose().getX() < (P_keep1.getX() + 1) && (follower.getPose().getY()) < (P_keep1.getY()) + 1)){
                         follower.setMaxPower(1);
                         follower.followPath(keep_1);
@@ -195,21 +178,20 @@ import org.firstinspires.ftc.teamcode.opmode.auto.camera;
                         break;
                     }
                 case 3:
-                    if (!follower.isBusy()) {
+                    if (!follower.isBusy()){
 //                    if ((follower.getPose().getX() < (keep1.getX() + 1) && (follower.getPose().getY()) < (keep1.getY()) + 1)){
                         Thread.sleep(200);
-                        follower.setMaxPower(0.75);
+                        follower.setMaxPower(1);
                         follower.followPath(scoring2);
 
                         setPathState(102);
                         break;
                     }
                 case 102:
-                    if (!follower.isBusy()) {
-                        Thread.sleep(400);
+                    if (!follower.isBusy()){
 //                    if ((follower.getPose().getX() > (scorePose2.getX() - 1) && (follower.getPose().getY()) > (scorePose2.getY()) - 1)) {
 //                        Thread.sleep(300);
-                        for (int i = 0; i < 3; i++) {
+                        for (int i = 0;i < 3;i++){
 
                             araise.setPosition(0.78);
                             front_motor.setPower(0.4);
@@ -226,18 +208,17 @@ import org.firstinspires.ftc.teamcode.opmode.auto.camera;
                         break;
                     }
                 case 4:
-                    if (!follower.isBusy()) {
+                    if (!follower.isBusy()){
                         follower.setMaxPower(1);
                         follower.followPath(Pre_keep2);
-                        shooter1.setPower(0.58);
-                        shooter2.setPower(0.58);
+                        shooter1.setPower(0.45);
+                        shooter2.setPower(0.45);
                         setPathState(5);
                         break;
                     }
 
                 case 5:
-                    if (!follower.isBusy()) {
-                        Thread.sleep(500);
+                    if (!follower.isBusy()){
 //                    if ((follower.getPose().getX() < (P_keep2.getX() + 1) && (follower.getPose().getY()) < (P_keep2.getY()) + 1)){
                         follower.setMaxPower(1);
                         follower.followPath(keep_2);
@@ -245,20 +226,20 @@ import org.firstinspires.ftc.teamcode.opmode.auto.camera;
                         break;
                     }
                 case 6:
-                    if (!follower.isBusy()) {
+                    if (!follower.isBusy()){
 //                    if ((follower.getPose().getX() < (keep2.getX() + 1) && (follower.getPose().getY()) < (keep2.getY()) + 1)){
                         Thread.sleep(200);
-                        follower.setMaxPower(0.75);
+                        follower.setMaxPower(1);
                         follower.followPath(scoring3);
 
                         setPathState(103);
                         break;
                     }
                 case 103:
-                    if (!follower.isBusy()) {
+                    if (!follower.isBusy()){
 //                    if ((follower.getPose().getX() > (scorePose3.getX() - 1) && (follower.getPose().getY()) > (scorePose3.getY()) - 1)) {
-                        Thread.sleep(500);
-                        for (int i = 0; i < 3; i++) {
+                        Thread.sleep(300);
+                        for (int i = 0;i < 3;i++){
 
                             araise.setPosition(0.78);
                             front_motor.setPower(0.4);
@@ -271,10 +252,67 @@ import org.firstinspires.ftc.teamcode.opmode.auto.camera;
 
 
                         }
-                        setPathState(-7);
+                        setPathState(7);
                         break;
-                    }*/
+                    }
 
+                case 7:
+                    if (!follower.isBusy()){
+                        follower.setMaxPower(1);
+                        follower.followPath(Pre_keep3);
+                        shooter1.setPower(0.45);
+                        shooter2.setPower(0.45);
+                        setPathState(8);
+                        break;
+                    }
+
+                case 8:
+                    if (!follower.isBusy()){
+//                    if ((follower.getPose().getX() < (P_keep3.getX() + 1) && (follower.getPose().getY()) < (P_keep3.getY()) + 1)){
+                        follower.setMaxPower(1);
+                        follower.followPath(keep_3);
+                        setPathState(9);
+                        break;
+                    }
+                case 9:
+                    if (!follower.isBusy()){
+//                    if ((follower.getPose().getX() < (keep3.getX() + 1) && (follower.getPose().getY()) < (keep3.getY()) + 1)){
+                        Thread.sleep(200);
+                        follower.setMaxPower(1);
+                        follower.followPath(scoring4);
+
+                        setPathState(104);
+                        break;
+                    }
+                case 104:
+                    if (!follower.isBusy()){
+//                    if ((follower.getPose().getX() > (scorePose4.getX() - 1) && (follower.getPose().getY()) > (scorePose4.getY()) - 1)){
+//                        Thread.sleep(300);
+                        for (int i = 0;i < 3;i++){
+
+
+                            araise.setPosition(0.78);
+                            front_motor.setPower(0.4);
+                            center_motor.setPower(0.74);
+                            Thread.sleep(340);
+                            araise.setPosition(0.48);
+                            front_motor.setPower(0.75);
+                            center_motor.setPower(1);
+                            Thread.sleep(610);
+
+
+                        }
+                        setPathState(10);
+                        break;
+                    }
+                case 10:
+                    if (!follower.isBusy()){
+                        follower.setMaxPower(1);
+                        follower.followPath(Finale);
+
+                        setPathState(11);
+                        break;
+                    }
             }
         }
 
@@ -323,10 +361,6 @@ import org.firstinspires.ftc.teamcode.opmode.auto.camera;
             follower = Constants.createFollower(hardwareMap);
             buildPaths();
             follower.setStartingPose(startPose);
-
-            Camera = new camera();
-            Camera.initAprilTag(hardwareMap);
-
             rightRear = hardwareMap.get(DcMotor.class, "rightRear");
             rightFront = hardwareMap.get(DcMotor.class, "rightFront");
             leftRear = hardwareMap.get(DcMotor.class, "leftRear");
