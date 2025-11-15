@@ -39,14 +39,14 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
         private final Pose P_keep1 = new Pose(90, -15, Math.toRadians(-90));
         private final Pose keep1 = new Pose(85, -40, Math.toRadians(-90));
         private final Pose open_keep1 = new Pose(78, -50, Math.toRadians(-90));
-        private final Pose scorePose2 = new Pose(80, -8, Math.toRadians(-46));
+        private final Pose scorePose2 = new Pose(80.5, -7.5, Math.toRadians(-47.2));
         private final Pose P_keep2 = new Pose(67.5, -15, Math.toRadians(-90));
-        private final Pose keep2 = new Pose(67.5, -56, Math.toRadians(-90));
+        private final Pose keep2 = new Pose(67.5, -59, Math.toRadians(-90));
         private final Pose scorePose3 = new Pose(80, -8, Math.toRadians(-46));
-        private final Pose P_keep3 = new Pose(46, -15, Math.toRadians(-88));
-        private final Pose keep3 = new Pose(46, -56, Math.toRadians(-88));
-        private final Pose scorePose4 = new Pose(-22, 22, Math.toRadians(-46));
-        private final Pose Final = new Pose(-82, -16, Math.toRadians(-46));
+        private final Pose P_keep3 = new Pose(46, -25, Math.toRadians(-90));
+        private final Pose keep3 = new Pose(46, -59, Math.toRadians(-90));
+        private final Pose scorePose4 = new Pose(80, -8, Math.toRadians(-46));
+        private final Pose Final = new Pose(10, -20, Math.toRadians(-46));
 
 
 
@@ -167,7 +167,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                 case 1:
                     if (!follower.isBusy()){
                     front_motor.setPower(1);
-                    follower.setMaxPower(1);
+                    follower.setMaxPower(0.8);
                     follower.followPath(Pre_keep1);
                     shooter1.setPower(0.52);
                     shooter2.setPower(0.52);
@@ -177,14 +177,15 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
                 case 2:
                     if (!follower.isBusy()){
-                       follower.setMaxPower(0.7);
+                       follower.setMaxPower(0.5);
                         follower.followPath(keep_1);
                         setPathState(21);
                         break;
                     }
                 case 21:
                     if (!follower.isBusy()){
-                        follower.setMaxPower(1);
+                        Thread.sleep(100);
+                        follower.setMaxPower(0.8);
                         follower.followPath(open);
                         setPathState(3);
                         break;
@@ -254,7 +255,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                 case 6:
                     if (!follower.isBusy()){
 //                    if ((follower.getPose().getX() < (keep2.getX() + 1) && (follower.getPose().getY()) < (keep2.getY()) + 1)){
-                        Thread.sleep(200);
+                        Thread.sleep(100);
                         follower.setMaxPower(1);
                         follower.followPath(scoring3);
 
@@ -309,7 +310,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                 case 8:
                     if (!follower.isBusy()){
 
-                        follower.setMaxPower(0.6);
+                        follower.setMaxPower(0.5);
                         follower.followPath(keep_3);
                         setPathState(9);
                         break;
@@ -335,8 +336,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                     shooter2.setPower(0.52);
                                     break;
                                 case 1:
-                                    shooter1.setPower(0.52);
-                                    shooter2.setPower(0.52);
+                                    shooter1.setPower(0.55);
+                                    shooter2.setPower(0.55);
                                     break;
                                 case 2:
                                     shooter1.setPower(0.52);
@@ -355,7 +356,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
                         }
-                        setPathState(-10);
+                        setPathState(10);
                         break;
                     }
                 case 10:
@@ -363,7 +364,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                         follower.setMaxPower(1);
                         follower.followPath(Finale);
 
-                        setPathState(11);
+                        setPathState(-11);
                         break;
                     }
             }
