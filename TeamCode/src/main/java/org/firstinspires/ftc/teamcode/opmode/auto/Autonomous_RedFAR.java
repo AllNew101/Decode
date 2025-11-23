@@ -44,8 +44,8 @@ public class Autonomous_RedFAR extends OpMode {
     private final Pose scorePose2 = new Pose(16, -4, Math.toRadians(-26.8));
 //    private final Pose P_keep2 = new Pose(46.8, -72, Math.toRadians(-180));
     private final Pose turn_keep2 = new Pose(14, -10, Math.toRadians(-100));
-    private final Pose P_keep2 = new Pose(6.2, -26, Math.toRadians(-90));
-    private final Pose keep2 = new Pose(6.2, -52, Math.toRadians(-90));
+    private final Pose P_keep2 = new Pose(7.4, -26, Math.toRadians(-90));
+    private final Pose keep2 = new Pose(7.4, -52, Math.toRadians(-90));
     private final Pose scorePose3 = new Pose(20, -2, Math.toRadians(-26));
     private final Pose P_keep3 = new Pose(18.4, -26, Math.toRadians(-92));
     private final Pose keep3 = new Pose(18.4, -57.2, Math.toRadians(-92));
@@ -161,16 +161,14 @@ public class Autonomous_RedFAR extends OpMode {
                                 break;
                         }
 
-                        araise.setPosition(0.67);
-                        araise2.setPosition(0.68);
-                        front_motor.setPower(0.75);
-                        center_motor.setPower(0.6);
+                        araise2.setPosition(0.44);
+                        front_motor.setPower(1);
+                        center_motor.setPower(1);
                         Thread.sleep(300);
-                        araise.setPosition(0);
                         araise2.setPosition(0);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
-                        Thread.sleep(460);
+                        Thread.sleep(640);
 
 
                     }
@@ -224,16 +222,14 @@ public class Autonomous_RedFAR extends OpMode {
                                 break;
                         }
 
-                        araise.setPosition(0.67);
-                        araise2.setPosition(0.68);
-                        front_motor.setPower(0.9);
-                        center_motor.setPower(0.8);
+                        araise2.setPosition(0.44);
+                        front_motor.setPower(1);
+                        center_motor.setPower(1);
                         Thread.sleep(300);
-                        araise.setPosition(0);
                         araise2.setPosition(0);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
-                        Thread.sleep(460);
+                        Thread.sleep(640);
 
 
                     }
@@ -296,16 +292,14 @@ public class Autonomous_RedFAR extends OpMode {
                                 break;
                         }
 
-                        araise.setPosition(0.67);
-                        araise2.setPosition(0.68);
-                        front_motor.setPower(0.9);
-                        center_motor.setPower(0.8);
+                        araise2.setPosition(0.44);
+                        front_motor.setPower(1);
+                        center_motor.setPower(1);
                         Thread.sleep(300);
-                        araise.setPosition(0);
                         araise2.setPosition(0);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
-                        Thread.sleep(460);
+                        Thread.sleep(640);
 
 
                     }
@@ -361,16 +355,14 @@ public class Autonomous_RedFAR extends OpMode {
                                 break;
                         }
 
-                        araise.setPosition(0.67);
-                        araise2.setPosition(0.68);
-                        front_motor.setPower(0.9);
-                        center_motor.setPower(0.8);
-                        Thread.sleep(300);
-                        araise.setPosition(0);
-                        araise2.setPosition(0);
+                        araise2.setPosition(0.44);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
                         Thread.sleep(300);
+                        araise2.setPosition(0);
+                        front_motor.setPower(1);
+                        center_motor.setPower(1);
+                        Thread.sleep(640);
 
 
                     }
