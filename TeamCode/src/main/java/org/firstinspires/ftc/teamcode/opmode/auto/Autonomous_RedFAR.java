@@ -38,19 +38,19 @@ public class Autonomous_RedFAR extends OpMode {
 
 
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0)); // Start Pose of our robot.
-    private final Pose scorePose = new Pose(12, -4, Math.toRadians(-26.8)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
-    private final Pose P_keep1 = new Pose(45, -15, Math.toRadians(-90));
-    private final Pose keep1 = new Pose(45, -48, Math.toRadians(-90));
-    private final Pose scorePose2 = new Pose(16, -4, Math.toRadians(-26.8));
+    private final Pose scorePose = new Pose(12, -4, Math.toRadians(-26)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    private final Pose P_keep1 = new Pose(40, -15, Math.toRadians(-90));
+    private final Pose keep1 = new Pose(40, -48, Math.toRadians(-90));
+    private final Pose scorePose2 = new Pose(16, -4, Math.toRadians(-28));
 //    private final Pose P_keep2 = new Pose(46.8, -72, Math.toRadians(-180));
-    private final Pose turn_keep2 = new Pose(14, -10, Math.toRadians(-100));
-    private final Pose P_keep2 = new Pose(7.4, -26, Math.toRadians(-90));
-    private final Pose keep2 = new Pose(7.4, -52, Math.toRadians(-90));
-    private final Pose scorePose3 = new Pose(20, -2, Math.toRadians(-26));
+    private final Pose turn_keep2 = new Pose(16, -10, Math.toRadians(-100));
+    private final Pose P_keep2 = new Pose(16, -26, Math.toRadians(-90));
+    private final Pose keep2 = new Pose(16, -56, Math.toRadians(-90));
+    private final Pose scorePose3 = new Pose(20, -2, Math.toRadians(-28));
     private final Pose P_keep3 = new Pose(18.4, -26, Math.toRadians(-92));
-    private final Pose keep3 = new Pose(18.4, -57.2, Math.toRadians(-92));
-    private final Pose scorePose4 = new Pose(18, -2, Math.toRadians(-26));
-    private final Pose Final = new Pose(34, -24, Math.toRadians(-46));
+    private final Pose keep3 = new Pose(18.4, -58, Math.toRadians(-92));
+    private final Pose scorePose4 = new Pose(18, -2, Math.toRadians(-28));
+    private final Pose Final = new Pose(50, -8, Math.toRadians(-46));
 
 
 
@@ -127,12 +127,11 @@ public class Autonomous_RedFAR extends OpMode {
             case 0:
                 front_motor.setPower(0.75);
                 center_motor.setPower(1);
-                shooter1.setPower(0.8);
-                shooter2.setPower(0.8);
-                araise.setPosition(0);
-                araise2.setPosition(0);
-                angle_1.setPosition(0.85);
-                angle_2.setPosition(0.85);
+                shooter1.setPower(0.84);
+                shooter2.setPower(0.84);
+                araise2.setPosition(0.25);
+                angle_1.setPosition(0.87);
+                angle_2.setPosition(0.87);
                 follower.setMaxPower(1);
                 follower.followPath(scorePreload);
                 setPathState(101);
@@ -142,33 +141,34 @@ public class Autonomous_RedFAR extends OpMode {
             case 101:
                 if (!follower.isBusy()){
                     follower.followPath(scorePreload);
-                    Thread.sleep(800);
+                    Thread.sleep(500);
 
                     for (int i = 0;i < 3;i++){
                         switch (i) {
                             case 0:
-                                shooter1.setPower(0.63);
-                                shooter2.setPower(0.63);
+                                shooter1.setPower(0.6);
+                                shooter2.setPower(0.6);
                                 break;
                             case 1:
-                                shooter1.setPower(0.64);
-                                shooter2.setPower(0.64);
+                                shooter1.setPower(0.6);
+                                shooter2.setPower(0.6);
                                 break;
                             case 2:
-                                shooter1.setPower(0.65);
-                                shooter2.setPower(0.65);
-                                setPathState(10);
+                                shooter1.setPower(0.6);
+                                shooter2.setPower(0.6);
+
                                 break;
                         }
 
-                        araise2.setPosition(0.44);
+                        araise2.setPosition(0.68);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
                         Thread.sleep(300);
-                        araise2.setPosition(0);
+                        araise2.setPosition(0.25);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
-                        Thread.sleep(640);
+                        Thread.sleep(700);
+
 
 
                     }
@@ -180,8 +180,8 @@ public class Autonomous_RedFAR extends OpMode {
                     front_motor.setPower(1);
                     follower.setMaxPower(0.8);
                     follower.followPath(Pre_keep1);
-                    shooter1.setPower(0.64);
-                    shooter2.setPower(0.64);
+                    shooter1.setPower(0.6);
+                    shooter2.setPower(0.6);
                     setPathState(2);
                     break;
                 }
@@ -209,27 +209,29 @@ public class Autonomous_RedFAR extends OpMode {
                     for (int i = 0;i < 3;i++){
                         switch (i) {
                             case 0:
-                                shooter1.setPower(0.63);
-                                shooter2.setPower(0.63);
+                                shooter1.setPower(0.6);
+                                shooter2.setPower(0.6);
                                 break;
                             case 1:
-                                shooter1.setPower(0.65);
-                                shooter2.setPower(0.65);
+                                shooter1.setPower(0.6);
+                                shooter2.setPower(0.6);
                                 break;
                             case 2:
-                                shooter1.setPower(0.66);
-                                shooter2.setPower(0.66);
+                                shooter1.setPower(0.6);
+                                shooter2.setPower(0.6);
                                 break;
                         }
 
-                        araise2.setPosition(0.44);
+                        araise2.setPosition(0.68);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
                         Thread.sleep(300);
-                        araise2.setPosition(0);
+                        araise2.setPosition(0.25);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
-                        Thread.sleep(640);
+                        Thread.sleep(600);
+
+
 
 
                     }
@@ -249,8 +251,8 @@ public class Autonomous_RedFAR extends OpMode {
                     front_motor.setPower(1);
                     follower.setMaxPower(0.8);
                     follower.followPath(Pre_keep2);
-                    shooter1.setPower(0.64);
-                    shooter2.setPower(0.64);
+                    shooter1.setPower(0.6);
+                    shooter2.setPower(0.6);
                     setPathState(5);
                     break;
                 }
@@ -265,7 +267,7 @@ public class Autonomous_RedFAR extends OpMode {
                 }
             case 6:
                 if (!follower.isBusy()){  //                    if ((follower.getPose().getX() < (keep2.getX() + 1) && (follower.getPose().getY()) < (keep2.getY()) + 1)){
-                    Thread.sleep(800);
+                    Thread.sleep(900);
                     follower.setMaxPower(0.75);
                     follower.followPath(scoring3,true);
 
@@ -279,27 +281,28 @@ public class Autonomous_RedFAR extends OpMode {
                     for (int i = 0;i < 3;i++){
                         switch (i) {
                             case 0:
-                                shooter1.setPower(0.62);
-                                shooter2.setPower(0.62);
+                                shooter1.setPower(0.6);
+                                shooter2.setPower(0.6);
                                 break;
                             case 1:
-                                shooter1.setPower(0.64);
-                                shooter2.setPower(0.64);
+                                shooter1.setPower(0.6);
+                                shooter2.setPower(0.6);
                                 break;
                             case 2:
-                                shooter1.setPower(0.64);
-                                shooter2.setPower(0.64);
+                                shooter1.setPower(0.6);
+                                shooter2.setPower(0.6);
                                 break;
                         }
 
-                        araise2.setPosition(0.44);
+                        araise2.setPosition(0.68);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
                         Thread.sleep(300);
-                        araise2.setPosition(0);
+                        araise2.setPosition(0.25);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
-                        Thread.sleep(640);
+                        Thread.sleep(700);
+
 
 
                     }
@@ -311,8 +314,8 @@ public class Autonomous_RedFAR extends OpMode {
                 if (!follower.isBusy()){
                     follower.setMaxPower(0.8);
                     follower.followPath(Pre_keep3);
-                    shooter1.setPower(0.64);
-                    shooter2.setPower(0.64);
+                    shooter1.setPower(0.6);
+                    shooter2.setPower(0.6);
                     setPathState(8);
                     break;
                 }
@@ -328,7 +331,7 @@ public class Autonomous_RedFAR extends OpMode {
             case 9:
                 if (!follower.isBusy()){
 
-                    Thread.sleep(800);
+                    Thread.sleep(900);
                     follower.setMaxPower(0.84);
                     follower.followPath(scoring4,true);
 
@@ -346,27 +349,27 @@ public class Autonomous_RedFAR extends OpMode {
                                 shooter2.setPower(0.62);
                                 break;
                             case 1:
-                                shooter1.setPower(0.64);
-                                shooter2.setPower(0.64);
+                                shooter1.setPower(0.62);
+                                shooter2.setPower(0.62);
                                 break;
                             case 2:
-                                shooter1.setPower(0.64);
-                                shooter2.setPower(0.64);
+                                shooter1.setPower(0.62);
+                                shooter2.setPower(0.62);
                                 break;
                         }
 
-                        araise2.setPosition(0.44);
+                        araise2.setPosition(0.68);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
                         Thread.sleep(300);
-                        araise2.setPosition(0);
+                        araise2.setPosition(0.25);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
-                        Thread.sleep(640);
+                        Thread.sleep(600);
 
 
                     }
-                    setPathState(-10);
+                    setPathState(10);
                     break;
                 }
             case 10:
@@ -374,7 +377,7 @@ public class Autonomous_RedFAR extends OpMode {
                     follower.setMaxPower(1);
                     follower.followPath(Finale);
 
-                    setPathState(-11);
+                    setPathState(11);
                     break;
                 }
         }

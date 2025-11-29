@@ -38,7 +38,7 @@ public class Autonomous_BlueFAR extends OpMode {
 
 
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0)); // Start Pose of our robot.
-    private final Pose scorePose = new Pose(4, 4, Math.toRadians(24)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    private final Pose scorePose = new Pose(4, 4, Math.toRadians(22)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
     private final Pose P_keep1 = new Pose(18, 5, Math.toRadians(90));
     private final Pose keep1 = new Pose(18, 30, Math.toRadians(90));
     private final Pose scorePose2 = new Pose(4, 4, Math.toRadians(24));
@@ -129,8 +129,7 @@ public class Autonomous_BlueFAR extends OpMode {
                 center_motor.setPower(0.8);
                 shooter1.setPower(0.8);
                 shooter2.setPower(0.8);
-                araise.setPosition(0);
-                araise2.setPosition(0);
+                araise2.setPosition(0.25);
                 angle_1.setPosition(0.85);
                 angle_2.setPosition(0.85);
                 follower.setMaxPower(1);
@@ -157,20 +156,17 @@ public class Autonomous_BlueFAR extends OpMode {
                             case 2:
                                 shooter1.setPower(0.65);
                                 shooter2.setPower(0.65);
-                                setPathState(10);
                                 break;
                         }
 
-                        araise.setPosition(0.67);
                         araise2.setPosition(0.68);
-                        front_motor.setPower(0.75);
-                        center_motor.setPower(0.6);
-                        Thread.sleep(300);
-                        araise.setPosition(0);
-                        araise2.setPosition(0);
                         front_motor.setPower(1);
-                        center_motor.setPower(0.8);
-                        Thread.sleep(460);
+                        center_motor.setPower(1);
+                        Thread.sleep(300);
+                        araise2.setPosition(0.25);
+                        front_motor.setPower(1);
+                        center_motor.setPower(1);
+                        Thread.sleep(640);
 
 
                     }
@@ -224,16 +220,14 @@ public class Autonomous_BlueFAR extends OpMode {
                                 break;
                         }
 
-                        araise.setPosition(0.67);
                         araise2.setPosition(0.68);
-                        front_motor.setPower(0.9);
-                        center_motor.setPower(0.8);
-                        Thread.sleep(300);
-                        araise.setPosition(0);
-                        araise2.setPosition(0);
                         front_motor.setPower(1);
-                        center_motor.setPower(0.8);
-                        Thread.sleep(460);
+                        center_motor.setPower(1);
+                        Thread.sleep(300);
+                        araise2.setPosition(0.25);
+                        front_motor.setPower(1);
+                        center_motor.setPower(1);
+                        Thread.sleep(640);
 
 
                     }
@@ -296,16 +290,14 @@ public class Autonomous_BlueFAR extends OpMode {
                                 break;
                         }
 
-                        araise.setPosition(0.67);
                         araise2.setPosition(0.68);
-                        front_motor.setPower(0.9);
-                        center_motor.setPower(0.8);
-                        Thread.sleep(300);
-                        araise.setPosition(0);
-                        araise2.setPosition(0);
                         front_motor.setPower(1);
-                        center_motor.setPower(0.8);
-                        Thread.sleep(460);
+                        center_motor.setPower(1);
+                        Thread.sleep(300);
+                        araise2.setPosition(0.25);
+                        front_motor.setPower(1);
+                        center_motor.setPower(1);
+                        Thread.sleep(640);
 
 
                     }
@@ -361,20 +353,18 @@ public class Autonomous_BlueFAR extends OpMode {
                                 break;
                         }
 
-                        araise.setPosition(0.67);
                         araise2.setPosition(0.68);
-                        front_motor.setPower(0.9);
-                        center_motor.setPower(0.8);
-                        Thread.sleep(300);
-                        araise.setPosition(0);
-                        araise2.setPosition(0);
                         front_motor.setPower(1);
-                        center_motor.setPower(0.8);
+                        center_motor.setPower(1);
                         Thread.sleep(300);
+                        araise2.setPosition(0.25);
+                        front_motor.setPower(1);
+                        center_motor.setPower(1);
+                        Thread.sleep(640);
 
 
                     }
-                    setPathState(-10);
+                    setPathState(10);
                     break;
                 }
             case 10:
