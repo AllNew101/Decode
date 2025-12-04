@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
         private DcMotor leftRear;
         private DcMotor leftFront;
         private Servo angle_1;
-        private Servo araise;
+        private Servo araise2;
         private Servo angle_2;
         private DcMotor front_motor;
         private DcMotor shooter1;
@@ -50,6 +50,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
         private final Pose keep3 = new Pose(-81.5, -20, Math.toRadians(-88));
         private final Pose scorePose4 = new Pose(-50, 33, Math.toRadians(-37));
         private final Pose Final = new Pose(-82, -16, Math.toRadians(-46));
+        private final double ar = 0.72;
+
 
 
 
@@ -127,7 +129,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                     center_motor.setPower(1);
                     shooter1.setPower(0.6);
                     shooter2.setPower(0.6);
-                    araise.setPosition(0.48);
+                    araise2.setPosition(0.25);
                     angle_1.setPosition(0);
                     angle_2.setPosition(0);
                     follower.setMaxPower(1);
@@ -157,14 +159,14 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                     break;
                             }
 
-                            araise.setPosition(0.9);
-                            front_motor.setPower(0.7);
-                            center_motor.setPower(0.6);
-                            Thread.sleep(300);
-                            araise.setPosition(0.45);
+                            araise2.setPosition(ar);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
-                            Thread.sleep(440);
+                            Thread.sleep(300);
+                            araise2.setPosition(0.25);
+                            front_motor.setPower(1);
+                            center_motor.setPower(1);
+                            Thread.sleep(580);
 
 
                         }
@@ -232,14 +234,14 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                     break;
                             }
 
-                            araise.setPosition(0.9);
-                            front_motor.setPower(0.7);
-                            center_motor.setPower(0.6);
-                            Thread.sleep(300);
-                            araise.setPosition(0.45);
+                            araise2.setPosition(ar);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
-                            Thread.sleep(440);
+                            Thread.sleep(300);
+                            araise2.setPosition(0.25);
+                            front_motor.setPower(1);
+                            center_motor.setPower(1);
+                            Thread.sleep(580);
 
 
                         }
@@ -295,14 +297,14 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                     break;
                             }
 
-                            araise.setPosition(0.9);
-                            front_motor.setPower(0.7);
-                            center_motor.setPower(0.6);
-                            Thread.sleep(300);
-                            araise.setPosition(0.45);
+                            araise2.setPosition(ar);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
-                            Thread.sleep(440);
+                            Thread.sleep(300);
+                            araise2.setPosition(0.25);
+                            front_motor.setPower(1);
+                            center_motor.setPower(1);
+                            Thread.sleep(580);
 
 
                         }
@@ -359,14 +361,14 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                     break;
                             }
 
-                            araise.setPosition(0.9);
-                            front_motor.setPower(0.7);
-                            center_motor.setPower(0.6);
-                            Thread.sleep(300);
-                            araise.setPosition(0.45);
+                            araise2.setPosition(ar);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
-                            Thread.sleep(440);
+                            Thread.sleep(300);
+                            araise2.setPosition(0.25);
+                            front_motor.setPower(1);
+                            center_motor.setPower(1);
+                            Thread.sleep(580);
 
 
                         }
@@ -437,7 +439,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
             leftRear = hardwareMap.get(DcMotor.class, "leftRear");
             leftFront = hardwareMap.get(DcMotor.class, "leftFront");
             angle_1 = hardwareMap.get(Servo.class, "angle_1");
-            araise = hardwareMap.get(Servo.class, "araise");
+            araise2 = hardwareMap.get(Servo.class, "araise");
             angle_2 = hardwareMap.get(Servo.class, "angle_2");
             front_motor = hardwareMap.get(DcMotor.class, "front_motor");
             shooter1 = hardwareMap.get(DcMotor.class, "shooter1");
@@ -446,7 +448,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
             shooter2.setDirection(DcMotor.Direction.REVERSE);
             angle_1.setDirection(Servo.Direction.REVERSE);
-            araise.setDirection(Servo.Direction.REVERSE);
+            araise2.setDirection(Servo.Direction.FORWARD);
 
 
 

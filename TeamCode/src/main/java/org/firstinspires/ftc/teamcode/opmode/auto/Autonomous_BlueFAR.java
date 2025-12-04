@@ -51,6 +51,7 @@ public class Autonomous_BlueFAR extends OpMode {
     private final Pose keep3 = new Pose(-6.4, 32, Math.toRadians(92));
     private final Pose scorePose4 = new Pose(4, 4, Math.toRadians(23));
     private final Pose Final = new Pose(34, 24, Math.toRadians(46));
+    private final double ar = 0.72;
 
 
 
@@ -159,7 +160,7 @@ public class Autonomous_BlueFAR extends OpMode {
                                 break;
                         }
 
-                        araise2.setPosition(0.68);
+                        araise2.setPosition(ar);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
                         Thread.sleep(300);
@@ -220,7 +221,7 @@ public class Autonomous_BlueFAR extends OpMode {
                                 break;
                         }
 
-                        araise2.setPosition(0.68);
+                        araise2.setPosition(ar);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
                         Thread.sleep(300);
@@ -290,7 +291,7 @@ public class Autonomous_BlueFAR extends OpMode {
                                 break;
                         }
 
-                        araise2.setPosition(0.68);
+                        araise2.setPosition(ar);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
                         Thread.sleep(300);
@@ -353,7 +354,7 @@ public class Autonomous_BlueFAR extends OpMode {
                                 break;
                         }
 
-                        araise2.setPosition(0.68);
+                        araise2.setPosition(ar);
                         front_motor.setPower(1);
                         center_motor.setPower(1);
                         Thread.sleep(300);

@@ -48,6 +48,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
         private final Pose keep3 = new Pose(18, 30, Math.toRadians(90));
         private final Pose scorePose4 = new Pose(68, 4, Math.toRadians(39));
         private final Pose Final = new Pose(34, 24, Math.toRadians(46));
+        private final double ar = 0.72;
+
 
 
 
@@ -150,7 +152,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                     break;
                             }
 
-                            araise2.setPosition(0.68);
+                            araise2.setPosition(ar);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
                             Thread.sleep(300);
@@ -219,7 +221,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                     break;
                             }
 
-                            araise2.setPosition(0.68);
+                            araise2.setPosition(ar);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
                             Thread.sleep(300);
@@ -282,7 +284,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                     break;
                             }
 
-                            araise2.setPosition(0.68);
+                            araise2.setPosition(ar);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
                             Thread.sleep(300);
@@ -343,7 +345,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                     break;
                             }
 
-                            araise2.setPosition(0.68);
+                            araise2.setPosition(ar);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
                             Thread.sleep(300);
