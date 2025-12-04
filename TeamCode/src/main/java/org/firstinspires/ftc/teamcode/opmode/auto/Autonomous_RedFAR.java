@@ -49,7 +49,7 @@ public class Autonomous_RedFAR extends OpMode {
     private final Pose scorePose3 = new Pose(20, -2, Math.toRadians(-28));
     private final Pose P_keep3 = new Pose(18.4, -26, Math.toRadians(-92));
     private final Pose keep3 = new Pose(18.4, -58, Math.toRadians(-92));
-    private final Pose scorePose4 = new Pose(18, -2, Math.toRadians(-28));
+    private final Pose scorePose4 = new Pose(18, -2, Math.toRadians(-30));
     private final Pose Final = new Pose(50, -8, Math.toRadians(-46));
 
 
@@ -213,8 +213,8 @@ public class Autonomous_RedFAR extends OpMode {
                                 shooter2.setPower(0.6);
                                 break;
                             case 1:
-                                shooter1.setPower(0.6);
-                                shooter2.setPower(0.6);
+                                shooter1.setPower(0.62);
+                                shooter2.setPower(0.62);
                                 break;
                             case 2:
                                 shooter1.setPower(0.6);

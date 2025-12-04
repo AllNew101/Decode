@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
         private DcMotor leftRear;
         private DcMotor leftFront;
         private Servo angle_1;
-        private Servo araise;
+        private Servo araise2;
         private Servo angle_2;
         private DcMotor front_motor;
         private DcMotor shooter1;
@@ -115,7 +115,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                     center_motor.setPower(1);
                     shooter1.setPower(0.55);
                     shooter2.setPower(0.55);
-                    araise.setPosition(0.48);
+                    araise2.setPosition(0.25);
 //                    angle_1.setPosition(0);
 //                    angle_2.setPosition(0);
                     follower.setMaxPower(1);
@@ -145,11 +145,11 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                   break;
                           }
 
-                          araise.setPosition(0.78);
+                          araise2.setPosition(0.78);
                           front_motor.setPower(0.25);
                           center_motor.setPower(0.6);
                           Thread.sleep(460);
-                          araise.setPosition(0.48);
+                          araise2.setPosition(0.48);
                           front_motor.setPower(0.75);
                           center_motor.setPower(1);
                           Thread.sleep(640);
@@ -193,11 +193,11 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 //                        Thread.sleep(300);
                         for (int i = 0;i < 3;i++){
 
-                            araise.setPosition(0.78);
+                            araise2.setPosition(0.78);
                             front_motor.setPower(0.4);
                             center_motor.setPower(0.74);
                             Thread.sleep(340);
-                            araise.setPosition(0.48);
+                            araise2.setPosition(0.48);
                             front_motor.setPower(0.75);
                             center_motor.setPower(1);
                             Thread.sleep(610);
@@ -241,11 +241,11 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                         Thread.sleep(300);
                         for (int i = 0;i < 3;i++){
 
-                            araise.setPosition(0.78);
+                            araise2.setPosition(0.78);
                             front_motor.setPower(0.4);
                             center_motor.setPower(0.74);
                             Thread.sleep(340);
-                            araise.setPosition(0.48);
+                            araise2.setPosition(0.48);
                             front_motor.setPower(0.75);
                             center_motor.setPower(1);
                             Thread.sleep(610);
@@ -291,11 +291,11 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                         for (int i = 0;i < 3;i++){
 
 
-                            araise.setPosition(0.78);
+                            araise2.setPosition(0.78);
                             front_motor.setPower(0.4);
                             center_motor.setPower(0.74);
                             Thread.sleep(340);
-                            araise.setPosition(0.48);
+                            araise2.setPosition(0.48);
                             front_motor.setPower(0.75);
                             center_motor.setPower(1);
                             Thread.sleep(610);
@@ -366,7 +366,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
             leftRear = hardwareMap.get(DcMotor.class, "leftRear");
             leftFront = hardwareMap.get(DcMotor.class, "leftFront");
             angle_1 = hardwareMap.get(Servo.class, "angle_1");
-            araise = hardwareMap.get(Servo.class, "araise");
+            araise2 = hardwareMap.get(Servo.class, "araise2");
             angle_2 = hardwareMap.get(Servo.class, "angle_2");
             front_motor = hardwareMap.get(DcMotor.class, "front_motor");
             shooter1 = hardwareMap.get(DcMotor.class, "shooter1");
@@ -375,7 +375,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
             shooter2.setDirection(DcMotor.Direction.REVERSE);
             angle_1.setDirection(Servo.Direction.REVERSE);
-            araise.setDirection(Servo.Direction.REVERSE);
+            araise2.setDirection(Servo.Direction.REVERSE);
 
 
 
