@@ -46,6 +46,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
         private final Pose scorePose3 = new Pose(87.2, -14, Math.toRadians(-51));
         private final Pose P_keep3 = new Pose(45, -25, Math.toRadians(-90));
         private final Pose keep3 = new Pose(45, -56, Math.toRadians(-90));
+
         private final Pose scorePose4 = new Pose(87.2, -14,  Math.toRadians(-52.4));
         private final Pose Final = new Pose(78, -32, Math.toRadians(-46));
         private final double ar = 0.72;
