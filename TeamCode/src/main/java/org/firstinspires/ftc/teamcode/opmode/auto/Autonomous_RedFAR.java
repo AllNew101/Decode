@@ -147,16 +147,16 @@ public class Autonomous_RedFAR extends OpMode {
                     for (int i = 0;i < 3;i++){
                         switch (i) {
                             case 0:
-                                shooter1.setPower(0.6);
-                                shooter2.setPower(0.6);
+                                shooter1.setPower(0.62);
+                                shooter2.setPower(0.62);
                                 break;
                             case 1:
-                                shooter1.setPower(0.6);
-                                shooter2.setPower(0.6);
+                                shooter1.setPower(0.62);
+                                shooter2.setPower(0.62);
                                 break;
                             case 2:
-                                shooter1.setPower(0.6);
-                                shooter2.setPower(0.6);
+                                shooter1.setPower(0.62);
+                                shooter2.setPower(0.62);
 
                                 break;
                         }
@@ -210,16 +210,16 @@ public class Autonomous_RedFAR extends OpMode {
                     for (int i = 0;i < 3;i++){
                         switch (i) {
                             case 0:
-                                shooter1.setPower(0.6);
-                                shooter2.setPower(0.6);
-                                break;
-                            case 1:
                                 shooter1.setPower(0.62);
                                 shooter2.setPower(0.62);
                                 break;
+                            case 1:
+                                shooter1.setPower(0.64);
+                                shooter2.setPower(0.64);
+                                break;
                             case 2:
-                                shooter1.setPower(0.6);
-                                shooter2.setPower(0.6);
+                                shooter1.setPower(0.64);
+                                shooter2.setPower(0.64);
                                 break;
                         }
 
@@ -282,16 +282,16 @@ public class Autonomous_RedFAR extends OpMode {
                     for (int i = 0;i < 3;i++){
                         switch (i) {
                             case 0:
-                                shooter1.setPower(0.6);
-                                shooter2.setPower(0.6);
+                                shooter1.setPower(0.64);
+                                shooter2.setPower(0.64);
                                 break;
                             case 1:
-                                shooter1.setPower(0.6);
-                                shooter2.setPower(0.6);
+                                shooter1.setPower(0.64);
+                                shooter2.setPower(0.64);
                                 break;
                             case 2:
-                                shooter1.setPower(0.6);
-                                shooter2.setPower(0.6);
+                                shooter1.setPower(0.64);
+                                shooter2.setPower(0.64);
                                 break;
                         }
 
@@ -346,16 +346,16 @@ public class Autonomous_RedFAR extends OpMode {
                     for (int i = 0;i < 3;i++){
                         switch (i) {
                             case 0:
-                                shooter1.setPower(0.62);
-                                shooter2.setPower(0.62);
+                                shooter1.setPower(0.64);
+                                shooter2.setPower(0.64);
                                 break;
                             case 1:
-                                shooter1.setPower(0.62);
-                                shooter2.setPower(0.62);
+                                shooter1.setPower(0.64);
+                                shooter2.setPower(0.64);
                                 break;
                             case 2:
-                                shooter1.setPower(0.62);
-                                shooter2.setPower(0.62);
+                                shooter1.setPower(0.64);
+                                shooter2.setPower(0.64);
                                 break;
                         }
 

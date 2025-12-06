@@ -36,14 +36,14 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
         private final Pose startPose = new Pose(0, 0, Math.toRadians(0)); // Start Pose of our robot.
-        private final Pose scorePose = new Pose(75, -4, Math.toRadians(-40)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+        private final Pose scorePose = new Pose(70, -3, Math.toRadians(-40)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
         private final Pose P_keep1 = new Pose(78, -20 , Math.toRadians(-90));
         private final Pose keep1 = new Pose(78, -40, Math.toRadians(-90));
         private final Pose open_keep1 = new Pose(74, -46 , Math.toRadians(-90));
         private final Pose scorePose2 = new Pose(87.2, -14, Math.toRadians(-49));
         private final Pose P_keep2 = new Pose(67.2, -20, Math.toRadians(-90));
         private final Pose keep2 = new Pose(67.2, -59, Math.toRadians(-91));
-        private final Pose scorePose3 = new Pose(87.2, -14, Math.toRadians(-49));
+        private final Pose scorePose3 = new Pose(87.2, -14, Math.toRadians(-50));
         private final Pose P_keep3 = new Pose(45, -25, Math.toRadians(-90));
         private final Pose keep3 = new Pose(45, -56, Math.toRadians(-90));
         private final Pose scorePose4 = new Pose(87.2, -14,  Math.toRadians(-52.4));
@@ -158,7 +158,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                           araise2.setPosition(0.25);
                           front_motor.setPower(1);
                           center_motor.setPower(1);
-                          Thread.sleep(600);
+                          Thread.sleep(640);
 
 
                       }
@@ -228,7 +228,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                             araise2.setPosition(0.25);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
-                            Thread.sleep(600);
+                            Thread.sleep(640);
 
 
                         }
@@ -292,7 +292,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                             araise2.setPosition(0.25);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
-                            Thread.sleep(600);
+                            Thread.sleep(640);
 
 
                         }
@@ -356,7 +356,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                             araise2.setPosition(0.25);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
-                            Thread.sleep(600);
+                            Thread.sleep(640);
 
                         }
                         setPathState(10);

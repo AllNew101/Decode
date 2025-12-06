@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.opmode.auto; // make sure this aligns with class location
-import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
 import com.pedropathing.follower.Follower;
@@ -17,7 +16,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
 @Autonomous(name = "Red Near")
-    public class Autonomous_Read extends OpMode {
+    public class Autonomous_RedNEAR extends OpMode {
 
         private DcMotor rightRear;
         private DcMotor rightFront;
@@ -127,8 +126,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                 case 0:
                     front_motor.setPower(1);
                     center_motor.setPower(1);
-                    shooter1.setPower(0.6);
-                    shooter2.setPower(0.6);
+                    shooter1.setPower(0.58);
+                    shooter2.setPower(0.58);
                     araise2.setPosition(0.25);
                     angle_1.setPosition(0);
                     angle_2.setPosition(0);
@@ -146,35 +145,30 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                         for (int i = 0;i < 3;i++){
                             switch (i) {
                                 case 0:
-                                    shooter1.setPower(0.58);
-                                    shooter2.setPower(0.58);
+                                    shooter1.setPower(0.54);
+                                    shooter2.setPower(0.54);
                                     break;
                                 case 1:
-                                    shooter1.setPower(0.58);
-                                    shooter2.setPower(0.58);
+                                    shooter1.setPower(0.54);
+                                    shooter2.setPower(0.54);
                                     break;
                                 case 2:
-                                    shooter1.setPower(0.58);
-                                    shooter2.setPower(0.58);
+                                    shooter1.setPower(0.54);
+                                    shooter2.setPower(0.54);
                                     break;
                             }
 
-<<<<<<< HEAD
+
                             araise2.setPosition(ar);
-=======
-                            araise2.setPosition(0.72);
->>>>>>> f71cde76560a42a20e18c49c3acbfa481f43e45e
                             front_motor.setPower(1);
                             center_motor.setPower(1);
                             Thread.sleep(300);
                             araise2.setPosition(0.25);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
-<<<<<<< HEAD
-                            Thread.sleep(580);
-=======
-                            Thread.sleep(600);
->>>>>>> f71cde76560a42a20e18c49c3acbfa481f43e45e
+                            Thread.sleep(640);
+
+
 
 
                         }
@@ -187,8 +181,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                     center_motor.setPower(0.8);
                     follower.setMaxPower(1);
                     follower.followPath(Pre_keep1,true);
-                    shooter1.setPower(0.46);
-                    shooter2.setPower(0.46);
+                    shooter1.setPower(0.54);
+                    shooter2.setPower(0.54);
                     setPathState(2);
                     break;
                     }
@@ -204,8 +198,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                     if (!follower.isBusy()){
                         follower.setMaxPower(1);
                         follower.followPath(Pre,true);
-                        shooter1.setPower(0.58);
-                        shooter2.setPower(0.58);
                         setPathState(-3);
                         break;
                     }
@@ -231,35 +223,29 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                         for (int i = 0;i < 3;i++){
                             switch (i) {
                                 case 0:
-                                    shooter1.setPower(0.56);
-                                    shooter2.setPower(0.56);
+                                    shooter1.setPower(0.54);
+                                    shooter2.setPower(0.54);
                                     break;
                                 case 1:
-                                    shooter1.setPower(0.56);
-                                    shooter2.setPower(0.56);
+                                    shooter1.setPower(0.54);
+                                    shooter2.setPower(0.54);
                                     break;
                                 case 2:
-                                    shooter1.setPower(0.56);
-                                    shooter2.setPower(0.56);
+                                    shooter1.setPower(0.54);
+                                    shooter2.setPower(0.54);
                                     break;
                             }
 
-<<<<<<< HEAD
                             araise2.setPosition(ar);
-=======
-                            araise2.setPosition(0.72);
->>>>>>> f71cde76560a42a20e18c49c3acbfa481f43e45e
                             front_motor.setPower(1);
                             center_motor.setPower(1);
                             Thread.sleep(300);
                             araise2.setPosition(0.25);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
-<<<<<<< HEAD
-                            Thread.sleep(580);
-=======
-                            Thread.sleep(600);
->>>>>>> f71cde76560a42a20e18c49c3acbfa481f43e45e
+                            Thread.sleep(640);
+
+
 
 
                         }
@@ -282,8 +268,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 //                    if ((follower.getPose().getX() < (P_keep2.getX() + 1) && (follower.getPose().getY()) < (P_keep2.getY()) + 1)){
                         follower.setMaxPower(0.6);
                         follower.followPath(keep_2,true);
-                        shooter1.setPower(0.56);
-                        shooter2.setPower(0.56);
                         setPathState(6);
                         break;
                     }
@@ -304,35 +288,28 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                         for (int i = 0;i < 3;i++){
                             switch (i) {
                                 case 0:
-                                    shooter1.setPower(0.55);
-                                    shooter2.setPower(0.55);
+                                    shooter1.setPower(0.54);
+                                    shooter2.setPower(0.54);
                                     break;
                                 case 1:
-                                    shooter1.setPower(0.55);
-                                    shooter2.setPower(0.55);
+                                    shooter1.setPower(0.54);
+                                    shooter2.setPower(0.54);
                                     break;
                                 case 2:
-                                    shooter1.setPower(0.55);
-                                    shooter2.setPower(0.55);
+                                    shooter1.setPower(0.54);
+                                    shooter2.setPower(0.54);
                                     break;
                             }
 
-<<<<<<< HEAD
                             araise2.setPosition(ar);
-=======
-                            araise2.setPosition(0.72);
->>>>>>> f71cde76560a42a20e18c49c3acbfa481f43e45e
                             front_motor.setPower(1);
                             center_motor.setPower(1);
                             Thread.sleep(300);
                             araise2.setPosition(0.25);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
-<<<<<<< HEAD
-                            Thread.sleep(580);
-=======
-                            Thread.sleep(600);
->>>>>>> f71cde76560a42a20e18c49c3acbfa481f43e45e
+                            Thread.sleep(640);
+
 
 
                         }
@@ -346,8 +323,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                         follower.setMaxPower(1);
                         follower.followPath(Pre_keep3,true);
                         center_motor.setPower(0.8);
-                        shooter1.setPower(0.56);
-                        shooter2.setPower(0.56);
+                        shooter1.setPower(0.54);
+                        shooter2.setPower(0.54);
                         setPathState(8);
                         break;
                     }
@@ -375,36 +352,29 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                         for (int i = 0;i < 3;i++){
                             switch (i) {
                                 case 0:
-                                    shooter1.setPower(0.56);
-                                    shooter2.setPower(0.56);
+                                    shooter1.setPower(0.54);
+                                    shooter2.setPower(0.54);
                                     break;
                                 case 1:
-                                    shooter1.setPower(0.56);
-                                    shooter2.setPower(0.56);
+                                    shooter1.setPower(0.54);
+                                    shooter2.setPower(0.54);
                                     break;
                                 case 2:
-                                    shooter1.setPower(0.56);
-                                    shooter2.setPower(0.56);
+                                    shooter1.setPower(0.54);
+                                    shooter2.setPower(0.54);
                                     setPathState(10);
                                     break;
                             }
 
-<<<<<<< HEAD
                             araise2.setPosition(ar);
-=======
-                            araise2.setPosition(0.72);
->>>>>>> f71cde76560a42a20e18c49c3acbfa481f43e45e
                             front_motor.setPower(1);
                             center_motor.setPower(1);
                             Thread.sleep(300);
                             araise2.setPosition(0.25);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
-<<<<<<< HEAD
-                            Thread.sleep(580);
-=======
-                            Thread.sleep(600);
->>>>>>> f71cde76560a42a20e18c49c3acbfa481f43e45e
+                            Thread.sleep(640);
+
 
 
                         }
@@ -475,11 +445,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
             leftRear = hardwareMap.get(DcMotor.class, "leftRear");
             leftFront = hardwareMap.get(DcMotor.class, "leftFront");
             angle_1 = hardwareMap.get(Servo.class, "angle_1");
-<<<<<<< HEAD
             araise2 = hardwareMap.get(Servo.class, "araise");
-=======
             araise2 = hardwareMap.get(Servo.class, "araise2");
->>>>>>> f71cde76560a42a20e18c49c3acbfa481f43e45e
             angle_2 = hardwareMap.get(Servo.class, "angle_2");
             front_motor = hardwareMap.get(DcMotor.class, "front_motor");
             shooter1 = hardwareMap.get(DcMotor.class, "shooter1");
@@ -488,7 +455,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
             shooter2.setDirection(DcMotor.Direction.REVERSE);
             angle_1.setDirection(Servo.Direction.REVERSE);
-            araise2.setDirection(Servo.Direction.FORWARD);
+
 
 
 
