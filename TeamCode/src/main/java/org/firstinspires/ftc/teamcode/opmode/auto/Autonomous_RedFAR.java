@@ -41,12 +41,12 @@ public class Autonomous_RedFAR extends OpMode {
     private final Pose scorePose = new Pose(12, -4, Math.toRadians(-26)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
     private final Pose P_keep1 = new Pose(40, -15, Math.toRadians(-90));
     private final Pose keep1 = new Pose(40, -48, Math.toRadians(-90));
-    private final Pose scorePose2 = new Pose(16, -4, Math.toRadians(-28));
+    private final Pose scorePose2 = new Pose(16, -4, Math.toRadians(-30));
 //    private final Pose P_keep2 = new Pose(46.8, -72, Math.toRadians(-180));
     private final Pose turn_keep2 = new Pose(16, -10, Math.toRadians(-100));
     private final Pose P_keep2 = new Pose(16, -26, Math.toRadians(-90));
     private final Pose keep2 = new Pose(16, -56, Math.toRadians(-90));
-    private final Pose scorePose3 = new Pose(20, -2, Math.toRadians(-28));
+    private final Pose scorePose3 = new Pose(20, -2, Math.toRadians(-30));
     private final Pose P_keep3 = new Pose(18.4, -26, Math.toRadians(-92));
     private final Pose keep3 = new Pose(18.4, -58, Math.toRadians(-92));
     private final Pose scorePose4 = new Pose(18, -2, Math.toRadians(-30));

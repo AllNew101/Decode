@@ -151,7 +151,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                   break;
                           }
 
-                          araise2.setPosition(0.72);
+                          araise2.setPosition(ar);
                           front_motor.setPower(1);
                           center_motor.setPower(1);
                           Thread.sleep(300);
@@ -221,7 +221,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                     break;
                             }
 
-                            araise2.setPosition(0.72);
+                            araise2.setPosition(ar);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
                             Thread.sleep(300);
@@ -285,7 +285,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                     break;
                             }
 
-                            araise2.setPosition(0.72);
+                            araise2.setPosition(ar);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
                             Thread.sleep(300);
@@ -349,7 +349,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                     break;
                             }
 
-                            araise2.setPosition(0.72);
+                            araise2.setPosition(ar);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
                             Thread.sleep(300);
