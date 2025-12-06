@@ -39,20 +39,16 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
         private final Pose scorePose = new Pose(75, -4, Math.toRadians(-40)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
         private final Pose P_keep1 = new Pose(78, -20 , Math.toRadians(-90));
         private final Pose keep1 = new Pose(78, -40, Math.toRadians(-90));
-
-        private final Pose open_keep1 = new Pose(74, -46, Math.toRadians(-90));
-        private final Pose scorePose2 = new Pose(87.2, -14, Math.toRadians(-50));
+        private final Pose open_keep1 = new Pose(74, -46 , Math.toRadians(-90));
+        private final Pose scorePose2 = new Pose(87.2, -14, Math.toRadians(-49));
         private final Pose P_keep2 = new Pose(67.2, -20, Math.toRadians(-90));
         private final Pose keep2 = new Pose(67.2, -59, Math.toRadians(-91));
-        private final Pose scorePose3 = new Pose(87.2, -14, Math.toRadians(-51));
+        private final Pose scorePose3 = new Pose(87.2, -14, Math.toRadians(-49));
         private final Pose P_keep3 = new Pose(45, -25, Math.toRadians(-90));
         private final Pose keep3 = new Pose(45, -56, Math.toRadians(-90));
-
         private final Pose scorePose4 = new Pose(87.2, -14,  Math.toRadians(-52.4));
         private final Pose Final = new Pose(78, -32, Math.toRadians(-46));
-        private final double ar = 0.72;
-
-
+        private final double ar = 0.72 ;
 
 
 
@@ -155,17 +151,14 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                   break;
                           }
 
-                          araise2.setPosition(ar);
-
                           araise2.setPosition(0.72);
-
                           front_motor.setPower(1);
                           center_motor.setPower(1);
                           Thread.sleep(300);
                           araise2.setPosition(0.25);
                           front_motor.setPower(1);
                           center_motor.setPower(1);
-                          Thread.sleep(580);
+                          Thread.sleep(600);
 
 
                       }
@@ -202,7 +195,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                 case 3:
                     if (!follower.isBusy()){
                        Thread.sleep(600);
-                        follower.setMaxPower(0.9);
+                        follower.setMaxPower(1);
                         follower.followPath(scoring2,true);
                         Thread.sleep(400);
                         setPathState(102);
@@ -219,27 +212,23 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                                     shooter2.setPower(0.53);
                                     break;
                                 case 1:
-                                    shooter1.setPower(0.52);
-                                    shooter2.setPower(0.52);
+                                    shooter1.setPower(0.53);
+                                    shooter2.setPower(0.53);
                                     break;
                                 case 2:
-                                    shooter1.setPower(0.52);
-                                    shooter2.setPower(0.52);
+                                    shooter1.setPower(0.53);
+                                    shooter2.setPower(0.53);
                                     break;
                             }
 
-
-                            araise2.setPosition(ar);
-
                             araise2.setPosition(0.72);
-
                             front_motor.setPower(1);
                             center_motor.setPower(1);
                             Thread.sleep(300);
                             araise2.setPosition(0.25);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
-                            Thread.sleep(580);
+                            Thread.sleep(600);
 
 
                         }
@@ -283,31 +272,27 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                         for (int i = 0;i < 3;i++){
                             switch (i) {
                                 case 0:
-                                    shooter1.setPower(0.52);
-                                    shooter2.setPower(0.52);
+                                    shooter1.setPower(0.53);
+                                    shooter2.setPower(0.53);
                                     break;
                                 case 1:
-                                    shooter1.setPower(0.52);
-                                    shooter2.setPower(0.52);
+                                    shooter1.setPower(0.53);
+                                    shooter2.setPower(0.53);
                                     break;
                                 case 2:
-                                    shooter1.setPower(0.52);
-                                    shooter2.setPower(0.52);
+                                    shooter1.setPower(0.53);
+                                    shooter2.setPower(0.53);
                                     break;
                             }
 
-
-                            araise2.setPosition(ar);
-
                             araise2.setPosition(0.72);
-
                             front_motor.setPower(1);
                             center_motor.setPower(1);
                             Thread.sleep(300);
                             araise2.setPosition(0.25);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
-                            Thread.sleep(580);
+                            Thread.sleep(600);
 
 
                         }
@@ -351,31 +336,27 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                         for (int i = 0;i < 3;i++){
                             switch (i) {
                                 case 0:
-                                    shooter1.setPower(0.52);
-                                    shooter2.setPower(0.52);
+                                    shooter1.setPower(0.53);
+                                    shooter2.setPower(0.53);
                                     break;
                                 case 1:
-                                    shooter1.setPower(0.52);
-                                    shooter2.setPower(0.52);
+                                    shooter1.setPower(0.53);
+                                    shooter2.setPower(0.53);
                                     break;
                                 case 2:
-                                    shooter1.setPower(0.52);
-                                    shooter2.setPower(0.52);
+                                    shooter1.setPower(0.53);
+                                    shooter2.setPower(0.53);
                                     break;
                             }
 
-
-                            araise2.setPosition(ar);
-
                             araise2.setPosition(0.72);
-
                             front_motor.setPower(1);
                             center_motor.setPower(1);
                             Thread.sleep(300);
                             araise2.setPosition(0.25);
                             front_motor.setPower(1);
                             center_motor.setPower(1);
-                            Thread.sleep(580);
+                            Thread.sleep(600);
 
                         }
                         setPathState(10);
