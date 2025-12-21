@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
 @Autonomous(name = "Blue Near")
-public class Autonomous_RedNEAR extends OpMode {
+public class Autonomous_BlueNEAR extends OpMode {
 
     private DcMotor rightRear;
     private DcMotor rightFront;

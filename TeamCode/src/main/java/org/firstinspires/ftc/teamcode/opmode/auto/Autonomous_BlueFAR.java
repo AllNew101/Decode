@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 /* git add .
-* git push origin master
-* git commit -m "***********" */
+ * git push origin master
+ * git commit -m "***********" */
 
 @Autonomous(name = "Blue Far")
 public class Autonomous_BlueFAR extends OpMode {
@@ -42,7 +42,7 @@ public class Autonomous_BlueFAR extends OpMode {
     private final Pose P_keep1 = new Pose(18, 5, Math.toRadians(90));
     private final Pose keep1 = new Pose(18, 30, Math.toRadians(90));
     private final Pose scorePose2 = new Pose(4, 4, Math.toRadians(24));
-//    private final Pose P_keep2 = new Pose(46.8, -72, Math.toRadians(-180));
+    //    private final Pose P_keep2 = new Pose(46.8, -72, Math.toRadians(-180));
     private final Pose turn_keep2 = new Pose(-4, 10, Math.toRadians(100));
     private final Pose P_keep2 = new Pose(-6.4, 12, Math.toRadians(90));
     private final Pose keep2 = new Pose(-6.4, 32, Math.toRadians(90));

@@ -47,10 +47,11 @@ public class Constants {
 
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(-167)
-            .strafePodX(-50)
-            .distanceUnit(DistanceUnit.MM)
+            .forwardPodY(5.75)
+            .strafePodX(-7.25)
+            .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("odo")
+            .yawScalar(1)
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
