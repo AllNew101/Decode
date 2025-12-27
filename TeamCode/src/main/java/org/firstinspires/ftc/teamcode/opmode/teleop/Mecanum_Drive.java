@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.panels.Panels;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
@@ -11,31 +14,40 @@ import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.opmode.teleop.PIDF_Shooter;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.util.function.Supplier;
 
-@Configurable
+@Config
 @TeleOp
 public class Mecanum_Drive extends OpMode {
     private Follower follower;
     public static Pose startingPose; //See ExampleAuto to understand how to use this
-    private boolean automatedDrive;
+    private boolean automatedDrive = false;
     private Supplier<PathChain> pathChain;
     private TelemetryManager telemetryM;
     private boolean slowMode = false;
     private double slowModeMultiplier = 0.5;
-    private double A, B, C, D, XGame1, YGame1, XGame2, YGame2, SpeedMove, SpeedLimit, SpeedTurn, drs, dls;
+    private PIDF_Shooter Ying;
+    public static double target = 10.00;
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+    Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
 
     @Override
     public void init() {
+
+        Ying = new PIDF_Shooter();
+        Ying.init_vel(hardwareMap);
+
+
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startingPose == null ? new Pose() : startingPose);
         follower.update();
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+
 
         pathChain = () -> follower.pathBuilder() //Lazy Curve Generation
                 .addPath(new Path(new BezierLine(follower::getPose, new Pose(45, 98))))
@@ -45,52 +57,76 @@ public class Mecanum_Drive extends OpMode {
 
     @Override
     public void start() {
+        //The parameter controls whether the Follower should use break mode on the motors (using it is recommended).
+        //In order to use float mode, add .useBrakeModeInTeleOp(true); to your Drivetrain Constants in Constant.java (for Mecanum)
+        //If you don't pass anything in, it uses the default (false)
+        follower.startTeleopDrive();
+        Ying.start_shooter();
     }
-
 
     @Override
     public void loop() {
+        //Call this once per loop
+         follower.update();
 
+
+        if (!automatedDrive) {
+            //Make the last parameter false for field-centric
+            //In case the drivers want to use a "slowMode" you can scale the vectors
+
+            //This is the normal version to use in the TeleOp
+            if (!slowMode) follower.setTeleOpDrive(
+                    -gamepad1.left_stick_y,
+                    -gamepad1.left_stick_x,
+                    -gamepad1.right_stick_x,
+                    true // Robot Centric
+            );
+
+                //This is how it looks with slowMode on
+            else follower.setTeleOpDrive(
+                    -gamepad1.left_stick_y * slowModeMultiplier,
+                    -gamepad1.left_stick_x * slowModeMultiplier,
+                    -gamepad1.right_stick_x * slowModeMultiplier,
+                    true // Robot Centric
+            );
+        }
+
+        //Automated PathFollowing
+        if (gamepad1.aWasPressed()) {
+            follower.followPath(pathChain.get());
+            automatedDrive = true;
+        }
+
+        //Stop automated following if the follower is done
+        if (automatedDrive && (gamepad1.bWasPressed() || !follower.isBusy())) {
+            follower.startTeleopDrive();
+            automatedDrive = false;
+        }
+
+        //Slow Mode
+        if (gamepad1.rightBumperWasPressed()) {
+            slowMode = !slowMode;
+        }
+
+        //Optional way to change slow mode strength
+        if (gamepad1.xWasPressed()) {
+            slowModeMultiplier += 0.25;
+        }
+
+        //Optional way to change slow mode strength
+        if (gamepad2.yWasPressed()) {
+            slowModeMultiplier -= 0.25;
+        }
+
+        Ying.run_shooter(target);
+        dashboardTelemetry.addData("target",target);
+        dashboardTelemetry.addData("velo", Ying.filter(Ying.getVelocity()));
+        dashboardTelemetry.addData("current",Ying.getCurrentposition());
+        dashboardTelemetry.addData("current",Ying.get_output(target));
+        dashboardTelemetry.addData("omega",Ying.getOmega());
+        dashboardTelemetry.addData("position", follower.getPose());
+        dashboardTelemetry.addData("automatedDrive", automatedDrive);
+
+        dashboardTelemetry.update();
     }
-
-    public void move() {
-
-        XGame1 = gamepad1.left_stick_x * -1;
-        YGame1 = gamepad1.left_stick_y * -1;
-        XGame2 = gamepad1.right_stick_x * -1;
-        YGame2 = gamepad1.right_stick_y * -1;
-
-
-            SpeedMove = Math.sqrt(Math.pow(XGame1, 2) + Math.pow(YGame1, 2)) * SpeedLimit;
-            SpeedTurn = Math.sqrt(Math.pow(XGame2, 2) + Math.pow(YGame2, 2)) * (SpeedLimit - 0.1);
-            drs = Math.sin((Math.atan2(YGame1, XGame1) / Math.PI * 180 - 45) / 180 * Math.PI);
-            dls = Math.cos((Math.atan2(YGame1, XGame1) / Math.PI * 180 - 45) / 180 * Math.PI);
-            if (YGame1 < 0) {
-                if (dls >= drs) {
-                    dls = -(dls / drs);
-                    drs = -1;
-                } else {
-                    drs = -(drs / dls);
-                    dls = -1;
-                }
-            } else {
-                if (drs <= dls) {
-                    drs = drs / dls;
-                    dls = 1;
-                } else {
-                    dls = dls / drs;
-                    drs = 1;
-                }
-            }
-
-        A = Math.min(Math.max(drs * SpeedMove, -SpeedLimit), SpeedLimit);
-        B = Math.min(Math.max(dls * SpeedMove, -SpeedLimit), SpeedLimit);
-        C = Math.min(Math.max(dls * SpeedMove, -SpeedLimit), SpeedLimit);
-        D = Math.min(Math.max(drs * SpeedMove, -SpeedLimit), SpeedLimit);
-        A += Math.sin((Math.atan2(YGame2, XGame2) / Math.PI * 180 - 45) / 180 * Math.PI) * SpeedTurn;
-        B += Math.cos((Math.atan2(YGame2, XGame2) / Math.PI * 180 - 45) / 180 * Math.PI) * SpeedTurn;
-        C += Math.sin((Math.atan2(YGame2, XGame2) / Math.PI * 180 - 45) / 180 * Math.PI) * SpeedTurn;
-        D += Math.cos((Math.atan2(YGame2, XGame2) / Math.PI * 180 - 45) / 180 * Math.PI) * SpeedTurn;
-
-
-}}
+}
