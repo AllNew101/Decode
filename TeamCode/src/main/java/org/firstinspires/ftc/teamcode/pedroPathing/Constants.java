@@ -30,6 +30,7 @@ public class Constants {
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.004,0,0.00013,0.6,0))
             .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.00000002,0,0.0000001,0.6,0))
             .centripetalScaling(0.000084)
+
             .mass(11);
 
     public static MecanumConstants driveConstants = new MecanumConstants()
@@ -40,6 +41,7 @@ public class Constants {
             .leftFrontMotorName("leftFront")
             .xVelocity(41.743954)
             .yVelocity(55.14645)
+            .useBrakeModeInTeleOp(true)
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
@@ -52,9 +54,9 @@ public class Constants {
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("odo")
             .yawScalar(1)
-            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD)
+            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
-            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
