@@ -16,6 +16,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opmode.system.PIDF_Shooter;
 import org.firstinspires.ftc.teamcode.opmode.system.Turret;
 import org.firstinspires.ftc.teamcode.opmode.system.Intake;
+import org.firstinspires.ftc.teamcode.opmode.system.telemetryX;
+import org.firstinspires.ftc.teamcode.opmode.system.angular_set;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.util.function.Supplier;
@@ -23,20 +25,28 @@ import java.util.function.Supplier;
 @Config
 @TeleOp
 public class Mecanum_Drive extends OpMode {
+    //Class import
     private Drawing drawing;
     private Follower follower;
-    public static Pose startingPose = new Pose(10, 10, Math.toRadians(0)); //See ExampleAuto to understand how to use this
-    private boolean automatedDrive = false;
     private Supplier<PathChain> pathChain;
     private TelemetryManager telemetryM;
-    private boolean slowMode = false;
-    private double slowModeMultiplier = 0.5;
     private PIDF_Shooter Ying;
     private Intake intake;
+    private angular_set angle;
+    private Turret Turret;
+    private telemetryX telemetryX;
+
+    //Tuning
     public static double target = 10.00;
+    public static int key = 0;
 
     boolean check_a = false;
     boolean check_B = false;
+    private boolean slowMode = false;
+    private double slowModeMultiplier = 0.5;
+    public static Pose startingPose = new Pose(10, 10, Math.toRadians(0)); //See ExampleAuto to understand how to use this
+    private boolean automatedDrive = false;
+
     FtcDashboard dashboard = FtcDashboard.getInstance();
     Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
@@ -46,8 +56,14 @@ public class Mecanum_Drive extends OpMode {
         drawing = new Drawing();
         Ying = new PIDF_Shooter();
         intake = new Intake();
+        angle = new angular_set();
+        Turret = new Turret();
+        telemetryX = new telemetryX();
+
         Ying.init_vel(hardwareMap);
         intake.init_intake(hardwareMap);
+        angle.init_angular(hardwareMap);
+        Turret.init_turret(hardwareMap);
 
 
 
@@ -55,32 +71,18 @@ public class Mecanum_Drive extends OpMode {
         follower.setStartingPose(startingPose == null ? new Pose() : startingPose);
         follower.update();
 
-
-        pathChain = () -> follower.pathBuilder() //Lazy Curve Generation
-                .addPath(new Path(new BezierLine(follower::getPose, new Pose(45, 98))))
-                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(45), 0.8))
-                .build();
     }
 
     @Override
     public void start() {
-        //The parameter controls whether the Follower should use break mode on the motors (using it is recommended).
-        //In order to use float mode, add .useBrakeModeInTeleOp(true); to your Drivetrain Constants in Constant.java (for Mecanum)
-        //If you don't pass anything in, it uses the default (false)
         follower.startTeleopDrive();
         Ying.start_shooter();
     }
 
     @Override
     public void loop() {
-        //Call this once per loop
-         follower.update();
 
         if (!automatedDrive) {
-            //Make the last parameter false for field-centric
-            //In case the drivers want to use a "slowMode" you can scale the vectors
-
-            //This is the normal version to use in the TeleOp
             if (!slowMode) follower.setTeleOpDrive(
                     -gamepad1.left_stick_y,
                     -gamepad1.left_stick_x,
@@ -113,7 +115,6 @@ public class Mecanum_Drive extends OpMode {
         if (gamepad1.rightBumperWasPressed()) {
             slowMode = !slowMode;
         }
-
         if (gamepad1.aWasPressed()) {
             check_a = !check_a;
         }
@@ -123,46 +124,54 @@ public class Mecanum_Drive extends OpMode {
             intake.stop_intake();
         }
         if (gamepad1.dpad_up) {
-            angle += 0.01;
+            angle.angular(20,true,0);
         } else if (gamepad1.dpad_down) {
-            angle += -0.01;
+            angle.angular(-20,true,0);
         }
         if (gamepad1.dpad_left) {
-            turret.setPower(-0.4);
+            Turret.turn(-0.4);
         } else if (gamepad1.dpad_right) {
-            turret.setPower(0.4);
+            Turret.turn(0.4);
         } else {
-            turret.setPower(0);
+            Turret.turn(0);
         }
         // Put loop blocks here.
         if (gamepad1.bWasPressed()) {
             check_B = !check_B;
         }
         if (check_B) {
-            Ying.setPower(power);
+            Ying.run_shooter(target);
         } else if (!check_B) {
             Ying.stop_shooter();
         }
-        if (gamepad1.x) {
-            close.setPosition(0.5);
-        } else if (!gamepad1.x) {
-            close.setPosition(0.5);
-        }
-        power += (gamepad1.right_trigger - gamepad1.left_trigger) * 0.005;
-        telemetry.addData("power", power);
-        telemetry.update();
 
 
-        Ying.run_shooter(target);
-        dashboardTelemetry.addData("target",target);
-        dashboardTelemetry.addData("velo", Ying.filter(Ying.getVelocity()));
-        dashboardTelemetry.addData("current",Ying.getCurrentposition());
-        dashboardTelemetry.addData("current",Ying.get_output(target));
-        dashboardTelemetry.addData("omega",Ying.getOmega());
-        dashboardTelemetry.addData("position", follower.getPose());
-        dashboardTelemetry.addData("automatedDrive", automatedDrive);
+
+
+
+
         drawing.drawRobot(follower.getPose(),"red");
         drawing.sendPacket();
+        telemetryX.addData("muhaha","z");
+        //Call this once per loop
+        follower.update();
+        debug();
         dashboardTelemetry.update();
+        telemetry.update();
+        telemetryX.update();
+    }
+
+    public void debug(){
+        dashboardTelemetry.addData("position", follower.getPose());
+        dashboardTelemetry.addData("automatedDrive", automatedDrive);
+        switch (key){
+            case 1:
+                dashboardTelemetry.addData("target",target);
+                dashboardTelemetry.addData("velo", Ying.filter(Ying.getVelocity()));
+                dashboardTelemetry.addData("current_position",Ying.getCurrentposition());
+                dashboardTelemetry.addData("current",Ying.get_output(target));
+                dashboardTelemetry.addData("omega",Ying.getOmega());
+
+    }
     }
 }

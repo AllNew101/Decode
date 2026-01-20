@@ -18,8 +18,20 @@ public class angular_set {
         angle = hardwareMap.get(Servo.class, "angle_2");
     }
 
-    public void angular(double power){
-        angle.setPosition(angle.getPosition() + (speed_angular / 200));
+    public double angular(double speed_angular, boolean is_get_position, double angular_set){
+        double angularx;
+        if (is_get_position){
+            angularx = angle.getPosition() + (speed_angular / 200);
+            angle.setPosition(angularx);
+        }
+        else{
+            angularx = angular_set + (speed_angular / 200);
+            angle.setPosition(angularx);
+        }
+        return angularx;
+    }
+    public void set_offset(double position){
+        angle.setPosition(angle.getPosition() + position);
     }
 
     public void set_position(double position){

@@ -16,6 +16,7 @@ public class Intake {
     public void init_intake(HardwareMap hardwareMap) {
         Front = hardwareMap.get(DcMotor.class, "Front");
         Front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Front.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void intake(double power){
