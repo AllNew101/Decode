@@ -10,21 +10,29 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.acmerobotics.dashboard.FtcDashboard;
 
 
-@Disabled
-public class telemetryX extends LinearOpMode {
+public class telemetryX {
     FtcDashboard dashboard = FtcDashboard.getInstance();
     Telemetry dashboardTelemetry = dashboard.getTelemetry();
+    Telemetry telemetry;
 
-    public void addData(String head, String child){
-        dashboardTelemetry.addData(head,child);
-        //telemetry.addData(head,child);
+    public void init(Telemetry t){
+        telemetry = t;
+    }
+    public void addData(String head, Object child, int key){
+        switch (key) {
+            case 0:
+                dashboardTelemetry.addData(head, child);
+            case 1:
+                telemetry.addData(head, child);
+            case 2:
+                dashboardTelemetry.addData(head, child);
+                telemetry.addData(head, child);
+        }
     }
 
     public void update(){
         dashboardTelemetry.update();
-        //telemetry.update();
+        telemetry.update();
     }
-    @Override
-    public void runOpMode() {}
 }
 

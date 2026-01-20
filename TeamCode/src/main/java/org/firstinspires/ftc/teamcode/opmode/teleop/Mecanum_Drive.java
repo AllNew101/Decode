@@ -64,6 +64,8 @@ public class Mecanum_Drive extends OpMode {
         intake.init_intake(hardwareMap);
         angle.init_angular(hardwareMap);
         Turret.init_turret(hardwareMap);
+        telemetryX.init(telemetry);
+
 
 
 
@@ -152,25 +154,28 @@ public class Mecanum_Drive extends OpMode {
 
         drawing.drawRobot(follower.getPose(),"red");
         drawing.sendPacket();
-        telemetryX.addData("muhaha","z");
+
+        telemetryX.update();
         //Call this once per loop
         follower.update();
         debug();
-        dashboardTelemetry.update();
-        telemetry.update();
-        telemetryX.update();
+//        dashboardTelemetry.update();
+//        telemetry.update();
+
     }
 
     public void debug(){
-        dashboardTelemetry.addData("position", follower.getPose());
+        telemetryX.addData("position",follower.getPose(),2);
+
         dashboardTelemetry.addData("automatedDrive", automatedDrive);
         switch (key){
             case 1:
-                dashboardTelemetry.addData("target",target);
-                dashboardTelemetry.addData("velo", Ying.filter(Ying.getVelocity()));
-                dashboardTelemetry.addData("current_position",Ying.getCurrentposition());
-                dashboardTelemetry.addData("current",Ying.get_output(target));
-                dashboardTelemetry.addData("omega",Ying.getOmega());
+                telemetryX.addData("target",target,2);
+                telemetryX.addData("velo",Ying.filter(Ying.getVelocity()),2);
+                telemetryX.addData("current_position",Ying.getCurrentposition(),2);
+                telemetryX.addData("current",Ying.get_output(target),2);
+                telemetryX.addData("omega",Ying.getOmega(),2);
+
 
     }
     }
