@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.opmode.system.Turret;
 import org.firstinspires.ftc.teamcode.opmode.system.Intake;
 import org.firstinspires.ftc.teamcode.opmode.system.telemetryX;
 import org.firstinspires.ftc.teamcode.opmode.system.angular_set;
+import org.firstinspires.ftc.teamcode.opmode.system.Closer;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.util.function.Supplier;
@@ -34,22 +35,24 @@ public class Mecanum_Drive extends OpMode {
     private Intake intake;
     private angular_set angle;
     private Turret Turret;
+    private Closer closer;
     private telemetryX telemetryX;
 
     //Tuning
-    public static double target = 10.00;
     public static int key = 0;
+    public static int position = 4;
+    public static int speed_servo = 4;
+    public static double target = 13.400000000000006;
 
+
+    private double offset = 0.0;
     boolean check_a = false;
     boolean check_B = false;
+    boolean check_X = false;
     private boolean slowMode = false;
     private double slowModeMultiplier = 0.5;
     public static Pose startingPose = new Pose(10, 10, Math.toRadians(0)); //See ExampleAuto to understand how to use this
     private boolean automatedDrive = false;
-
-    FtcDashboard dashboard = FtcDashboard.getInstance();
-    Telemetry dashboardTelemetry = dashboard.getTelemetry();
-
 
     @Override
     public void init() {
@@ -59,12 +62,14 @@ public class Mecanum_Drive extends OpMode {
         angle = new angular_set();
         Turret = new Turret();
         telemetryX = new telemetryX();
+        closer = new Closer();
 
         Ying.init_vel(hardwareMap);
         intake.init_intake(hardwareMap);
         angle.init_angular(hardwareMap);
         Turret.init_turret(hardwareMap);
         telemetryX.init(telemetry);
+        closer.init_angular(hardwareMap);
 
 
 
@@ -101,23 +106,31 @@ public class Mecanum_Drive extends OpMode {
             );
         }
 
-        //Automated PathFollowing
-        if (gamepad1.aWasPressed()) {
-            follower.followPath(pathChain.get());
-            automatedDrive = true;
-        }
-
-        //Stop automated following if the follower is done
-        if (automatedDrive && (gamepad1.bWasPressed() || !follower.isBusy())) {
-            follower.startTeleopDrive();
-            automatedDrive = false;
-        }
+//        //Automated PathFollowing
+//        if (gamepad1.aWasPressed()) {
+//            follower.followPath(pathChain.get());
+//            automatedDrive = true;
+//        }
+//
+//        //Stop automated following if the follower is done
+//        if (automatedDrive && (gamepad1.bWasPressed() || !follower.isBusy())) {
+//            follower.startTeleopDrive();
+//            automatedDrive = false;
+//        }
 
         //Slow Mode
         if (gamepad1.rightBumperWasPressed()) {
             slowMode = !slowMode;
         }
-        if (gamepad1.aWasPressed()) {
+        if (gamepad2.rightBumperWasPressed()) {
+            target += 0.2;
+        }
+        if (gamepad2.leftBumperWasPressed()) {
+            target -= 0.2;
+        }
+
+
+        if (gamepad1.crossWasPressed()) {
             check_a = !check_a;
         }
         if (check_a) {
@@ -125,27 +138,28 @@ public class Mecanum_Drive extends OpMode {
         } else if (!check_a) {
             intake.stop_intake();
         }
-        if (gamepad1.dpad_up) {
-            angle.angular(20,true,0);
-        } else if (gamepad1.dpad_down) {
-            angle.angular(-20,true,0);
+        if (gamepad2.dpad_up) {
+            angle.angular_on(speed_servo);
+        } else if (gamepad2.dpad_down) {
+            angle.angular_on(-speed_servo);
         }
-        if (gamepad1.dpad_left) {
-            Turret.turn(-0.4);
-        } else if (gamepad1.dpad_right) {
-            Turret.turn(0.4);
-        } else {
-            Turret.turn(0);
+        if (gamepad2.dpad_left) {
+            offset += 0.5;
+        } else if (gamepad2.dpad_right) {
+            offset -= 0.5;
         }
-        // Put loop blocks here.
-        if (gamepad1.bWasPressed()) {
-            check_B = !check_B;
-        }
-        if (check_B) {
-            Ying.run_shooter(target);
-        } else if (!check_B) {
-            Ying.stop_shooter();
-        }
+        Turret.to_position(offset );//(follower.getPose().getHeading() * 180 / Math.PI)
+
+
+
+
+        if (gamepad2.circleWasPressed()) {check_B = !check_B;}
+        if (check_B) {Ying.run_shooter(target);}
+        else if (!check_B) {Ying.stop_shooter(false);}
+
+        if (gamepad2.squareWasPressed()) {check_X = !check_X;}
+        if (check_X) {closer.open();}
+        else if (!check_X) {closer.close();}
 
 
 
@@ -159,24 +173,27 @@ public class Mecanum_Drive extends OpMode {
         //Call this once per loop
         follower.update();
         debug();
-//        dashboardTelemetry.update();
-//        telemetry.update();
 
     }
 
     public void debug(){
         telemetryX.addData("position",follower.getPose(),2);
-
-        dashboardTelemetry.addData("automatedDrive", automatedDrive);
+        telemetryX.addData("automatedDrive",automatedDrive,2);
+        telemetryX.addData("target (m/s)",target,2);
         switch (key){
             case 1:
-                telemetryX.addData("target",target,2);
-                telemetryX.addData("velo",Ying.filter(Ying.getVelocity()),2);
+                telemetryX.addData("velocity",Ying.getVelocity(),2);
                 telemetryX.addData("current_position",Ying.getCurrentposition(),2);
                 telemetryX.addData("current",Ying.get_output(target),2);
                 telemetryX.addData("omega",Ying.getOmega(),2);
+                break;
+            case 2:
+                telemetryX.addData("angle",Turret.get_angle(),2);
+                telemetryX.addData("degree",Turret.get_degree(),2);
+                telemetryX.addData("power",Turret.get_power(),2);
+                break;
 
 
-    }
+        }
     }
 }

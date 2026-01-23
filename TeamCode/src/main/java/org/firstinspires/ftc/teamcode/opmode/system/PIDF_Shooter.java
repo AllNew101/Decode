@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmode.system;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
+
 
 @Config
 public class PIDF_Shooter {
@@ -16,19 +17,21 @@ public class PIDF_Shooter {
     double omegaFiltered = 0;
     // Encoder counts per revolution
     public static double PPR = 28;
-    //Millimeters unit
-    public static double radian = 48;
-
-    public static double time_delay = 0.5;
-    public static double alpha = 0.7;
-    // PIDF coefficients
-    public static double kP = 0.1;
-    public static double kI = 0;
-    public static double kD = 0.001;
+    public static double alpha = 0.6;
     public static double feedForward = 0.05;
+    public static double feedForward_second = 0.15;
+    public static double kD = 0.000001;
+    public static double kD_second = 0.000001;
+    public static double kI = 0;
+    public static double kI_second = 0;
+    public static double kP = 0.5;
+    public static double kP_second = 0.4;
+    public static double radian = 48;
+    public static double time_delay = 0.1;
 
 
-    private TelemetryManager telemetryM;
+    Distance distance = new Distance();
+
 
     public void init_vel(HardwareMap hardwareMap){
         // Hardware map change name here
@@ -53,11 +56,14 @@ public class PIDF_Shooter {
         current = shooter.getCurrentPosition();
         previous_current = shooter.getCurrentPosition();
         previous_time = time.seconds();
-
-
-
-
     }
+
+
+    public double filter(double omegaRaw){
+        omegaFiltered = alpha * omegaFiltered + (1 - alpha) * omegaRaw;
+        return omegaFiltered;
+    }
+
     public double velocity_info(){
         current = shooter.getCurrentPosition();
         time_current = time.seconds();
@@ -71,21 +77,21 @@ public class PIDF_Shooter {
             previous_time = time_current;
 
         }
-        return Math.abs(velocity);
+        return filter(velocity);
     }
 
-    public double filter(double omegaRaw){
-        omegaFiltered = alpha * omegaFiltered + (1 - alpha) * omegaRaw;
-        return omegaFiltered;
-    }
     public double pidf(double targetVelocity) {
-
+        double output = 0;
         error = targetVelocity - velocity_info();
 
         integral += error * delta_time;
         derivative = (error - previousError) / delta_time;
 
-        double output = kP * error + kI * integral + kD * derivative + feedForward;
+        if (Math.abs(velocity - targetVelocity) > 1) {
+            output = kP * error + kI * integral + kD * derivative + feedForward;
+        } else {
+            output = kP_second * error + kI_second * integral + kD_second * derivative + feedForward_second;
+        }
 
         previousError = error;
 
@@ -101,11 +107,18 @@ public class PIDF_Shooter {
         return 0;
     }
 
-    public void stop_shooter() {
+    public void stop_shooter(boolean break_active) {
         shooter.setPower(0);
         shooter2.setPower(0);
-        shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        shooter2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        if (break_active){
+            shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            shooter2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+        else {
+            shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            shooter2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        }
+
     }
 
     public void run_shooter(double targetVelocity) {
@@ -118,6 +131,13 @@ public class PIDF_Shooter {
     public void setPower(double power) {
         shooter.setPower(power);
         shooter2.setPower(power);
+    }
+
+    //In dev
+    public double distance_adjustment(double X, double Y, boolean is_red){
+        double x = distance.distance(X,Y,is_red)[1];
+        double y = 0.5*x;
+        return y;
     }
 
 

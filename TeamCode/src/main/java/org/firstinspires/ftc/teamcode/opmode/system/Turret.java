@@ -1,64 +1,77 @@
 package org.firstinspires.ftc.teamcode.opmode.system;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
+
 
 @Config
 public class Turret {
     DcMotor turret;
-    public static double kp = 0.0;
-    public static double kd = 0.0;
-    public static double feedforward = 0.0;
-    public static double limit = 110;
+    private double integral, derivative, previousError, delta_time , time_current , previous_time;
+    ElapsedTime time;
+    Distance distance = new Distance();
 
-    public static double red_X =  0.0;
-    public static double blue_X = 0.0;
-    public static double red_Y = 0.0;
-    public static double blue_Y = 0.0;
-
-    private double X_target = 0.0;
-    private double Y_target = 0.0;
+    public static double feedForward = 0.001;
+    public static double kD = 0;
+    public static double kI = 0;
+    public static double kP = 0.1;
+    public static double limit = 120;
 
 
-    private TelemetryManager telemetryM;
+    private double power_turret = 0;
+
 
     public void init_turret(HardwareMap hardwareMap) {
         turret = hardwareMap.get(DcMotor.class, "turret1");
-        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        time = new ElapsedTime();
+        time.reset();
     }
 
     public void to_position(double target){
         double error = target - convert_c_2_d(turret.getCurrentPosition());
+        time_current = time.seconds();
+        delta_time = (time_current - previous_time) ;
 
-        turn(error * kp + feedforward);
+        integral += error * delta_time;
+        derivative = (error - previousError) / delta_time;
+
+        double output = kP * error + kI * integral + kD * derivative + feedForward;
+
+
+        turn(output);
         if (Math.abs(error) <= 0.05) {
-            feedforward = 0;
+            feedForward = 0;
         }
+        previousError = error;
     }
 
-    public double aimming(boolean red, double X, double Y, double theta, double offset){
-        if (red){
-            double X_target = red_X;
-            double Y_target = red_Y;
-        }
-        else{
-            double X_target = blue_X;
-            double Y_target = blue_Y;
-        }
-        return 90 - Math.atan2(X_target - X, Y_target - Y)/ Math.PI * 180 + theta + offset;
+    public double targeting(double X, double Y, boolean is_red , double theta, double offset){
+        return 90 - distance.distance(X ,Y ,is_red)[2] + theta + offset;
     }
+
+
 
     public void turn(double power){
-        turret.setPower(power);
-        turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        if (Math.abs(convert_c_2_d(turret.getCurrentPosition())) > limit){
-            stop();
+        power_turret = power;
+        boolean check_over = false;
+        if (Math.abs(convert_c_2_d(turret.getCurrentPosition())) > (limit * 0.95)){power_turret *= 0.05;}
+        if (convert_c_2_d(turret.getCurrentPosition()) > limit && power > 0){check_over = true;}
+        if (convert_c_2_d(turret.getCurrentPosition()) < -1 * limit && power < 0){check_over = true;}
+        if (check_over){stop();}
+        else{
+            turret.setPower(power_turret);
+            turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
+
     }
+
+
+
 
     public void stop(){
         turret.setPower(0);
@@ -71,4 +84,19 @@ public class Turret {
     public double convert_d_2_c(double position){
         return position * 7.48;
     }
+    public double get_degree(){
+        return turret.getCurrentPosition();
+    }
+    public double get_angle(){
+        return convert_c_2_d(turret.getCurrentPosition());
+    }
+    public double get_power(){
+        return power_turret;
+    }
+
+    public void reset(){
+        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
 }

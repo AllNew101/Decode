@@ -30,7 +30,6 @@ public class Constants {
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.004,0,0.00013,0.6,0))
             .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.00000002,0,0.0000001,0.6,0))
             .centripetalScaling(0.000084)
-
             .mass(11);
 
     public static MecanumConstants driveConstants = new MecanumConstants()
