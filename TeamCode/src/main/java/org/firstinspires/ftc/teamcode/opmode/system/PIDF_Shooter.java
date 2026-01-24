@@ -18,16 +18,17 @@ public class PIDF_Shooter {
     // Encoder counts per revolution
     public static double PPR = 28;
     public static double alpha = 0.6;
-    public static double feedForward = 0.05;
-    public static double feedForward_second = 0.15;
     public static double kD = 0.000001;
-    public static double kD_second = 0.000001;
     public static double kI = 0;
-    public static double kI_second = 0;
     public static double kP = 0.5;
-    public static double kP_second = 0.4;
+    public static double kS = 0.01;
+    public static double kV = 0.037;
     public static double radian = 48;
+    public static double secondary_kD = 0.0001;
+    public static double secondary_kI = 0;
+    public static double secondary_kP = 0.29;
     public static double time_delay = 0.1;
+
 
 
     Distance distance = new Distance();
@@ -87,11 +88,8 @@ public class PIDF_Shooter {
         integral += error * delta_time;
         derivative = (error - previousError) / delta_time;
 
-        if (Math.abs(velocity - targetVelocity) > 1) {
-            output = kP * error + kI * integral + kD * derivative + feedForward;
-        } else {
-            output = kP_second * error + kI_second * integral + kD_second * derivative + feedForward_second;
-        }
+        if (Math.abs(velocity - targetVelocity) > 1) {output = kP * error + kI * integral + kD * derivative + (kV * targetVelocity + kS);}
+        else {output = secondary_kP * error + secondary_kI * integral + secondary_kD * derivative + (kV * targetVelocity + kS);}
 
         previousError = error;
 

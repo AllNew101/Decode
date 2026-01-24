@@ -10,9 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Closer {
     private Servo closer;
     public static double close = 0.42;
-    public static double open = 0.8;
-
-
+    public static double open = 0.88;
 
     public void init_angular(HardwareMap hardwareMap) {
         closer = hardwareMap.get(Servo.class, "tuakan");

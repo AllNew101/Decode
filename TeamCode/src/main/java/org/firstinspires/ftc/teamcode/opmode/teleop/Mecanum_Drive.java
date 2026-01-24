@@ -43,6 +43,8 @@ public class Mecanum_Drive extends OpMode {
     public static int position = 4;
     public static int speed_servo = 4;
     public static double target = 13.400000000000006;
+    public static double[] multiplier = {1,1,1};
+    public static boolean break_shooter = false;
 
 
     private double offset = 0.0;
@@ -50,8 +52,8 @@ public class Mecanum_Drive extends OpMode {
     boolean check_B = false;
     boolean check_X = false;
     private boolean slowMode = false;
-    private double slowModeMultiplier = 0.5;
-    public static Pose startingPose = new Pose(10, 10, Math.toRadians(0)); //See ExampleAuto to understand how to use this
+    private boolean check_turret = false;
+    public static Pose startingPose = new Pose(0,0 , Math.toRadians(0)); //See ExampleAuto to understand how to use this
     private boolean automatedDrive = false;
 
     @Override
@@ -91,19 +93,12 @@ public class Mecanum_Drive extends OpMode {
 
         if (!automatedDrive) {
             if (!slowMode) follower.setTeleOpDrive(
-                    -gamepad1.left_stick_y,
-                    -gamepad1.left_stick_x,
-                    -gamepad1.right_stick_x,
+                    -gamepad1.left_stick_y * multiplier[0],
+                    -gamepad1.left_stick_x * multiplier[1],
+                    -gamepad1.right_stick_x * multiplier[2],
                     true // Robot Centric
             );
 
-                //This is how it looks with slowMode on
-            else follower.setTeleOpDrive(
-                    -gamepad1.left_stick_y * slowModeMultiplier,
-                    -gamepad1.left_stick_x * slowModeMultiplier,
-                    -gamepad1.right_stick_x * slowModeMultiplier,
-                    true // Robot Centric
-            );
         }
 
 //        //Automated PathFollowing
@@ -148,29 +143,33 @@ public class Mecanum_Drive extends OpMode {
         } else if (gamepad2.dpad_right) {
             offset -= 0.5;
         }
-        Turret.to_position(offset );//(follower.getPose().getHeading() * 180 / Math.PI)
 
+        //(follower.getPose().getHeading() * 180 / Math.PI)
+       // Turret.to_position(Turret.targeting(follower.getPose().getX(),follower.getPose().getY(),true,follower.getPose().getHeading() * 180 / Math.PI,offset));
 
 
 
         if (gamepad2.circleWasPressed()) {check_B = !check_B;}
         if (check_B) {Ying.run_shooter(target);}
-        else if (!check_B) {Ying.stop_shooter(false);}
+        else if (!check_B) {Ying.stop_shooter(break_shooter);}
 
         if (gamepad2.squareWasPressed()) {check_X = !check_X;}
         if (check_X) {closer.open();}
         else if (!check_X) {closer.close();}
 
-
-
-
+        if (gamepad2.triangleWasPressed()){check_turret = !check_turret;}
+        if (check_turret){
+            Turret.to_position(Turret.targeting(follower.getPose().getX(),follower.getPose().getY(),true,follower.getPose().getHeading() * 180 / Math.PI,offset));}
+        else{
+            Turret.to_position(offset);
+        }
 
 
         drawing.drawRobot(follower.getPose(),"red");
         drawing.sendPacket();
 
-        telemetryX.update();
         //Call this once per loop
+        telemetryX.update();
         follower.update();
         debug();
 
@@ -178,19 +177,19 @@ public class Mecanum_Drive extends OpMode {
 
     public void debug(){
         telemetryX.addData("position",follower.getPose(),2);
-        telemetryX.addData("automatedDrive",automatedDrive,2);
+        telemetryX.addData("automatedDrive",automatedDrive,0);
         telemetryX.addData("target (m/s)",target,2);
         switch (key){
             case 1:
-                telemetryX.addData("velocity",Ying.getVelocity(),2);
-                telemetryX.addData("current_position",Ying.getCurrentposition(),2);
-                telemetryX.addData("current",Ying.get_output(target),2);
-                telemetryX.addData("omega",Ying.getOmega(),2);
+                telemetryX.addData("velocity",Ying.getVelocity(),0);
+                telemetryX.addData("current_position",Ying.getCurrentposition(),0);
+                telemetryX.addData("current",Ying.get_output(target),0);
+                telemetryX.addData("omega",Ying.getOmega(),0);
                 break;
             case 2:
-                telemetryX.addData("angle",Turret.get_angle(),2);
-                telemetryX.addData("degree",Turret.get_degree(),2);
-                telemetryX.addData("power",Turret.get_power(),2);
+                telemetryX.addData("angle",Turret.get_angle(),0);
+                telemetryX.addData("degree",Turret.get_degree(),0);
+                telemetryX.addData("power",Turret.get_power(),0);
                 break;
 
 

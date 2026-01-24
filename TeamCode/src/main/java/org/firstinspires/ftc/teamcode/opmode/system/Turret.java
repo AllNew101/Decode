@@ -18,7 +18,7 @@ public class Turret {
     public static double kD = 0;
     public static double kI = 0;
     public static double kP = 0.1;
-    public static double limit = 120;
+    public static double limit = 105;
 
 
     private double power_turret = 0;

@@ -5,8 +5,8 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class Distance {
 
-    public static double[] red = {0.0 , 0.0 , 0.0};
-    public static double[] blue = {0.0 , 0.0 , 0.0};
+    public static double[] red = {133.80923076923077 , 128.4923076923077 , 45.0};
+    public static double[] blue = { 131.8153846153846, 14.4 , 45.0};
     private double[] target = {0.0 , 0.0 , 0.0};
 
     public double[] distance(double X, double Y, boolean is_red){
@@ -18,5 +18,6 @@ public class Distance {
 
         double[] distances = {delta_X, delta_Y, theta};
         return distances;
+
     }
 }

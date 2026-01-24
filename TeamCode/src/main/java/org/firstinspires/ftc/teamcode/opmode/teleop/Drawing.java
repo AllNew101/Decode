@@ -41,6 +41,11 @@ class Drawing {
     public static void drawRobot(Pose pose, String color) {
         if (packet == null) packet = new TelemetryPacket();
         packet.fieldOverlay().setStroke(color);
+        packet.fieldOverlay()
+                .setRotation(Math.toRadians(180))
+                .setTranslation(72,-72);
+
+
         org.firstinspires.ftc.teamcode.opmode.teleop.Drawing.drawRobotOnCanvas(packet.fieldOverlay(), pose.copy());
     }
 
