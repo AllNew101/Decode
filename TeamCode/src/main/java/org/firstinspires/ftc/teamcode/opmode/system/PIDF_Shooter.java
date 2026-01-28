@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmode.system;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,8 +14,9 @@ import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
 public class PIDF_Shooter {
     public DcMotor shooter;
     public DcMotor shooter2;
-    public double omega, current, previous_current, power, rpm, velocity, previous_time, delta_time, time_current, integral, derivative, error, previousError;
+    public double displacement, omega, current, previous_current, power, rpm, velocity, previous_time, delta_time, time_current, integral, derivative, error, previousError;
     ElapsedTime time;
+    Follower follower;
     double omegaFiltered = 0;
     // Encoder counts per revolution
     public static double PPR = 28;
@@ -29,12 +32,10 @@ public class PIDF_Shooter {
     public static double secondary_kP = 0.29;
     public static double time_delay = 0.1;
 
-
-
     Distance distance = new Distance();
 
 
-    public void init_vel(HardwareMap hardwareMap){
+    public void init_vel(HardwareMap hardwareMap, Follower position, ElapsedTime Time){
         // Hardware map change name here
         shooter2 = hardwareMap.get(DcMotor.class,"Shooter");
         shooter = hardwareMap.get(DcMotor.class,"Shooter2");
@@ -50,9 +51,8 @@ public class PIDF_Shooter {
         shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         shooter2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        time = new ElapsedTime();
-        time.reset();
-
+        time = Time;
+        follower = position;
         //default position
         current = shooter.getCurrentPosition();
         previous_current = shooter.getCurrentPosition();
@@ -133,20 +133,21 @@ public class PIDF_Shooter {
 
     //In dev
     public double distance_adjustment(double X, double Y, boolean is_red){
-        double x = distance.distance(X,Y,is_red)[1];
-        double y = 0.5*x;
-        return y;
+        displacement = distance.distance(X, Y, is_red)[3];
+        double target = displacement ;
+        return target;
     }
 
 
     // get function
+    public double getDisplacement(double x,double y){return distance.distance(x,y, true)[3];}
     public double getVelocity(){
         return velocity_info();
     }
     public int getCurrentposition(){
         return shooter.getCurrentPosition();
     }
-    public double gettime(){
+    public double get_time(){
         return time_current;
     }
     public double getDelta_time(){

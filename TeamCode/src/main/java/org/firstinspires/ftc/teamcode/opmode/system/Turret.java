@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmode.system;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
+
 
 
 @Config
@@ -17,19 +19,18 @@ public class Turret {
     public static double feedForward = 0.001;
     public static double kD = 0;
     public static double kI = 0;
-    public static double kP = 0.1;
+    public static double kP = 0.06;
     public static double limit = 105;
 
 
     private double power_turret = 0;
 
 
-    public void init_turret(HardwareMap hardwareMap) {
+    public void init_turret(HardwareMap hardwareMap, ElapsedTime Time) {
         turret = hardwareMap.get(DcMotor.class, "turret1");
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        time = new ElapsedTime();
-        time.reset();
+        time = Time;
     }
 
     public void to_position(double target){

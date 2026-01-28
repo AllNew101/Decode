@@ -21,15 +21,7 @@ public class gamepad {
     public boolean dpadLeftWasPressed(Gamepad current){return current.dpadLeftWasPressed();}
     public boolean dpadRightWasPressed(Gamepad current){return current.dpadRightWasPressed();}
 
-    public double[] left_stick(Gamepad current){
-        double[] l = {current.left_stick_x,current.left_stick_y};
-        return l;
-    }
-
-    public double[] right_stick(Gamepad current){
-        double[] l = {current.right_stick_x,current.right_stick_y};
-        return l;
-    }
+    public void RGB_SETUP(Gamepad current, double RGB){}
 
 
 

@@ -20,6 +20,7 @@ public class angular_set {
         angularx = angle.getPosition() + (speed_angular / divided_COF);
         angle.setPosition(angularx);
     }
+
     public double angular_on(double speed_angular , double angular){
         double angularx;
         angularx = angular + (speed_angular / divided_COF);
@@ -54,6 +55,10 @@ public class angular_set {
 
     public void setup_servo(){
         angle.setPosition(0.5);
+    }
+
+    public double get_position(){
+        return angle.getPosition();
     }
 
     public void short_cut(int key){
