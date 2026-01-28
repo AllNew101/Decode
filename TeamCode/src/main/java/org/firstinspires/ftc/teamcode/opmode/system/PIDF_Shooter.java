@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode.opmode.system;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
 
+import org.firstinspires.ftc.teamcode.opmode.Calculate.BinarySearch;
+import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
 
 @Config
 public class PIDF_Shooter {
@@ -18,6 +18,7 @@ public class PIDF_Shooter {
     ElapsedTime time;
     Follower follower;
     double omegaFiltered = 0;
+
     // Encoder counts per revolution
     public static double PPR = 28;
     public static double alpha = 0.6;
@@ -32,8 +33,11 @@ public class PIDF_Shooter {
     public static double secondary_kP = 0.29;
     public static double time_delay = 0.1;
 
-    Distance distance = new Distance();
+    public double[] distance_list = {};
+    public double[] target_list = {};
 
+    Distance distance = new Distance();
+    BinarySearch BS = new BinarySearch(distance_list);
 
     public void init_vel(HardwareMap hardwareMap, Follower position, ElapsedTime Time){
         // Hardware map change name here
@@ -73,12 +77,12 @@ public class PIDF_Shooter {
         // V = wR Unit: m/s
         if (delta_time >= time_delay) {
             omega = ((((current - previous_current) / PPR) * (2 * Math.PI))) / delta_time;
-            velocity = omega * (radian / 1000);
+            velocity = filter(omega * (radian / 1000));
             previous_current = shooter.getCurrentPosition();
             previous_time = time_current;
 
         }
-        return filter(velocity);
+        return velocity;
     }
 
     public double pidf(double targetVelocity) {
@@ -121,14 +125,23 @@ public class PIDF_Shooter {
 
     public void run_shooter(double targetVelocity) {
         double power = pidf(targetVelocity);
+        if (!is_working(power,velocity)){power = critical(targetVelocity);}
         shooter.setPower(power);
         shooter2.setPower(power);
-
     }
 
     public void setPower(double power) {
         shooter.setPower(power);
         shooter2.setPower(power);
+    }
+
+    public boolean is_working(double power, double velocity){
+        if (Math.abs(power) > kS && velocity == 0){return false;}
+        else {return true;}
+    }
+
+    public double critical(double targetVelocity){
+        return  kV * targetVelocity + kS;
     }
 
     //In dev

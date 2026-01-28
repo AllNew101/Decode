@@ -26,14 +26,6 @@ public class localization_limelight {
     public void loop() {
         follower.update();
         //if you're not using limelight you can follow the same steps: build an offset pose, put your heading offset, and generate a path etc
-        if (!following) {
-            follower.followPath(
-                    follower.pathBuilder()
-                            .addPath(new BezierLine(follower.getPose(), TARGET_LOCATION))
-                            .setLinearHeadingInterpolation(follower.getHeading(), TARGET_LOCATION.minus(follower.getPose()).getAsVector().getTheta())
-                            .build()
-            );
-        }
         //This uses the aprilTag to relocalize your robot
         //You can also create a custom AprilTag fusion Localizer for the follower if you want to use this by default for all your autos
         follower.setPose(getRobotPoseFromCamera());

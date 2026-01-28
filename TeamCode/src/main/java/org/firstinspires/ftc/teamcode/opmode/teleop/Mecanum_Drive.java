@@ -123,10 +123,10 @@ public class Mecanum_Drive extends OpMode {
             slowMode = !slowMode;
         }
         if (gamepad2.right_bumper) {
-            target += 0.2;
+            target += 0.05;
         }
         if (gamepad2.left_bumper) {
-            target -= 0.2;
+            target -= 0.05;
         }
 
 
