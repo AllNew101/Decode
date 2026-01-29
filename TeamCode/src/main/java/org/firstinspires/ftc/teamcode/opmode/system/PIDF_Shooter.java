@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.opmode.Calculate.BinarySearch;
+import org.firstinspires.ftc.teamcode.opmode.Calculate.Interpolation;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
 
 @Config
@@ -17,6 +18,7 @@ public class PIDF_Shooter {
     public double displacement, omega, current, previous_current, power, rpm, velocity, previous_time, delta_time, time_current, integral, derivative, error, previousError;
     ElapsedTime time;
     Follower follower;
+    boolean critical = false;
     double omegaFiltered = 0;
 
     // Encoder counts per revolution
@@ -25,7 +27,7 @@ public class PIDF_Shooter {
     public static double kD = 0.000001;
     public static double kI = 0;
     public static double kP = 0.5;
-    public static double kS = 0.01;
+    public static double kS = 0.043;
     public static double kV = 0.037;
     public static double radian = 48;
     public static double secondary_kD = 0.0001;
@@ -33,10 +35,11 @@ public class PIDF_Shooter {
     public static double secondary_kP = 0.29;
     public static double time_delay = 0.1;
 
-    public double[] distance_list = {};
-    public double[] target_list = {};
+    public double[] distance_list = {20,40,60,80,100,120,140,160,180,200};
+    public double[] target_list = {1,3,7,11,29,32,50,80,100,135};
 
     Distance distance = new Distance();
+    Interpolation inter = new Interpolation();
     BinarySearch BS = new BinarySearch(distance_list);
 
     public void init_vel(HardwareMap hardwareMap, Follower position, ElapsedTime Time){
@@ -125,7 +128,11 @@ public class PIDF_Shooter {
 
     public void run_shooter(double targetVelocity) {
         double power = pidf(targetVelocity);
-        if (!is_working(power,velocity)){power = critical(targetVelocity);}
+        if (!is_working(power,velocity)){
+            power = critical(targetVelocity);
+            critical = true;
+        }
+        else{critical = false;}
         shooter.setPower(power);
         shooter2.setPower(power);
     }
@@ -136,7 +143,7 @@ public class PIDF_Shooter {
     }
 
     public boolean is_working(double power, double velocity){
-        if (Math.abs(power) > kS && velocity == 0){return false;}
+        if (Math.abs(power) > kS && Math.floor(velocity) == 0){return false;}
         else {return true;}
     }
 
@@ -146,8 +153,9 @@ public class PIDF_Shooter {
 
     //In dev
     public double distance_adjustment(double X, double Y, boolean is_red){
-        displacement = distance.distance(X, Y, is_red)[3];
-        double target = displacement ;
+        displacement = X;
+        int index = BS.find(0,distance_list.length,displacement);
+        double target = inter.interpolation(displacement,distance_list[index],distance_list[index + 1], target_list[index], target_list[index + 1]) ;
         return target;
     }
 
@@ -168,6 +176,9 @@ public class PIDF_Shooter {
     }
     public double getOmega(){
         return omega;
+    }
+    public boolean get_critical(){
+        return critical;
     }
     public double get_output(double targetVelocity) {
         return pidf(targetVelocity);

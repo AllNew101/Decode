@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.opmode.system.Intake;
 import org.firstinspires.ftc.teamcode.opmode.system.telemetryX;
 import org.firstinspires.ftc.teamcode.opmode.system.angular_set;
 import org.firstinspires.ftc.teamcode.opmode.system.Closer;
+import org.firstinspires.ftc.teamcode.opmode.system.gamepad;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
 
@@ -44,10 +45,13 @@ public class Mecanum_Drive extends OpMode {
     public static int key = 0;
     public static int position = 4;
     public static int speed_servo = 4;
-    public static double target = 13.400000000000006;
+    public static double target = 12.8;
+    public static double speed_offset = 0.4;
+    public static double speed_eshooter = 0.05;
     public static double[] multiplier = {1,1,1};
     public static boolean break_shooter = false;
     public static boolean is_red = true;
+    public static int test = 0;
 
 
     private double offset = 0.0;
@@ -123,12 +127,11 @@ public class Mecanum_Drive extends OpMode {
             slowMode = !slowMode;
         }
         if (gamepad2.right_bumper) {
-            target += 0.05;
+            target += speed_eshooter;
         }
         if (gamepad2.left_bumper) {
-            target -= 0.05;
+            target -= speed_eshooter;
         }
-
 
         if (gamepad1.crossWasPressed()) {
             check_a = !check_a;
@@ -144,14 +147,14 @@ public class Mecanum_Drive extends OpMode {
             angle.angular_on(-speed_servo);
         }
         if (gamepad2.dpad_left) {
-            offset -= 0.1;
+            offset -= speed_offset;
         } else if (gamepad2.dpad_right) {
-            offset += 0.1;
+            offset += speed_offset;
         }
         if (gamepad2.optionsWasPressed()){is_red = !is_red;}
 
         if (gamepad2.circleWasPressed()) {check_B = !check_B;}
-        if (check_B) {Ying.run_shooter(target);}
+        if (check_B) {Ying.run_shooter(target);}//Ying.run_shooter(target);
         else if (!check_B) {Ying.stop_shooter(break_shooter);}
 
         if (gamepad2.squareWasPressed()) {check_X = !check_X;}
@@ -163,6 +166,7 @@ public class Mecanum_Drive extends OpMode {
         else if (!check_turret){Turret.to_position(offset);}
 
 
+
         drawing.drawRobot(follower.getPose(),"red");
         drawing.sendPacket();
 
@@ -170,14 +174,15 @@ public class Mecanum_Drive extends OpMode {
         telemetryX.update();
         follower.update();
         debug();
-
     }
 
     public void debug(){
         telemetryX.addData("position",follower.getPose(),2);
         telemetryX.addData("velocity",follower.getVelocity(),2);
-        telemetryX.addData("automatedDrive",automatedDrive,0);
+        telemetryX.addData("automatedDrive",automatedDrive,2);
         telemetryX.addData("target (m/s)",target,2);
+        telemetryX.addData("critical",Ying.get_critical(),2);
+        //telemetryX.addData("test",Ying.distance_adjustment(test,follower.getPose().getY(),is_red),2);
         telemetryX.addData("displacement",Ying.getDisplacement(follower.getPose().getX(),follower.getPose().getY()),2);
 
         if (is_red){telemetryX.addData("Alliance","Red",2);}
@@ -196,6 +201,7 @@ public class Mecanum_Drive extends OpMode {
                 break;
             case 3:
                 telemetryX.addData("angular",angle.get_position(),0);
+                break;
 
 
         }

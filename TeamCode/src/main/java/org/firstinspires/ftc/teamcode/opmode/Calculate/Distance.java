@@ -6,7 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 public class Distance {
 
     public static double[] red = {133.80923076923077 , -134.4923076923077 , 45.0};
-    public static double[] blue = { 130, -12 , -45.0};
+    public static double[] blue = {122, -12 , -45.0};
     private double[] target = {0.0 , 0.0 , 0.0};
 
     public double[] distance(double X, double Y, boolean is_red){

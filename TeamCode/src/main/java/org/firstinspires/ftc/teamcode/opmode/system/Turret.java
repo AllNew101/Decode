@@ -40,9 +40,7 @@ public class Turret {
 
         integral += error * delta_time;
         derivative = (error - previousError) / delta_time;
-
         double output = kP * error + kI * integral + kD * derivative + feedForward;
-
 
         turn(output);
         if (Math.abs(error) <= 0.05) {
@@ -50,6 +48,7 @@ public class Turret {
         }
         previousError = error;
     }
+
 
     public double targeting(double X, double Y, boolean is_red , double theta, double offset){
         return 90 - distance.distance(X ,Y ,is_red)[2] + theta + offset;

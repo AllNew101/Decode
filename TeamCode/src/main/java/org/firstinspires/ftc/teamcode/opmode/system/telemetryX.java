@@ -22,11 +22,14 @@ public class telemetryX {
         switch (key) {
             case 0:
                 dashboardTelemetry.addData(head, child);
+                break;
             case 1:
                 telemetry.addData(head, child);
+                break;
             case 2:
                 dashboardTelemetry.addData(head, child);
                 telemetry.addData(head, child);
+                break;
         }
     }
 
