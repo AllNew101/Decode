@@ -22,6 +22,6 @@ public class algo_debug extends OpMode {
 
     @Override
     public void loop() {
-        telemetryX.addData();
+
     }
 }

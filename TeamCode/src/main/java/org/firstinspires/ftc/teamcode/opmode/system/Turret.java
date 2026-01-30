@@ -49,7 +49,6 @@ public class Turret {
         previousError = error;
     }
 
-
     public double targeting(double X, double Y, boolean is_red , double theta, double offset){
         return 90 - distance.distance(X ,Y ,is_red)[2] + theta + offset;
     }

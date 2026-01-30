@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.opmode.system.Closer;
 import org.firstinspires.ftc.teamcode.opmode.system.gamepad;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
+import org.firstinspires.ftc.teamcode.opmode.Calculate.Dynamics;
 
 import java.util.function.Supplier;
 
@@ -32,12 +33,13 @@ public class Mecanum_Drive extends OpMode {
     private Drawing drawing;
     private Follower follower;
     private Supplier<PathChain> pathChain;
-
+    private gamepad gamepad0;
     private PIDF_Shooter Ying;
     private Intake intake;
     private angular_set angle;
     private Turret Turret;
     private Closer closer;
+    private Dynamics dynamics;
     private telemetryX telemetryX;
     ElapsedTime time;
 
@@ -45,7 +47,7 @@ public class Mecanum_Drive extends OpMode {
     public static int key = 0;
     public static int position = 4;
     public static int speed_servo = 4;
-    public static double target = 12.8;
+    public static double target = 0.00;
     public static double speed_offset = 0.4;
     public static double speed_eshooter = 0.05;
     public static double[] multiplier = {1,1,1};
@@ -55,6 +57,8 @@ public class Mecanum_Drive extends OpMode {
 
 
     private double offset = 0.0;
+    double adj;
+    double[] lead;
     boolean check_a = false;
     boolean check_B = false;
     boolean check_X = false;
@@ -73,6 +77,8 @@ public class Mecanum_Drive extends OpMode {
         telemetryX = new telemetryX();
         closer = new Closer();
         time = new ElapsedTime();
+        gamepad0 = new gamepad();
+        dynamics = new Dynamics();
         time.reset();
 
         Ying.init_vel(hardwareMap, follower, time);
@@ -81,10 +87,7 @@ public class Mecanum_Drive extends OpMode {
         Turret.init_turret(hardwareMap, time);
         telemetryX.init(telemetry);
         closer.init_angular(hardwareMap);
-
-
-
-
+        
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startingPose == null ? new Pose() : startingPose);
         follower.update();
@@ -123,6 +126,8 @@ public class Mecanum_Drive extends OpMode {
 //        }
 
         //Slow Mode
+        adj = Ying.distance_adjustment(follower.getPose().getX(), follower.getPose().getY(), is_red);
+        lead = dynamics.lead_calculation(follower.getVelocity().getMagnitude(), follower.getVelocity().getTheta() * 180 / Math.PI, Ying.getVelocity() * (1 / 2.186) * 39.3700787, Turret.get_angle(), 45);
         if (gamepad1.rightBumperWasPressed()) {
             slowMode = !slowMode;
         }
@@ -154,7 +159,7 @@ public class Mecanum_Drive extends OpMode {
         if (gamepad2.optionsWasPressed()){is_red = !is_red;}
 
         if (gamepad2.circleWasPressed()) {check_B = !check_B;}
-        if (check_B) {Ying.run_shooter(target);}//Ying.run_shooter(target);
+        if (check_B) {Ying.run_shooter(adj + target);}//Ying.run_shooter(target);
         else if (!check_B) {Ying.stop_shooter(break_shooter);}
 
         if (gamepad2.squareWasPressed()) {check_X = !check_X;}
@@ -162,7 +167,7 @@ public class Mecanum_Drive extends OpMode {
         else if (!check_X) {closer.close();}
 
         if (gamepad2.triangleWasPressed()){check_turret = !check_turret;}
-        if (check_turret){Turret.to_position(Turret.targeting(follower.getPose().getX(),follower.getPose().getY(),is_red,follower.getPose().getHeading() * 180 / Math.PI,offset));}
+        if (check_turret){Turret.to_position(Turret.targeting(follower.getPose().getX(), follower.getPose().getY(), is_red, follower.getPose().getHeading() * 180 / Math.PI,offset));}
         else if (!check_turret){Turret.to_position(offset);}
 
 
@@ -177,16 +182,23 @@ public class Mecanum_Drive extends OpMode {
     }
 
     public void debug(){
+        telemetryX.addData("lead",lead,2);
+        telemetryX.addData("position",follower.getPose(),2);
         telemetryX.addData("position",follower.getPose(),2);
         telemetryX.addData("velocity",follower.getVelocity(),2);
         telemetryX.addData("automatedDrive",automatedDrive,2);
-        telemetryX.addData("target (m/s)",target,2);
+        telemetryX.addData("OFFSET",target,2);
+        telemetryX.addData("target (m/s)",adj + target,2);
         telemetryX.addData("critical",Ying.get_critical(),2);
-        //telemetryX.addData("test",Ying.distance_adjustment(test,follower.getPose().getY(),is_red),2);
         telemetryX.addData("displacement",Ying.getDisplacement(follower.getPose().getX(),follower.getPose().getY()),2);
 
-        if (is_red){telemetryX.addData("Alliance","Red",2);}
-        else {telemetryX.addData("Alliance","Blue",2);}
+        if (is_red){
+            telemetryX.addData("Alliance","Red",2);
+            //gamepad0.RGB_SETUP(gamepad2,"red",10);
+        }
+        else {telemetryX.addData("Alliance","Blue",2);
+            //gamepad0.RGB_SETUP(gamepad2,"blue",10);
+        }
         switch (key){
             case 1:
                 telemetryX.addData("velocity",Ying.getVelocity(),0);

@@ -35,8 +35,8 @@ public class PIDF_Shooter {
     public static double secondary_kP = 0.29;
     public static double time_delay = 0.1;
 
-    public double[] distance_list = {20,40,60,80,100,120,140,160,180,200};
-    public double[] target_list = {1,3,7,11,29,32,50,80,100,135};
+    public double[] distance_list = {38.27,46.45,56.50,64.64,76.67,95.48,111.44,125.78,142.95,158.91};
+    public double[] target_list = {10.45,11.55,11.75,12,12.4,13.9,14.35,15.05,16.55,17.85};
 
     Distance distance = new Distance();
     Interpolation inter = new Interpolation();
@@ -153,9 +153,12 @@ public class PIDF_Shooter {
 
     //In dev
     public double distance_adjustment(double X, double Y, boolean is_red){
-        displacement = X;
-        int index = BS.find(0,distance_list.length,displacement);
-        double target = inter.interpolation(displacement,distance_list[index],distance_list[index + 1], target_list[index], target_list[index + 1]) ;
+        double displacement = distance.distance(X ,Y ,is_red)[3];
+        if (displacement < distance_list[0]){displacement = distance_list[0];}
+        if (displacement > distance_list[distance_list.length - 1]){displacement = distance_list[distance_list.length - 1];}
+
+        int index = BS.find(0,distance_list.length - 1,displacement);
+        double target = inter.interpolation(displacement, distance_list[index], distance_list[index + 1], target_list[index], target_list[index + 1]) ;
         return target;
     }
 

@@ -12,10 +12,34 @@ public class gamepad {
     public boolean square_WasPressed(Gamepad current){return current.xWasPressed() || current.squareWasPressed();}
     public boolean triangle_WasPressed(Gamepad current){return current.yWasPressed() || current.triangleWasPressed();}
 
-    public void RGB_SETUP(Gamepad current, int r, int g, int b, int duration){
-        current.setLedColor(r, g, b, duration);
-    }
-
+    public void RGB_SETUP(Gamepad current, int r, int g, int b, int duration){current.setLedColor(r, g, b, duration);}
+    public void RGB_SETUP(Gamepad current, String color, int duration){
+        switch (color.toLowerCase()) { 
+            case "red":
+                current.setLedColor(255, 0, 0, duration);
+                break;
+            case "green":
+                current.setLedColor(0, 255, 0, duration);
+                break;
+            case "blue":
+                current.setLedColor(0, 0, 255, duration);
+                break;
+            case "yellow":
+                current.setLedColor(255, 255, 0, duration);
+                break;
+            case "purple":
+                current.setLedColor(255, 0, 255, duration);
+                break;
+            case "cyan":
+                current.setLedColor(0, 255, 255, duration);
+                break;
+            case "white":
+                current.setLedColor(255, 255, 255, duration);
+                break;
+            default:
+                current.setLedColor(0, 0, 0, duration);
+                break;
+        }}
 
 
 
