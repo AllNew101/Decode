@@ -20,23 +20,25 @@ public class PIDF_Shooter {
     Follower follower;
     boolean critical = false;
     double omegaFiltered = 0;
+    int index;
 
     // Encoder counts per revolution
     public static double PPR = 28;
     public static double alpha = 0.6;
     public static double kD = 0.000001;
     public static double kI = 0;
-    public static double kP = 0.5;
+    public static double kP = 0.3;
     public static double kS = 0.043;
-    public static double kV = 0.037;
+    public static double kV = 0.029;
     public static double radian = 48;
     public static double secondary_kD = 0.0001;
     public static double secondary_kI = 0;
-    public static double secondary_kP = 0.29;
+    public static double secondary_kP = 0.26;
     public static double time_delay = 0.1;
 
-    public double[] distance_list = {38.27,46.45,56.50,64.64,76.67,95.48,111.44,125.78,142.95,158.91};
-    public double[] target_list = {10.45,11.55,11.75,12,12.4,13.9,14.35,15.05,16.55,17.85};
+
+    public double[] distance_list = {38.27,46.45,56.50,64.64,76.67,95.48,111.44,125.78,142.95,190.00,300.00};
+    public double[] target_list =   {10.45,11.55,11.75,12.50,12.80,13.40,14.350,15.050,16.550,16.550,17.000};
 
     Distance distance = new Distance();
     Interpolation inter = new Interpolation();
@@ -85,12 +87,13 @@ public class PIDF_Shooter {
             previous_time = time_current;
 
         }
+        if (velocity < 0.1){velocity = 0.0;}
         return velocity;
     }
 
     public double pidf(double targetVelocity) {
         double output = 0;
-        error = targetVelocity - velocity_info();
+        error = Math.abs(targetVelocity) - velocity_info();
 
         integral += error * delta_time;
         derivative = (error - previousError) / delta_time;
@@ -126,10 +129,10 @@ public class PIDF_Shooter {
 
     }
 
-    public void run_shooter(double targetVelocity) {
+    public void run_shooter(double targetVelocity , boolean manual) {
         double power = pidf(targetVelocity);
-        if (!is_working(power,velocity)){
-            power = critical(targetVelocity);
+        if (!is_working(power,velocity) || manual){
+            power = manual(targetVelocity);
             critical = true;
         }
         else{critical = false;}
@@ -147,7 +150,7 @@ public class PIDF_Shooter {
         else {return true;}
     }
 
-    public double critical(double targetVelocity){
+    public double manual(double targetVelocity){
         return  kV * targetVelocity + kS;
     }
 
@@ -157,7 +160,7 @@ public class PIDF_Shooter {
         if (displacement < distance_list[0]){displacement = distance_list[0];}
         if (displacement > distance_list[distance_list.length - 1]){displacement = distance_list[distance_list.length - 1];}
 
-        int index = BS.find(0,distance_list.length - 1,displacement);
+        index = BS.find(0,distance_list.length - 1,displacement);
         double target = inter.interpolation(displacement, distance_list[index], distance_list[index + 1], target_list[index], target_list[index + 1]) ;
         return target;
     }
@@ -182,6 +185,9 @@ public class PIDF_Shooter {
     }
     public boolean get_critical(){
         return critical;
+    }
+    public int get_index(){
+        return index;
     }
     public double get_output(double targetVelocity) {
         return pidf(targetVelocity);

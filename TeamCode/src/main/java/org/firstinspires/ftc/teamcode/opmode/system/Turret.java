@@ -13,13 +13,17 @@ import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
 public class Turret {
     DcMotor turret;
     private double integral, derivative, previousError, delta_time , time_current , previous_time;
+    boolean critical;
+    double critical_fx = 0.0;
+    double previous = 0.0;
+    int count = 0;
     ElapsedTime time;
     Distance distance = new Distance();
 
-    public static double feedForward = 0.001;
-    public static double kD = 0;
+    public static double feedForward = 0;
+    public static double kD = 0.00001;
     public static double kI = 0;
-    public static double kP = 0.06;
+    public static double kP = 0.054;
     public static double limit = 105;
 
 
@@ -32,8 +36,12 @@ public class Turret {
 
         time = Time;
     }
+    public void manual(double power){
+        critical_fx = power;
+    }
 
-    public void to_position(double target){
+    public void to_position(double target, boolean manual){
+        double delta = turret.getCurrentPosition() - previous;
         double error = target - convert_c_2_d(turret.getCurrentPosition());
         time_current = time.seconds();
         delta_time = (time_current - previous_time) ;
@@ -42,11 +50,26 @@ public class Turret {
         derivative = (error - previousError) / delta_time;
         double output = kP * error + kI * integral + kD * derivative + feedForward;
 
+        if (!is_working(output ,delta) || manual) {
+            count += 1;
+            if (count > 3) {
+                critical = true;
+                output = critical_fx;
+            }
+            else{
+                critical = false;
+            }
+        }
+        else{critical = false;
+        count = 0;
+        }
+
         turn(output);
         if (Math.abs(error) <= 0.05) {
             feedForward = 0;
         }
         previousError = error;
+        previous = turret.getCurrentPosition();
     }
 
     public double targeting(double X, double Y, boolean is_red , double theta, double offset){
@@ -66,9 +89,12 @@ public class Turret {
             turret.setPower(power_turret);
             turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
-
     }
 
+    public boolean is_working(double power, double velocity){
+        if (Math.abs(power) > 0.09 && Math.abs(velocity) == 0){return false;}
+        else {return true;}
+    }
 
 
 
@@ -91,6 +117,12 @@ public class Turret {
     }
     public double get_power(){
         return power_turret;
+    }
+    public boolean get_critical(){
+        return critical;
+    }
+    public double get_derivative(){
+        return derivative;
     }
 
     public void reset(){
