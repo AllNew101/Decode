@@ -37,5 +37,9 @@ public class telemetryX {
         dashboardTelemetry.update();
         telemetry.update();
     }
+    public void clear(){
+        dashboardTelemetry.clear();
+        telemetry.clear();
+    }
 }
 

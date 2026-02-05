@@ -21,10 +21,11 @@ public class Turret {
     Distance distance = new Distance();
 
     public static double feedForward = 0;
-    public static double kD = 0.00001;
+    public static double kD = 0.00002;
     public static double kI = 0;
-    public static double kP = 0.054;
+    public static double kP = 0.028;
     public static double limit = 105;
+
 
 
     private double power_turret = 0;

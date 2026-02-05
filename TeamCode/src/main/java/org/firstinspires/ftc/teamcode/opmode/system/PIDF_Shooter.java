@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.BinarySearch;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Interpolation;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
+import org.firstinspires.ftc.teamcode.opmode.Calculate.Voltage_Drop;
 
 @Config
 public class PIDF_Shooter {
@@ -33,16 +34,20 @@ public class PIDF_Shooter {
     public static double radian = 48;
     public static double secondary_kD = 0.0001;
     public static double secondary_kI = 0;
-    public static double secondary_kP = 0.26;
+    public static double secondary_kP = 0.3;
     public static double time_delay = 0.1;
 
 
-    public double[] distance_list = {38.27,46.45,56.50,64.64,76.67,95.48,111.44,125.78,142.95,190.00,300.00};
-    public double[] target_list =   {10.45,11.55,11.75,12.50,12.80,13.40,14.350,15.050,16.550,16.550,17.000};
 
+    public double[] distance_list = {38.27,46.45,56.50,64.64,76.67,95.48,111.44,125.78,142.95,190.00,300.00};
+    public double[] target_list =   {10.45,11.55,11.75,12.50,12.80,13.40,14.350,15.050,16.000,16.000,17.000};
+    double[] voltage;
     Distance distance = new Distance();
     Interpolation inter = new Interpolation();
     BinarySearch BS = new BinarySearch(distance_list);
+    Voltage_Drop voltageDrop = new Voltage_Drop();
+
+
 
     public void init_vel(HardwareMap hardwareMap, Follower position, ElapsedTime Time){
         // Hardware map change name here
@@ -66,6 +71,7 @@ public class PIDF_Shooter {
         current = shooter.getCurrentPosition();
         previous_current = shooter.getCurrentPosition();
         previous_time = time.seconds();
+        voltageDrop.init_Voltage(hardwareMap);
     }
 
 
@@ -130,12 +136,16 @@ public class PIDF_Shooter {
     }
 
     public void run_shooter(double targetVelocity , boolean manual) {
+        voltage = voltageDrop.Voltage_checker();
         double power = pidf(targetVelocity);
         if (!is_working(power,velocity) || manual){
             power = manual(targetVelocity);
             critical = true;
         }
         else{critical = false;}
+
+        if (voltage[1] < 11.5){power *= voltage[2];}
+
         shooter.setPower(power);
         shooter2.setPower(power);
     }
@@ -158,7 +168,7 @@ public class PIDF_Shooter {
     public double distance_adjustment(double X, double Y, boolean is_red){
         double displacement = distance.distance(X ,Y ,is_red)[3];
         if (displacement < distance_list[0]){displacement = distance_list[0];}
-        if (displacement > distance_list[distance_list.length - 1]){displacement = distance_list[distance_list.length - 1];}
+        if (displacement > distance_list[distance_list.length - 1]){displacement = distance_list[distance_list.length - 2];}
 
         index = BS.find(0,distance_list.length - 1,displacement);
         double target = inter.interpolation(displacement, distance_list[index], distance_list[index + 1], target_list[index], target_list[index + 1]) ;
@@ -192,4 +202,5 @@ public class PIDF_Shooter {
     public double get_output(double targetVelocity) {
         return pidf(targetVelocity);
     }
+    public double[] get_voltage(){return voltage;}
 }
