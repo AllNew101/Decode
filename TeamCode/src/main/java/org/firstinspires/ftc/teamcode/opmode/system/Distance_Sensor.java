@@ -35,7 +35,7 @@ public class Distance_Sensor {
         if (Is_distanceUp() || Is_distanceDown()){
             time = 0;
             return false;
-        } else if (time > 15) {
+        } else if (time > 13) {
             return true;
         }else{
             time++;

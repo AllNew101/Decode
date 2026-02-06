@@ -28,20 +28,22 @@ public class PIDF_Shooter {
     public static double alpha = 0.6;
     public static double kD = 0.000001;
     public static double kI = 0;
-    public static double kP = 0.3;
+    public static double kP = 0.2;
     public static double kS = 0.043;
     public static double kV = 0.029;
     public static double radian = 48;
     public static double secondary_kD = 0.0001;
     public static double secondary_kI = 0;
-    public static double secondary_kP = 0.3;
+    public static double secondary_kP = 0.7;
     public static double time_delay = 0.1;
+
 
 
 
     public double[] distance_list = {38.27,46.45,56.50,64.64,76.67,95.48,111.44,125.78,142.95,190.00,300.00};
     public double[] target_list =   {10.45,11.55,11.75,12.50,12.80,13.40,14.350,15.050,16.000,16.000,17.000};
     double[] voltage;
+    double prev = 0.0;
     Distance distance = new Distance();
     Interpolation inter = new Interpolation();
     BinarySearch BS = new BinarySearch(distance_list);
@@ -88,13 +90,20 @@ public class PIDF_Shooter {
         // V = wR Unit: m/s
         if (delta_time >= time_delay) {
             omega = ((((current - previous_current) / PPR) * (2 * Math.PI))) / delta_time;
-            velocity = filter(omega * (radian / 1000));
+            velocity = omega * (radian / 1000);
             previous_current = shooter.getCurrentPosition();
             previous_time = time_current;
 
         }
+
         if (velocity < 0.1){velocity = 0.0;}
-        return velocity;
+        if (velocity == 0 && power > 0){
+            velocity = prev;
+        }
+        else{
+             prev = velocity;
+        }
+        return filter(velocity) ;// / 2.625935489 * 39.37
     }
 
     public double pidf(double targetVelocity) {
@@ -137,7 +146,7 @@ public class PIDF_Shooter {
 
     public void run_shooter(double targetVelocity , boolean manual) {
         voltage = voltageDrop.Voltage_checker();
-        double power = pidf(targetVelocity);
+        power = pidf(targetVelocity);
         if (!is_working(power,velocity) || manual){
             power = manual(targetVelocity);
             critical = true;

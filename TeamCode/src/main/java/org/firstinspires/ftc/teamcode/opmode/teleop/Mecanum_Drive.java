@@ -127,7 +127,7 @@ public class Mecanum_Drive extends OpMode {
         }
 
         //Slow Mode
-        lead = dynamics.lead(follower.getPose(),follower.getVelocity(),Ying.getVelocity() * (1 / 2.1486) * Math.cos(45) * 39.3701,Turret.get_angle() / 180 * Math.PI, is_red);
+        lead = dynamics.lead(follower.getPose(),follower.getVelocity(),Ying.getVelocity(),Turret.get_angle() / 180 * Math.PI, is_red);
         tracking = Turret.targeting(follower.getPose().getX(), follower.getPose().getY(), is_red, follower.getPose().getHeading() / Math.PI * 180,offset);
         adj = Ying.distance_adjustment(follower.getPose().getX(), follower.getPose().getY(), is_red);
 
@@ -140,9 +140,12 @@ public class Mecanum_Drive extends OpMode {
         if (gamepad1.circleWasPressed()) {check_out = !check_out;}
 
         if (check_intake) {
-            intake.intake(speed_intake);}
+            intake.intake(speed_intake);
+            check_out = false;
+        }
         else if (check_out) {
             intake.intake(-1);
+            check_intake = false;
             check_one = false;
         }
         else if (!check_intake && !check_out) {
@@ -188,6 +191,7 @@ public class Mecanum_Drive extends OpMode {
         }
         if (follower.getPose().getX() > 40){
             angle.angular_on(-1 * speed_servo);
+
         }
 
         //
@@ -211,7 +215,7 @@ public class Mecanum_Drive extends OpMode {
 
         telemetryX.addData("position",follower.getPose(),2);
         telemetryX.addData("automatedDrive",automatedDrive,2);
-        telemetryX.addData("target (m/s)",adj + target,2);
+        telemetryX.addData("target (m/s)",target + adj,2);
         telemetryX.addData("displacement",Ying.getDisplacement(follower.getPose().getX(),follower.getPose().getY()),2);
 
         if (Ying.get_critical()){telemetryX.addData("Danger!!!!","Shooter is in manual mode",2);}
