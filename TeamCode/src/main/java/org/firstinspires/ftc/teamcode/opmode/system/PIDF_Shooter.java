@@ -26,23 +26,25 @@ public class PIDF_Shooter {
     // Encoder counts per revolution
     public static double PPR = 28;
     public static double alpha = 0.6;
-    public static double kD = 0.000001;
+    public static double defau = 58.6;
+    public static double kD = 0.0001;
     public static double kI = 0;
-    public static double kP = 0.2;
+    public static double kP = 0.001;
     public static double kS = 0.043;
-    public static double kV = 0.029;
+    public static double kV = 0.0036;
     public static double radian = 48;
-    public static double secondary_kD = 0.0001;
+    public static double secondary_kD = 1e-7;
     public static double secondary_kI = 0;
-    public static double secondary_kP = 0.7;
+    public static double secondary_kP = 0.01;
     public static double time_delay = 0.1;
 
 
 
 
-    public double[] distance_list = {38.27,46.45,56.50,64.64,76.67,95.48,111.44,125.78,142.95,190.00,300.00};
-    public double[] target_list =   {10.45,11.55,11.75,12.50,12.80,13.40,14.350,15.050,16.000,16.000,17.000};
+    public double[] distance_list = {38.27, 46.45, 56.50, 64.64, 76.67, 95.48, 111.44, 125.78, 142.95, 190.00, 300.00};
+    public double[] target_list =   {81.60, 90.20, 91.80, 97.60, 100.0, 104.7, 112.10, 117.50, 125.00, 125.00, 132.80};
     double[] voltage;
+    double angle = 0.0;
     double prev = 0.0;
     Distance distance = new Distance();
     Interpolation inter = new Interpolation();
@@ -103,17 +105,35 @@ public class PIDF_Shooter {
         else{
              prev = velocity;
         }
-        return filter(velocity) ;// / 2.625935489 * 39.37
+        return filter(velocity * 0.38082347482092361511705462852966 * 39.37) ;
     }
 
-    public double pidf(double targetVelocity) {
+    public double pidf(double targetVelocity, double theta) {
         double output = 0;
-        error = Math.abs(targetVelocity) - velocity_info();
+        double velocity_shooter = velocity_info();
+        angle = theta;
+        error = Math.abs(targetVelocity) - (velocity_shooter * Math.cos(Math.toRadians(angle)));
 
         integral += error * delta_time;
         derivative = (error - previousError) / delta_time;
 
-        if (Math.abs(velocity - targetVelocity) > 1) {output = kP * error + kI * integral + kD * derivative + (kV * targetVelocity + kS);}
+        if (Math.abs(velocity_shooter * Math.cos(Math.toRadians(angle)) - targetVelocity) > 30) {output = kP * error + kI * integral + kD * derivative + (kV * targetVelocity + kS);}
+        else {output = secondary_kP * error + secondary_kI * integral + secondary_kD * derivative + (kV * targetVelocity + kS);}
+
+        previousError = error;
+
+        return output;
+    }
+
+    public double pidf(double targetVelocity) {
+        double output = 0;
+        double velocity_shooter = velocity_info();
+        error = Math.abs(targetVelocity) - (velocity_shooter * Math.cos(Math.toRadians(defau)));
+
+        integral += error * delta_time;
+        derivative = (error - previousError) / delta_time;
+
+        if (Math.abs(velocity_info() * Math.cos(Math.toRadians(defau)) - targetVelocity) > 30) {output = kP * error + kI * integral + kD * derivative + (kV * targetVelocity + kS);}
         else {output = secondary_kP * error + secondary_kI * integral + secondary_kD * derivative + (kV * targetVelocity + kS);}
 
         previousError = error;
@@ -144,16 +164,16 @@ public class PIDF_Shooter {
 
     }
 
-    public void run_shooter(double targetVelocity , boolean manual) {
+    public void run_shooter(double targetVelocity, double theta, boolean manual) {
         voltage = voltageDrop.Voltage_checker();
-        power = pidf(targetVelocity);
+        power = pidf(targetVelocity,theta);
         if (!is_working(power,velocity) || manual){
             power = manual(targetVelocity);
             critical = true;
         }
         else{critical = false;}
 
-        if (voltage[1] < 11.5){power *= voltage[2];}
+        if (voltage[1] < 11){power *= voltage[2];}
 
         shooter.setPower(power);
         shooter2.setPower(power);
@@ -173,7 +193,6 @@ public class PIDF_Shooter {
         return  kV * targetVelocity + kS;
     }
 
-    //In dev
     public double distance_adjustment(double X, double Y, boolean is_red){
         double displacement = distance.distance(X ,Y ,is_red)[3];
         if (displacement < distance_list[0]){displacement = distance_list[0];}
@@ -185,10 +204,14 @@ public class PIDF_Shooter {
     }
 
 
+
     // get function
     public double getDisplacement(double x,double y){return distance.distance(x,y, true)[3];}
     public double getVelocity(){
         return velocity_info();
+    }
+    public double getVelocity_X(){
+        return velocity_info() * Math.cos(Math.toRadians(angle));
     }
     public int getCurrentposition(){
         return shooter.getCurrentPosition();

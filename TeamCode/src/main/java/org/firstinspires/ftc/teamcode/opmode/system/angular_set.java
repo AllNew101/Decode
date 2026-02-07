@@ -67,6 +67,10 @@ public class angular_set {
         return angle.getPosition();
     }
 
+    public double get_angle(){
+        return angle.getPosition() * - 12.4 + 65.42;
+    }
+
     public void short_cut(int key){
         switch (key){
             case 0:
@@ -75,5 +79,6 @@ public class angular_set {
                 angle.setPosition(0.56);
         }
     }
+
 
 }

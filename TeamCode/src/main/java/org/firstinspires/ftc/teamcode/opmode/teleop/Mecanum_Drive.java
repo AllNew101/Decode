@@ -52,7 +52,7 @@ public class Mecanum_Drive extends OpMode {
     public static double speed_servo = 16;
     public static double target = 0.00;
     public static double speed_offset = 0.4;
-    public static double speed_eshooter = 0.05;
+    public static double speed_eshooter = 0.2;
     public static double[] multiplier = {1,1,1};
     public static boolean break_shooter = false;
     public static boolean is_red = true;
@@ -172,7 +172,7 @@ public class Mecanum_Drive extends OpMode {
 
 
 
-        if (check_shooter) {Ying.run_shooter(adj + target, manual);}
+        if (check_shooter) {Ying.run_shooter(adj + target, angle.get_angle(), manual);}
         else if (!check_shooter) {Ying.stop_shooter(break_shooter);}
         //
         if (gamepad2.squareWasPressed()) {check_X = !check_X;}
@@ -230,6 +230,7 @@ public class Mecanum_Drive extends OpMode {
         switch (key){
             case 1:
                 telemetryX.addData("velocity",Ying.getVelocity(),0);
+                telemetryX.addData("velocity_X",Ying.getVelocity_X(),0);
                 telemetryX.addData("current_position",Ying.getCurrentposition(),0);
                 telemetryX.addData("current",Ying.get_output(target),0);
                 telemetryX.addData("omega",Ying.getOmega(),0);
@@ -244,6 +245,7 @@ public class Mecanum_Drive extends OpMode {
 
             case 3:
                 telemetryX.addData("angular",angle.get_position(),0);
+                telemetryX.addData("angle",angle.get_angle(),0);
                 break;
 
             case 4:
