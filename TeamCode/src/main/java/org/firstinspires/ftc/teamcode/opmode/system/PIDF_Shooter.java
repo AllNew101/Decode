@@ -11,12 +11,13 @@ import org.firstinspires.ftc.teamcode.opmode.Calculate.BinarySearch;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Interpolation;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Voltage_Drop;
+import org.firstinspires.ftc.teamcode.opmode.Calculate.Kalman_filter_1d;
 
 @Config
 public class PIDF_Shooter {
     public DcMotor shooter;
     public DcMotor shooter2;
-    public double displacement, omega, current, previous_current, power, rpm, velocity, previous_time, delta_time, time_current, integral, derivative, error, previousError;
+    public double displacement, omega, current, previous_current, power, rpm, velocity, previous_time, delta_time, current_time , integral, derivative, error, previousError;
     ElapsedTime time;
     Follower follower;
     boolean critical = false;
@@ -25,27 +26,31 @@ public class PIDF_Shooter {
 
     // Encoder counts per revolution
     public static double PPR = 28;
+    public static double Q = 0.03;
+    public static double R = 1.5;
     public static double alpha = 0.6;
     public static double defau = 58.6;
-    public static double kD = 0.0001;
+    public static double kD = 0.01;
     public static double kI = 0;
-    public static double kP = 0.001;
+    public static double kP = 0.1;
     public static double kS = 0.043;
     public static double kV = 0.0036;
     public static double radian = 48;
-    public static double secondary_kD = 1e-7;
+    public static double secondary_kD = 0.000001;
     public static double secondary_kI = 0;
-    public static double secondary_kP = 0.01;
+    public static double secondary_kP = 0.012;
     public static double time_delay = 0.1;
 
 
 
 
+
     public double[] distance_list = {38.27, 46.45, 56.50, 64.64, 76.67, 95.48, 111.44, 125.78, 142.95, 190.00, 300.00};
-    public double[] target_list =   {81.60, 90.20, 91.80, 97.60, 100.0, 104.7, 112.10, 117.50, 125.00, 125.00, 132.80};
+    public double[] target_list =   {106.7, 117.9, 120.0, 127.6, 130.7, 136.9, 146.50, 153.60, 163.40, 163.40, 173.60};
     double[] voltage;
     double angle = 0.0;
     double prev = 0.0;
+    Kalman_filter_1d kalman = new Kalman_filter_1d(Q,R);
     Distance distance = new Distance();
     Interpolation inter = new Interpolation();
     BinarySearch BS = new BinarySearch(distance_list);
@@ -79,23 +84,20 @@ public class PIDF_Shooter {
     }
 
 
-    public double filter(double omegaRaw){
-        omegaFiltered = alpha * omegaFiltered + (1 - alpha) * omegaRaw;
-        return omegaFiltered;
-    }
-
     public double velocity_info(){
         current = shooter.getCurrentPosition();
-        time_current = time.seconds();
-        delta_time = (time_current - previous_time) ;
+        current_time = time.seconds();
+        delta_time = (current_time - previous_time) ;
 
         // V = wR Unit: m/s
         if (delta_time >= time_delay) {
             omega = ((((current - previous_current) / PPR) * (2 * Math.PI))) / delta_time;
+            kalman.update(omega);
+
+            omega =  kalman.get_Omega();
             velocity = omega * (radian / 1000);
             previous_current = shooter.getCurrentPosition();
-            previous_time = time_current;
-
+            previous_time = current_time;
         }
 
         if (velocity < 0.1){velocity = 0.0;}
@@ -105,7 +107,7 @@ public class PIDF_Shooter {
         else{
              prev = velocity;
         }
-        return filter(velocity * 0.38082347482092361511705462852966 * 39.37) ;
+        return velocity * 0.38082347482092361511705462852966 * 39.37 ;
     }
 
     public double pidf(double targetVelocity, double theta) {
@@ -140,6 +142,7 @@ public class PIDF_Shooter {
 
         return output;
     }
+
     public int start_shooter() {
         shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooter2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -217,7 +220,7 @@ public class PIDF_Shooter {
         return shooter.getCurrentPosition();
     }
     public double get_time(){
-        return time_current;
+        return current_time;
     }
     public double getDelta_time(){
         return delta_time;

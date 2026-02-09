@@ -179,11 +179,6 @@ public class Mecanum_Drive extends OpMode {
         if (check_X) {
             closer.open();
             check_intake = true;
-            if (sensor.check_time()){
-                check_X = false;
-                check_one = false;
-                check_turret = false;
-            }
         }
         else if (!check_X) {
             closer.close();
@@ -261,9 +256,7 @@ public class Mecanum_Drive extends OpMode {
                 break;
 
             case 5:
-                telemetryX.addData("DISTANCE_UP",sensor.get_distanceUp(),2);
                 telemetryX.addData("DISTANCE_DOWN",sensor.get_distanceDown(),2);
-                telemetryX.addData("DISTANCE_UP_is",sensor.Is_distanceUp(),2);
                 telemetryX.addData("DISTANCE_DOWN_is",sensor.Is_distanceDown(),2);
                 telemetryX.addData("IS_three",sensor.Is_three(),2);
                 break;
