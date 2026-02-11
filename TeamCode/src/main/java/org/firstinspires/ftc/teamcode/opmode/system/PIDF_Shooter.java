@@ -26,8 +26,8 @@ public class PIDF_Shooter {
 
     // Encoder counts per revolution
     public static double PPR = 28;
-    public static double Q = 0.03;
-    public static double R = 1.5;
+    public static double Q = 0.5;
+    public static double R = 3;
     public static double alpha = 0.6;
     public static double defau = 58.6;
     public static double kD = 0.01;
@@ -45,8 +45,9 @@ public class PIDF_Shooter {
 
 
 
+
     public double[] distance_list = {38.27, 46.45, 56.50, 64.64, 76.67, 95.48, 111.44, 125.78, 142.95, 190.00, 300.00};
-    public double[] target_list =   {106.7, 117.9, 120.0, 127.6, 130.7, 136.9, 146.50, 153.60, 163.40, 163.40, 173.60};
+    public double[] target_list =   {106.7, 117.9, 120.0, 127.6, 130.7, 136.9, 146.50, 153.60, 156.60, 156.60, 156.60};
     double[] voltage;
     double angle = 0.0;
     double prev = 0.0;

@@ -50,9 +50,9 @@ public class Mecanum_Drive extends OpMode {
     public static int key = 0;
     public static int position = 4;
     public static double speed_servo = 16;
-    public static double target = 0.00;
+    public static double ratio_shooter = 0.952;
     public static double speed_offset = 0.4;
-    public static double speed_eshooter = 0.2;
+    public static double speed_eshooter = 0.001;
     public static double[] multiplier = {1,1,1};
     public static boolean break_shooter = false;
     public static boolean is_red = true;
@@ -62,6 +62,7 @@ public class Mecanum_Drive extends OpMode {
     public static boolean check_shooter = false;
     public static boolean check_X = false;
     public static boolean check_out = false;
+    public double ratio = 1;
 
     boolean check_one = false;
     private double offset = 0.0;
@@ -131,16 +132,16 @@ public class Mecanum_Drive extends OpMode {
         tracking = Turret.targeting(follower.getPose().getX(), follower.getPose().getY(), is_red, follower.getPose().getHeading() / Math.PI * 180,offset);
         adj = Ying.distance_adjustment(follower.getPose().getX(), follower.getPose().getY(), is_red);
 
-        if (gamepad2.right_bumper) {target += speed_eshooter;}
-        if (gamepad2.left_bumper) {target -= speed_eshooter;}
+        if (gamepad2.right_bumper) {ratio_shooter += speed_eshooter;}
+        if (gamepad2.left_bumper) {ratio_shooter -= speed_eshooter;}
         if (gamepad2.optionsWasPressed()){is_red = !is_red;}
         if (gamepad2.guideWasPressed()){manual = !manual;}
         if (gamepad2.circleWasPressed()) {check_shooter = !check_shooter;}
         if (gamepad1.crossWasPressed()) {check_intake = !check_intake;}
         if (gamepad1.circleWasPressed()) {check_out = !check_out;}
 
-        if (check_intake) {
-            intake.intake(speed_intake);
+        if (check_intake && !check_X) {
+            intake.intake(1);
             check_out = false;
         }
         else if (check_out) {
@@ -172,12 +173,17 @@ public class Mecanum_Drive extends OpMode {
 
 
 
-        if (check_shooter) {Ying.run_shooter(adj + target, angle.get_angle(), manual);}
+        if (check_shooter) {Ying.run_shooter(adj * ratio_shooter * ratio, angle.get_angle(), manual);}
         else if (!check_shooter) {Ying.stop_shooter(break_shooter);}
         //
-        if (gamepad2.squareWasPressed()) {check_X = !check_X;}
+        if (gamepad2.squareWasPressed()) {
+            check_X = !check_X;
+            if (check_X == false){ratio = 0.5;}
+        }
         if (check_X) {
             closer.open();
+            intake.intake(speed_intake);
+            ratio = 1;
             check_intake = true;
         }
         else if (!check_X) {
@@ -191,7 +197,10 @@ public class Mecanum_Drive extends OpMode {
 
         //
         if (gamepad2.triangleWasPressed()){check_turret = !check_turret;}
-        if (check_turret){Turret.to_position(tracking,manual);}
+        if (check_turret){
+            ratio = 1;
+            Turret.to_position(tracking,manual);
+        }
         else if (!check_turret ){Turret.to_position(offset,manual);}
 
         drawing.drawRobot(follower.getPose(),"red");
@@ -210,7 +219,7 @@ public class Mecanum_Drive extends OpMode {
 
         telemetryX.addData("position",follower.getPose(),2);
         telemetryX.addData("automatedDrive",automatedDrive,2);
-        telemetryX.addData("target (m/s)",target + adj,2);
+        telemetryX.addData("target (m/s)",adj * ratio_shooter,2);
         telemetryX.addData("displacement",Ying.getDisplacement(follower.getPose().getX(),follower.getPose().getY()),2);
 
         if (Ying.get_critical()){telemetryX.addData("Danger!!!!","Shooter is in manual mode",2);}
@@ -227,9 +236,9 @@ public class Mecanum_Drive extends OpMode {
                 telemetryX.addData("velocity",Ying.getVelocity(),0);
                 telemetryX.addData("velocity_X",Ying.getVelocity_X(),0);
                 telemetryX.addData("current_position",Ying.getCurrentposition(),0);
-                telemetryX.addData("current",Ying.get_output(target),0);
+                telemetryX.addData("current",Ying.get_output(adj * ratio_shooter * ratio),0);
                 telemetryX.addData("omega",Ying.getOmega(),0);
-                telemetryX.addData("OFFSET",target,2);
+                telemetryX.addData("OFFSET",ratio_shooter,2);
                 break;
 
             case 2:
