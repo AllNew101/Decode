@@ -1,41 +1,61 @@
 package org.firstinspires.ftc.teamcode.opmode.system;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ftc.FTCCoordinates;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.PedroCoordinates;
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
+@Config
 public class localization_limelight {
     private Limelight3A camera; //any camera here
     private Follower follower;
     private boolean following = false;
     private final Pose TARGET_LOCATION = new Pose(); //Put the target location here
+    double X = 0.0;
+    double Y = 0.0;
+    double heading = 0.0;
+    double ava = 1.0;
+    public static double offset_X = 0.0;
+    public static double offset_Y = 0.0;
 
 
-    public void init(HardwareMap hardwareMap , Follower follower_import) {
+    public void init(HardwareMap hardwareMap) {
         camera = hardwareMap.get(Limelight3A.class, "limelight");
-        follower = follower_import;
+        camera.pipelineSwitch(0);
+        camera.setPollRateHz(60);
+        camera.start();
     }
 
 
-    public void loop() {
-        follower.update();
-        //if you're not using limelight you can follow the same steps: build an offset pose, put your heading offset, and generate a path etc
-        //This uses the aprilTag to relocalize your robot
-        //You can also create a custom AprilTag fusion Localizer for the follower if you want to use this by default for all your autos
-        follower.setPose(getRobotPoseFromCamera());
-        if (following && !follower.isBusy()) following = false;
-    }
-    private Pose getRobotPoseFromCamera() {
-        //Fill this out to get the robot Pose from the camera's output (apply any filters if you need to using follower.getPose() for fusion)
-        //Pedro Pathing has built-in KalmanFilter and LowPassFilter classes you can use for this
-        //Use this to convert standard FTC coordinates to standard Pedro Pathing coordinates
-        return new Pose(0, 0, 0, FTCCoordinates.INSTANCE).getAsCoordinateSystem(PedroCoordinates.INSTANCE);
+
+    public double[] getRobotPoseFromCamera(double angle) {
+        LLResult result = camera.getLatestResult();
+        if (result != null && result.isValid()) {
+            Pose3D botpose_mt = result.getBotpose();
+            if (botpose_mt != null) {
+                ava = 0.0;
+                X = botpose_mt.getPosition().x;
+                Y = botpose_mt.getPosition().y;
+                heading = 180 - botpose_mt.getOrientation().getYaw(AngleUnit.DEGREES);
+            }
+        }
+        else{
+            ava = 1.0;
+        }
+        double[] n = {ava, 144 - (X * 39.37 + 72) + offset_X * Math.cos(Math.toRadians(angle)) - offset_Y * Math.sin(Math.toRadians(angle)), Y * -39.37 - 72 + offset_X * Math.sin(Math.toRadians(angle)) + offset_Y * Math.cos(Math.toRadians(angle)), Math.toRadians(-1 * heading)};
+
+        return n;
     }
 
 }

@@ -20,4 +20,8 @@ public class Distance {
 
         return distances;
     }
+
+    public double targeting(double X, double Y, boolean is_red , double theta, double offset){
+        return 90 - distance(X ,Y ,is_red)[2] + theta + offset;
+    }
 }

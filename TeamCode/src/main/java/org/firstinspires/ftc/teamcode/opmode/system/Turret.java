@@ -23,7 +23,7 @@ public class Turret {
     public static double feedForward = 0;
     public static double kD = 0.00002;
     public static double kI = 0;
-    public static double kP = 0.028;
+    public static double kP = 0.03;
     public static double limit = 105;
 
 
@@ -71,10 +71,6 @@ public class Turret {
         }
         previousError = error;
         previous = turret.getCurrentPosition();
-    }
-
-    public double targeting(double X, double Y, boolean is_red , double theta, double offset){
-        return 90 - distance.distance(X ,Y ,is_red)[2] + theta + offset;
     }
 
 

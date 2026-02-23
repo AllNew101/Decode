@@ -12,20 +12,22 @@ public class angular_set {
     private Servo angle;
     public double speed_angular = 100;
     public static int divided_COF = 800;
-    public static double origin_POSE = 0.9;
+    private static double origin_POSE = 0.9;
 
     public void init_angular(HardwareMap hardwareMap) {
         angle = hardwareMap.get(Servo.class, "angle_2");
     }
-    public void angular_on(double speed_angular){
+    public void angular_on(double speed_angular , double minimum){
         double angularx;
         angularx = angle.getPosition() + (speed_angular / divided_COF);
+        if (angularx < minimum){angularx = minimum;}
         angle.setPosition(angularx);
     }
 
-    public double angular_on(double speed_angular , double angular){
+    public double angular_on(double speed_angular , double angular , double minimum){
         double angularx;
         angularx = angular + (speed_angular / divided_COF);
+        if (angularx < minimum){angularx = minimum;}
         angle.setPosition(angularx);
         return angularx;
     }
@@ -68,7 +70,7 @@ public class angular_set {
     }
 
     public double get_angle(){
-        return angle.getPosition() * - 12.4 + 65.42;
+        return angle.getPosition() * -12.4 + 65.42;
     }
 
     public void short_cut(int key){
