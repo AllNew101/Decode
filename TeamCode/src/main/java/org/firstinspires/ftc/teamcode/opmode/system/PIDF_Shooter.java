@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.opmode.Calculate.Kalman_filter_1d;
 public class PIDF_Shooter {
     public DcMotor shooter;
     public DcMotor shooter2;
-    public double displacement, omega, current, previous_current, power, rpm, velocity, previous_time, delta_time, current_time , integral, derivative, error, previousError;
+    public double acceleration, current_velocity, previous_velocity, displacement, omega, current, previous_current, power, rpm, velocity, previous_time, delta_time,delta_time_2,previous_time_2,current_time_2, current_time , integral, derivative, error, previousError;
     ElapsedTime time;
     Follower follower;
     boolean critical = false;
@@ -30,16 +30,17 @@ public class PIDF_Shooter {
     public static double R = 3;
     public static double alpha = 0.6;
     public static double defau = 58.6;
-    public static double kD = 0.01;
+    public static double kD = 0.0001;
     public static double kI = 0;
-    public static double kP = 0.1;
+    public static double kP = 0.08;
     public static double kS = 0.043;
-    public static double kV = 0.0036;
+    public static double kV = 0.00398;
     public static double radian = 48;
     public static double secondary_kD = 0.000001;
     public static double secondary_kI = 0;
-    public static double secondary_kP = 0.012;
-    public static double time_delay = 0.1;
+    public static double secondary_kP = 0.02;
+    public static double time_delay = 0.05;
+
 
 
 
@@ -81,6 +82,7 @@ public class PIDF_Shooter {
         current = shooter.getCurrentPosition();
         previous_current = shooter.getCurrentPosition();
         previous_time = time.seconds();
+        previous_velocity = 0;
         voltageDrop.init_Voltage(hardwareMap);
     }
 
@@ -109,6 +111,17 @@ public class PIDF_Shooter {
              prev = velocity;
         }
         return velocity * 0.38082347482092361511705462852966 * 39.37 ;
+    }
+
+    public double acceleration_info(){
+        current_velocity = velocity_info();
+        current_time_2 = time.seconds();
+        delta_time_2 = current_time_2 - previous_time_2;
+        acceleration = (current_velocity - previous_velocity) / delta_time_2;
+        previous_time_2 = current_time_2;
+        previous_velocity = current_velocity;
+
+        return acceleration;
     }
 
     public double pidf(double targetVelocity, double theta, boolean can_reverse) {
@@ -215,6 +228,9 @@ public class PIDF_Shooter {
     public double getDisplacement(double x,double y){return distance.distance(x,y, true)[3];}
     public double getVelocity(){
         return velocity_info();
+    }
+    public double getAcceleration(){
+        return acceleration_info();
     }
     public double getVelocity_X(){
         return velocity_info() * Math.cos(Math.toRadians(angles));

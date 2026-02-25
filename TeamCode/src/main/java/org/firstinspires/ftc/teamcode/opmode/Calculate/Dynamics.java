@@ -18,9 +18,10 @@ public class Dynamics {
         inner = (b * b) - (4 * a * c);
         t_positive = (b + Math.sqrt(inner)) / (2 * a);
         t_negative = (b - Math.sqrt(inner)) / (2 * a);
-        if (inner > 0 && vr.getMagnitude() > 1){
+        if (inner > 0 && vr.getMagnitude() > 10 && vb.getMagnitude() > 40){
             if (t_positive > 0){return t_positive;}
-            else{return t_negative;}
+            else if(t_negative > 0){return t_negative;}
+            else{return 0;}
         }
         else{
             return 0;

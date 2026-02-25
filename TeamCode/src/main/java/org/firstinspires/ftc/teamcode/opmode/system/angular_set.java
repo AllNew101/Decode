@@ -12,22 +12,24 @@ public class angular_set {
     private Servo angle;
     public double speed_angular = 100;
     public static int divided_COF = 800;
-    private static double origin_POSE = 0.9;
+    public static double origin_POSE = 0.9;
 
     public void init_angular(HardwareMap hardwareMap) {
         angle = hardwareMap.get(Servo.class, "angle_2");
     }
-    public void angular_on(double speed_angular , double minimum){
+    public void angular_on(double speed_angular , double minimum, double maximum){
         double angularx;
         angularx = angle.getPosition() + (speed_angular / divided_COF);
         if (angularx < minimum){angularx = minimum;}
+        if (angularx > maximum){angularx = maximum;}
         angle.setPosition(angularx);
     }
 
-    public double angular_on(double speed_angular , double angular , double minimum){
+    public double angular_on(double speed_angular , double angular , double minimum, double maximum){
         double angularx;
         angularx = angular + (speed_angular / divided_COF);
         if (angularx < minimum){angularx = minimum;}
+        if (angularx > maximum){angularx = maximum;}
         angle.setPosition(angularx);
         return angularx;
     }
