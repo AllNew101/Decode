@@ -47,6 +47,7 @@ public class PIDF_Shooter {
 
 
 
+
     public double[] distance_list = {38.27, 46.45, 56.50, 64.64, 76.67, 95.48, 111.44, 125.78, 142.95, 190.00, 300.00};
     public double[] target_list =   {106.7, 117.9, 120.0, 127.6, 130.7, 136.9, 146.50, 153.60, 156.60, 156.60, 156.60};
     double[] voltage;
@@ -185,14 +186,15 @@ public class PIDF_Shooter {
 
     public void run_shooter(double targetVelocity, double theta, boolean manual, boolean can_reverse) {
         voltage = voltageDrop.Voltage_checker();
-        power = pidf(targetVelocity,theta,can_reverse);
+        //power = pidf(targetVelocity,theta,can_reverse);
+        power = pidf(targetVelocity,can_reverse);
         if (!is_working(power,velocity) || manual){
             power = manual(targetVelocity);
             critical = true;
         }
         else{critical = false;}
 
-        if (voltage[1] < 11){power *= voltage[2];}
+        //if (voltage[1] < 11){power *= voltage[2];}
 
         shooter.setPower(power);
         shooter2.setPower(power);
@@ -230,7 +232,7 @@ public class PIDF_Shooter {
         return velocity_info();
     }
     public double getAcceleration(){
-        return acceleration_info();
+        return   acceleration_info();
     }
     public double getVelocity_X(){
         return velocity_info() * Math.cos(Math.toRadians(angles));

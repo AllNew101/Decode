@@ -58,24 +58,25 @@ public class Mecanum_Drive extends OpMode {
     public static boolean check_intake = false;
     public static boolean check_loca = false;
     public static boolean check_out = false;
-    public static boolean check_shooter = false;
-    public static boolean theseus = false;
+    public static boolean check_shooter = true;
     public static boolean is_red = true;
     public static int key = 1;
     public static double lock_position = 0.5799999999999998;
     public static boolean manual = false;
-    public static double minimum = 0.55;
     public static double maximum = 0.9;
+    public static double minimum = 0.7;
     public static double moving_Coff = 9;
     public static double origin = 0.5;
     public static int position = 4;
-    public static double ratio_shooter = 0.9009999999999999;
+    public static double ratio_shooter = 0.8769999999999999;
     public static double reduce_coff = 0.8;
     public static double speed_eshooter = 0.003;
     public static double speed_intake_far = 0.6;
     public static double speed_intake_near = 0.8;
     public static double speed_offset = 0.4;
     public static double speed_servo = 16;
+    public static boolean theseus = false;
+
 
 
 
