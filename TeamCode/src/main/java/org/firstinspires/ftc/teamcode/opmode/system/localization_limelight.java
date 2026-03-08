@@ -26,14 +26,15 @@ public class localization_limelight {
     double Y = 0.0;
     double heading = 0.0;
     double ava = 1.0;
-    public static double offset_X = 0.0;
-    public static double offset_Y = 0.0;
+    double previous_fps = 0;
+    double fps = 0;
+    public static double offset_X = -5;
+    public static double offset_Y = -5;
 
 
     public void init(HardwareMap hardwareMap) {
         camera = hardwareMap.get(Limelight3A.class, "limelight");
         camera.pipelineSwitch(0);
-        camera.setPollRateHz(60);
         camera.start();
     }
 
@@ -41,13 +42,15 @@ public class localization_limelight {
 
     public double[] getRobotPoseFromCamera(double angle) {
         LLResult result = camera.getLatestResult();
-        if (result != null && result.isValid()) {
+        LLStatus status = camera.getStatus();
+        //fps = result.getCaptureLatency();
+        if (result != null && result.isValid() ) {
             Pose3D botpose_mt = result.getBotpose();
             if (botpose_mt != null) {
                 ava = 0.0;
                 X = botpose_mt.getPosition().x;
                 Y = botpose_mt.getPosition().y;
-                heading = 180 - botpose_mt.getOrientation().getYaw(AngleUnit.DEGREES);
+                heading = 360 - botpose_mt.getOrientation().getYaw(AngleUnit.DEGREES);
             }
         }
         else{
@@ -55,6 +58,7 @@ public class localization_limelight {
         }
         double[] n = {ava, 144 - (X * 39.37 + 72) + offset_X * Math.cos(Math.toRadians(angle)) - offset_Y * Math.sin(Math.toRadians(angle)), Y * -39.37 - 72 + offset_X * Math.sin(Math.toRadians(angle)) + offset_Y * Math.cos(Math.toRadians(angle)), Math.toRadians(-1 * heading)};
 
+        //previous_fps = fps;
         return n;
     }
 

@@ -13,7 +13,7 @@ public class Closer {
     public static double open = 0.42;
 
     public void init_angular(HardwareMap hardwareMap) {
-        closer = hardwareMap.get(Servo.class, "tuakan");
+        closer = hardwareMap.get(Servo.class, "closer");
     }
     public void open(){
         closer.setPosition(open);

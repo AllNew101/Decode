@@ -15,7 +15,7 @@ public class angular_set {
     public static double origin_POSE = 0.9;
 
     public void init_angular(HardwareMap hardwareMap) {
-        angle = hardwareMap.get(Servo.class, "angle_2");
+        angle = hardwareMap.get(Servo.class, "angle");
     }
     public void angular_on(double speed_angular , double minimum, double maximum){
         double angularx;

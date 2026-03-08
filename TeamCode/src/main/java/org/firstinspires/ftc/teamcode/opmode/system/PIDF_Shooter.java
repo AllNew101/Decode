@@ -63,8 +63,8 @@ public class PIDF_Shooter {
 
     public void init_vel(HardwareMap hardwareMap, Follower position, ElapsedTime Time){
         // Hardware map change name here
-        shooter2 = hardwareMap.get(DcMotor.class,"Shooter");
-        shooter = hardwareMap.get(DcMotor.class,"Shooter2");
+        shooter2 = hardwareMap.get(DcMotor.class,"Shooter2");
+        shooter = hardwareMap.get(DcMotor.class,"Shooter");
 
         // Direction set-up
         shooter.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -232,10 +232,10 @@ public class PIDF_Shooter {
         return velocity_info();
     }
     public double getAcceleration(){
-        return   acceleration_info();
+        return acceleration_info();
     }
     public double getVelocity_X(){
-        return velocity_info() * Math.cos(Math.toRadians(angles));
+        return velocity_info() * Math.cos(Math.toRadians(defau));
     }
     public int getCurrentposition(){
         return shooter.getCurrentPosition();

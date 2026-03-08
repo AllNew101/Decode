@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @Config
 public class Constants {
     public static double forwardPodY = 2.25;
-    public static double strafePodX = -7.75;
+    public static double strafePodX = -5.30;
 
     public static FollowerConstants followerConstants = new FollowerConstants()
             .forwardZeroPowerAcceleration(-916.8404687)
@@ -60,7 +60,7 @@ public class Constants {
             .yawScalar(1)
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
-            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
 
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);

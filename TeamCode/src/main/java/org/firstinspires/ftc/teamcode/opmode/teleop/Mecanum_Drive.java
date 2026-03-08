@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.opmode.Indev.Intake_sup_servo;
 import org.firstinspires.ftc.teamcode.opmode.system.PIDF_Shooter;
 import org.firstinspires.ftc.teamcode.opmode.system.Intake;
 import org.firstinspires.ftc.teamcode.opmode.system.telemetryX;
@@ -41,6 +42,7 @@ public class Mecanum_Drive extends OpMode {
     private gamepad gamepad0;
     private PIDF_Shooter Ying;
     private Intake intake;
+    private Intake_sup_servo  sup_servo;
     private angular_set angle;
     private Turret_servo Turret;
     private Closer closer;
@@ -50,7 +52,7 @@ public class Mecanum_Drive extends OpMode {
     private Distance distance;
     private localization_limelight camera;
     ElapsedTime time;
-    public static double[] multiplier = {1,1,1};
+    public static double[] multiplier = {-1,-1,1};
 
     //Tuning
     public static boolean break_shooter = false;
@@ -63,7 +65,7 @@ public class Mecanum_Drive extends OpMode {
     public static int key = 1;
     public static double lock_position = 0.5799999999999998;
     public static boolean manual = false;
-    public static double maximum = 0.9;
+    public static double maximum = 0.85;
     public static double minimum = 0.7;
     public static double moving_Coff = 9;
     public static double origin = 0.5;
@@ -72,7 +74,7 @@ public class Mecanum_Drive extends OpMode {
     public static double reduce_coff = 0.8;
     public static double speed_eshooter = 0.003;
     public static double speed_intake_far = 0.6;
-    public static double speed_intake_near = 0.8;
+    public static double speed_intake_near = 0.8; // 0.725 when middle
     public static double speed_offset = 0.4;
     public static double speed_servo = 16;
     public static boolean theseus = false;
@@ -83,7 +85,7 @@ public class Mecanum_Drive extends OpMode {
     public double ratio = 1;
 
 
-
+    boolean camera_status = false;
     boolean check_one = false;
     boolean can_reverse = true;
     private double offset = 0.0;
@@ -111,6 +113,7 @@ public class Mecanum_Drive extends OpMode {
         dynamics = new Dynamics();
         sensor = new Distance_Sensor();
         camera = new localization_limelight();
+        sup_servo = new Intake_sup_servo();
         time.reset();
 
         check_intake = false;
@@ -120,6 +123,7 @@ public class Mecanum_Drive extends OpMode {
 
         Ying.init_vel(hardwareMap, follower, time);
         intake.init_intake(hardwareMap);
+        sup_servo.int_sup_servo(hardwareMap);
         angle.init_angular(hardwareMap);
 
         //Turret.init_turret(hardwareMap, time);
@@ -128,7 +132,7 @@ public class Mecanum_Drive extends OpMode {
 
         telemetryX.init(telemetry);
         closer.init_angular(hardwareMap);
-        sensor.init_distance(hardwareMap);
+        sensor.init_Distance_senser(hardwareMap);
         camera.init(hardwareMap);
 
         follower = Constants.createFollower(hardwareMap);
@@ -160,7 +164,7 @@ public class Mecanum_Drive extends OpMode {
 
         //Slow Mode
         lead = dynamics.lead(follower.getPose(),follower.getVelocity(),Ying.getVelocity(),Turret.get_angle() / 180 * Math.PI, is_red);
-        tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), is_red, follower.getPose().getHeading() / Math.PI * 180 , offset);
+        tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), is_red, follower.getPose().getHeading() / Math.PI * 180, offset) ;
         adj = Ying.distance_adjustment(follower.getPose().getX(), follower.getPose().getY(), is_red);
         esti = camera.getRobotPoseFromCamera(follower.getPose().getHeading());
 
@@ -171,6 +175,8 @@ public class Mecanum_Drive extends OpMode {
         if (gamepad2.circleWasPressed()) {check_shooter = !check_shooter;}
         if (gamepad1.crossWasPressed()) {check_intake = !check_intake;}
         if (gamepad1.circleWasPressed()) {check_out = !check_out;}
+
+
 
         if (check_intake && !check_X) {
             intake.intake(1);
@@ -185,6 +191,10 @@ public class Mecanum_Drive extends OpMode {
             intake.stop_intake();
         }
 
+        if (gamepad1.squareWasPressed()){
+            multiplier[0] *= -1;
+            multiplier[1] *= -1;
+        }
 
         if (gamepad2.dpad_left) {
             offset -= speed_offset;
@@ -245,7 +255,7 @@ public class Mecanum_Drive extends OpMode {
         if (check_turret){
             ratio = 1;
             can_reverse = true;
-            Turret.to_position(Turret.turret_free(tracking,Turret.get_angle()));
+            Turret.to_position(tracking);
 
         }
         else if (!check_turret){
@@ -256,6 +266,7 @@ public class Mecanum_Drive extends OpMode {
             if (esti[0] == 0.0 && check_loca){
                 estimate = new Pose(esti[1] ,esti[2], esti[3]);
                 follower.setPose(estimate);
+                camera_status = true;
             }
         }
 
@@ -265,6 +276,7 @@ public class Mecanum_Drive extends OpMode {
         //Call this once per loop
         telemetryX.update();
         follower.update();
+        sensor.check_led();
         debug();
     }
 
@@ -277,6 +289,7 @@ public class Mecanum_Drive extends OpMode {
         telemetryX.addData("automatedDrive",automatedDrive,2);
         telemetryX.addData("target (m/s)",adj * ratio_shooter,2);
         telemetryX.addData("displacement",Ying.getDisplacement(follower.getPose().getX(),follower.getPose().getY()),2);
+        telemetryX.addData("camera_working",camera_status,2);
 
         if (Ying.get_critical()){telemetryX.addData("Danger!!!!","Shooter is in manual mode",2);}
         if (is_red){
@@ -322,9 +335,7 @@ public class Mecanum_Drive extends OpMode {
                 break;
 
             case 5:
-                telemetryX.addData("DISTANCE_DOWN",sensor.get_distanceDown(),2);
-                telemetryX.addData("DISTANCE_DOWN_is",sensor.Is_distanceDown(),2);
-                telemetryX.addData("IS_three",sensor.Is_three(),2);
+                telemetryX.addData("DISTANCE",sensor.get_dis(),2);
                 break;
             case 6:
                 telemetryX.addData("Bat",Ying.get_voltage()[0],2);

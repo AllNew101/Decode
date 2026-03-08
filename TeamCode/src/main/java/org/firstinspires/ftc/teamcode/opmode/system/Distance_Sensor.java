@@ -2,46 +2,29 @@ package org.firstinspires.ftc.teamcode.opmode.system;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
+import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Config
 public class Distance_Sensor {
-    DistanceSensor UP,DOWN;
-    public static double DOWN_COFF = 12;
+    public Servo LED;
+    public DistanceSensor Dis_sen;
 
-    int count = 0;
-    int time = 0;
-    public void init_distance(HardwareMap hardwareMap){
-        DOWN = hardwareMap.get(DistanceSensor.class,"DOWN");
+    public static double not_ready = 0.28;
+    public static double ready = 0.5;
+    public static double test = 14;
+
+
+
+    public void init_Distance_senser (HardwareMap hardwareMap) {
+        Dis_sen = hardwareMap.get(DistanceSensor.class,"dis_sen");
+        LED = hardwareMap.get(Servo.class , "LED");
     }
 
-    public boolean Is_distanceDown(){
-        return (DOWN.getDistance(DistanceUnit.CM) < DOWN_COFF );
-    }
-    public boolean Is_three(){
-        if (count > 300 && Is_distanceDown()){
-            count = 0;
-            return true;}
-        else {
-            count++;
-            return false;}
-    }
+    public double get_dis() {return Dis_sen.getDistance(DistanceUnit.CM);}
 
-    public boolean check_time(){
-        if (Is_distanceDown()){
-            time = 0;
-            return false;
-        } else if (time > 13) {
-            return true;
-        }else{
-            time++;
-            return false;
-        }
+    public void check_led() {
+        if (get_dis() < test) {LED.setPosition(ready);}
+        else {LED.setPosition(not_ready);}
     }
-
-    public double get_distanceDown(){
-        return DOWN.getDistance(DistanceUnit.CM);
-    }
-
 }
