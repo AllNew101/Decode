@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.system;
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
 
 @Config
 public class Turret {
-    DcMotor turret;
+    DcMotor turret,current;
     private double integral, derivative, previousError, delta_time , time_current , previous_time;
     boolean critical;
     double critical_fx = 0.0;
@@ -20,11 +21,18 @@ public class Turret {
     ElapsedTime time;
     Distance distance = new Distance();
 
+    public static double Per_round = 537.7;
+    public static double condition = 10;
     public static double feedForward = 0;
-    public static double kD = 0.00002;
+    public static double gear_motor = 59;
+    public static double gear_turret = 99;
+    public static double kD = 1e-7;
+    public static double kD_secondary = 9e-8;
     public static double kI = 0;
-    public static double kP = 0.03;
-    public static double limit = 105;
+    public static double kP = 0.04;
+    public static double kP_secondary = 0.045;
+    public static double limit = 75;
+
 
 
 
@@ -32,8 +40,10 @@ public class Turret {
 
 
     public void init_turret(HardwareMap hardwareMap, ElapsedTime Time) {
-        turret = hardwareMap.get(DcMotor.class, "turret1");
+        turret = hardwareMap.get(DcMotor.class, "Turret");
+        current = hardwareMap.get(DcMotor.class, "leftRear");
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turret.setDirection(DcMotorSimple.Direction.REVERSE);
 
         time = Time;
     }
@@ -42,35 +52,40 @@ public class Turret {
     }
 
     public void to_position(double target, boolean manual){
-        double delta = turret.getCurrentPosition() - previous;
-        double error = target - convert_c_2_d(turret.getCurrentPosition());
+        double delta = current.getCurrentPosition() - previous;
+        double error = target - convert_current_to_degree(current.getCurrentPosition());
+        double output = 0;
         time_current = time.seconds();
         delta_time = (time_current - previous_time) ;
 
         integral += error * delta_time;
         derivative = (error - previousError) / delta_time;
-        double output = kP * error + kI * integral + kD * derivative + feedForward;
 
-        if (!is_working(output ,delta) || manual) {
-            count += 1;
-            if (count > 3) {
-                critical = true;
-                output = critical_fx;
-            }
-            else{
-                critical = false;
-            }
-        }
-        else{critical = false;
-        count = 0;
-        }
 
+//        if (!is_working(output ,delta) || manual) {
+//            count += 1;
+//            if (count > 3) {
+//                critical = true;
+//                output = critical_fx;
+//            }
+//            else{
+//                critical = false;
+//            }
+//        }
+//        else{critical = false;
+//        count = 0;
+//        }
+
+
+        if (Math.abs(error) > condition) {
+            output = kP * error + kI * integral + kD * derivative + feedForward;
+        }
+        else {
+            output = kP_secondary * error + kI * integral + kD_secondary * derivative + feedForward;
+        }
         turn(output);
-        if (Math.abs(error) <= 0.05) {
-            feedForward = 0;
-        }
         previousError = error;
-        previous = turret.getCurrentPosition();
+        previous = current.getCurrentPosition();
     }
 
 
@@ -78,13 +93,15 @@ public class Turret {
     public void turn(double power){
         power_turret = power;
         boolean check_over = false;
-        if (Math.abs(convert_c_2_d(turret.getCurrentPosition())) > (limit * 0.95)){power_turret *= 0.05;}
-        if (convert_c_2_d(turret.getCurrentPosition()) > limit && power > 0){check_over = true;}
-        if (convert_c_2_d(turret.getCurrentPosition()) < -1 * limit && power < 0){check_over = true;}
+
+
+        if (convert_current_to_degree(current.getCurrentPosition()) > limit && power_turret > 0){check_over = true;}
+        if (convert_current_to_degree(current.getCurrentPosition()) < -limit && power_turret < 0){check_over = true;}
+        if (convert_current_to_degree(current.getCurrentPosition()) > limit && power_turret < 0){check_over = false;}
+        if (convert_current_to_degree(current.getCurrentPosition()) < -limit && power_turret > 0){check_over = false;}
         if (check_over){stop();}
         else{
             turret.setPower(power_turret);
-            turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
     }
 
@@ -100,17 +117,15 @@ public class Turret {
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public double convert_c_2_d(double position){
-        return position / 7.48;
+    public double convert_current_to_degree(double position){
+        return (position / Per_round) * 360 * gear_motor / gear_turret;
     }
     public double convert_d_2_c(double position){
         return position * 7.48;
     }
-    public double get_degree(){
-        return turret.getCurrentPosition();
-    }
+    public double get_degree(){return current.getCurrentPosition();}
     public double get_angle(){
-        return convert_c_2_d(turret.getCurrentPosition());
+        return convert_current_to_degree(current.getCurrentPosition());
     }
     public double get_power(){
         return power_turret;
@@ -120,6 +135,9 @@ public class Turret {
     }
     public double get_derivative(){
         return derivative;
+    }
+    public double get_limit(){
+        return limit;
     }
 
     public void reset(){

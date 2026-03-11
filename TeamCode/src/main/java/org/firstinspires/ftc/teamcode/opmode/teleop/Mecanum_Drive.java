@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.opmode.Calculate.Voltage_Drop;
 import org.firstinspires.ftc.teamcode.opmode.system.localization_limelight;
 
 
-import org.firstinspires.ftc.teamcode.opmode.Indev.Turret_servo;
+import org.firstinspires.ftc.teamcode.opmode.system.Turret;
 
 import java.util.function.Supplier;
 
@@ -44,7 +44,7 @@ public class Mecanum_Drive extends OpMode {
     private Intake intake;
     private Intake_sup_servo  sup_servo;
     private angular_set angle;
-    private Turret_servo Turret;
+    private Turret Turret;
     private Closer closer;
     private Dynamics dynamics;
     private telemetryX telemetryX;
@@ -60,7 +60,7 @@ public class Mecanum_Drive extends OpMode {
     public static boolean check_intake = false;
     public static boolean check_loca = false;
     public static boolean check_out = false;
-    public static boolean check_shooter = true;
+    public static boolean check_shooter = false;
     public static boolean is_red = true;
     public static int key = 1;
     public static double lock_position = 0.5799999999999998;
@@ -70,25 +70,25 @@ public class Mecanum_Drive extends OpMode {
     public static double moving_Coff = 9;
     public static double origin = 0.5;
     public static int position = 4;
-    public static double ratio_shooter = 0.8769999999999999;
+    public static double ratio_shooter = 0.8499999999999999;
     public static double reduce_coff = 0.8;
     public static double speed_eshooter = 0.003;
     public static double speed_intake_far = 0.6;
-    public static double speed_intake_near = 0.8; // 0.725 when middle
-    public static double speed_offset = 0.4;
+    public static double speed_intake_near = 0.75;
+    public static double speed_offset = 1;
     public static double speed_servo = 16;
     public static boolean theseus = false;
 
 
 
 
+    private double offset = 0;
     public double ratio = 1;
 
 
     boolean camera_status = false;
     boolean check_one = false;
     boolean can_reverse = true;
-    private double offset = 0.0;
     int previous_key = 0;
     double adj, tracking;
     Pose lead, estimate;
@@ -105,7 +105,7 @@ public class Mecanum_Drive extends OpMode {
         Ying = new PIDF_Shooter();
         intake = new Intake();
         angle = new angular_set();
-        Turret = new Turret_servo();
+        Turret = new Turret();
         telemetryX = new telemetryX();
         closer = new Closer();
         time = new ElapsedTime();
@@ -126,8 +126,7 @@ public class Mecanum_Drive extends OpMode {
         sup_servo.int_sup_servo(hardwareMap);
         angle.init_angular(hardwareMap);
 
-        //Turret.init_turret(hardwareMap, time);
-        Turret.init_Turret_servo(hardwareMap);
+        Turret.init_turret(hardwareMap,time);
 
 
         telemetryX.init(telemetry);
@@ -145,8 +144,8 @@ public class Mecanum_Drive extends OpMode {
     public void start() {
         follower.startTeleopDrive();
         Ying.start_shooter();
-        Turret.set_Position(origin);
         angle.setOrigin();
+        offset = 0;
     }
 
     @Override
@@ -163,8 +162,8 @@ public class Mecanum_Drive extends OpMode {
         }
 
         //Slow Mode
-        lead = dynamics.lead(follower.getPose(),follower.getVelocity(),Ying.getVelocity(),Turret.get_angle() / 180 * Math.PI, is_red);
-        tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), is_red, follower.getPose().getHeading() / Math.PI * 180, offset) ;
+        //lead = dynamics.lead(follower.getPose(),follower.getVelocity(),Ying.getVelocity(),Turret.get_angle() / 180 * Math.PI, is_red);
+        tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), is_red, follower.getPose().getHeading() / Math.PI * 180, offset, Turret.get_limit()) ;
         adj = Ying.distance_adjustment(follower.getPose().getX(), follower.getPose().getY(), is_red);
         esti = camera.getRobotPoseFromCamera(follower.getPose().getHeading());
 
@@ -228,7 +227,7 @@ public class Mecanum_Drive extends OpMode {
             check_intake = true;
             if (follower.getPose().getX() > 40){
                 if (theseus){
-                angle.angular_on(-1 * Ying.getAcceleration() / 90 * moving_Coff, minimum ,maximum);}
+                angle.angular_on(-1 * Ying.getAcceleration() / 90 * moving_Coff, minimum, maximum);}
                 else {angle.angular_on(-1 * speed_servo, minimum, maximum);}
                 intake.intake(speed_intake_near);
             }
@@ -255,14 +254,14 @@ public class Mecanum_Drive extends OpMode {
         if (check_turret){
             ratio = 1;
             can_reverse = true;
-            Turret.to_position(tracking);
+            Turret.to_position(tracking,manual);
 
         }
         else if (!check_turret){
             if (esti[0] == 0.0 && check_loca){
                 offset = 0;
             }
-            Turret.to_position(offset);
+            Turret.to_position(offset,manual);
             if (esti[0] == 0.0 && check_loca){
                 estimate = new Pose(esti[1] ,esti[2], esti[3]);
                 follower.setPose(estimate);
@@ -312,8 +311,9 @@ public class Mecanum_Drive extends OpMode {
 
             case 2:
                 telemetryX.addData("angle",Turret.get_angle(),0);
-                telemetryX.addData("degree",Turret.get_Position(),0);
+                telemetryX.addData("degree",Turret.get_degree(),0);
                 telemetryX.addData("power",Turret.get_power(),0);
+                telemetryX.addData("offset",offset,0);
                 telemetryX.addData("Turret",tracking,0);
                 break;
 

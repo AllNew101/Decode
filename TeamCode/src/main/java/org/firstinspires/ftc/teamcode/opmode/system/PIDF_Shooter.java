@@ -36,9 +36,9 @@ public class PIDF_Shooter {
     public static double kS = 0.043;
     public static double kV = 0.00398;
     public static double radian = 48;
-    public static double secondary_kD = 0.000001;
+    public static double secondary_kD = 0.00001;
     public static double secondary_kI = 0;
-    public static double secondary_kP = 0.02;
+    public static double secondary_kP = 0.04;
     public static double time_delay = 0.05;
 
 
@@ -48,8 +48,10 @@ public class PIDF_Shooter {
 
 
 
-    public double[] distance_list = {38.27, 46.45, 56.50, 64.64, 76.67, 95.48, 111.44, 125.78, 142.95, 190.00, 300.00};
-    public double[] target_list =   {106.7, 117.9, 120.0, 127.6, 130.7, 136.9, 146.50, 153.60, 156.60, 156.60, 156.60};
+
+
+    public double[] distance_list = {38.27, 46.45, 56.50, 64.64, 76.67, 95.48, 111.44, 115.00, 142.95, 190.00, 300.00};
+    public double[] target_list =   {106.7, 117.9, 120.0, 127.6, 130.7, 136.9, 136.9, 136.9, 136.9, 136.9, 156.60};
     double[] voltage;
     double angles = 0.0;
     double prev = 0.0;

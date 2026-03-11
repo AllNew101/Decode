@@ -5,8 +5,10 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class Distance {
 
-    public static double[] red = {138.80923076923077 , -134.4923076923077 , 37.0};
+    public static double[] red = {138.80923076923077 , -134.4923076923077 , 33.0};
     public static double[] blue = {122, -12 , 50.0};
+    public static double coff = 27;
+    public static double increase_coff = 0;
     private double[] target = {0.0 , 0.0 , 0.0};
 
     public double[] distance(double X, double Y, boolean is_red){
@@ -21,11 +23,16 @@ public class Distance {
         return distances;
     }
 
-    public double targeting(double X, double Y, boolean is_red , double theta, double offset){
+    public double targeting(double X, double Y, boolean is_red , double theta, double offset, double limit){
         double angle;
         if (is_red){angle = red[2];}
         else{angle = blue[2];}
         if (theta < 0){theta = 360 + theta;}
-        return (angle - 180  + theta) - (37 - (90 - distance(X ,Y ,is_red)[2]) + offset);
+        double result = (angle - 180  + theta) - (coff - (90 - distance(X ,Y ,is_red)[2]))  + offset;
+       // if (theta > 170){result += increase_coff;}
+
+        if(result > limit){return limit;}
+        else if(result < -limit){return -limit;}
+        return result;
     }
 }

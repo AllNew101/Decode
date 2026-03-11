@@ -19,10 +19,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class Constants {
     public static double forwardPodY = 2.25;
     public static double strafePodX = -5.30;
+    public static double breaking = 1;
+    public static double breaking_start = 1;
 
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .forwardZeroPowerAcceleration(-916.8404687)
-            .lateralZeroPowerAcceleration(-79.8086021737)
+            .forwardZeroPowerAcceleration(-29.35704687)
+            .lateralZeroPowerAcceleration(-62.6986021737)
             .useSecondaryTranslationalPIDF(true)
             .useSecondaryHeadingPIDF(true)
             .useSecondaryDrivePIDF(true)
@@ -44,7 +46,7 @@ public class Constants {
             .leftRearMotorName("leftRear")
             .leftFrontMotorName("leftFront")
             .xVelocity(41.743954)
-            .yVelocity(55.14645)
+            .yVelocity(53.64)
             .useBrakeModeInTeleOp(true)
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
@@ -63,7 +65,7 @@ public class Constants {
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
 
-    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
+    public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, breaking, breaking_start);
 
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
