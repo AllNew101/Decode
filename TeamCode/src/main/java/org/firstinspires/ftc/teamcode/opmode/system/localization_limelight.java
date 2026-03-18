@@ -50,13 +50,13 @@ public class localization_limelight {
                 ava = 0.0;
                 X = botpose_mt.getPosition().x;
                 Y = botpose_mt.getPosition().y;
-                heading = 360 - botpose_mt.getOrientation().getYaw(AngleUnit.DEGREES);
+                heading = 180 + botpose_mt.getOrientation().getYaw(AngleUnit.DEGREES);
             }
         }
         else{
             ava = 1.0;
         }
-        double[] n = {ava, 144 - (X * 39.37 + 72) + offset_X * Math.cos(Math.toRadians(angle)) - offset_Y * Math.sin(Math.toRadians(angle)), Y * -39.37 - 72 + offset_X * Math.sin(Math.toRadians(angle)) + offset_Y * Math.cos(Math.toRadians(angle)), Math.toRadians(-1 * heading)};
+        double[] n = {ava, 144 - (X * 39.37 + 72) + offset_X * Math.cos(Math.toRadians(angle)) - offset_Y * Math.sin(Math.toRadians(angle)), Y * -39.37 - 72 + offset_X * Math.sin(Math.toRadians(angle)) + offset_Y * Math.cos(Math.toRadians(angle)), Math.toRadians(heading)};
 
         //previous_fps = fps;
         return n;

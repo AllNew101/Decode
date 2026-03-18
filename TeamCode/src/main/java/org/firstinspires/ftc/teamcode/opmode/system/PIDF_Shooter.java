@@ -27,31 +27,24 @@ public class PIDF_Shooter {
     // Encoder counts per revolution
     public static double PPR = 28;
     public static double Q = 0.5;
-    public static double R = 3;
+    public static double R = 1.5;
     public static double alpha = 0.6;
     public static double defau = 58.6;
     public static double kD = 0.0001;
     public static double kI = 0;
-    public static double kP = 0.08;
+    public static double kP = 0.04;
     public static double kS = 0.043;
     public static double kV = 0.00398;
     public static double radian = 48;
     public static double secondary_kD = 0.00001;
     public static double secondary_kI = 0;
-    public static double secondary_kP = 0.04;
-    public static double time_delay = 0.05;
+    public static double secondary_kP = 0.035;
+    public static double time_delay = 0.08;
 
 
 
-
-
-
-
-
-
-
-    public double[] distance_list = {38.27, 46.45, 56.50, 64.64, 76.67, 95.48, 111.44, 115.00, 142.95, 190.00, 300.00};
-    public double[] target_list =   {106.7, 117.9, 120.0, 127.6, 130.7, 136.9, 136.9, 136.9, 136.9, 136.9, 156.60};
+    public double[] distance_list = {0.0, 49.65, 58.0, 68.21, 82.8, 95.3, 190.00, 300.00};
+    public double[] target_list =   {106.0, 106.0, 106.0, 106.7, 110.9, 126.0, 126.0, 126.0};
     double[] voltage;
     double angles = 0.0;
     double prev = 0.0;
@@ -89,7 +82,10 @@ public class PIDF_Shooter {
         voltageDrop.init_Voltage(hardwareMap);
     }
 
-
+    public double filter(double omegaRaw){
+        omegaFiltered = alpha * omegaFiltered + (1 - alpha) * omegaRaw;
+        return omegaFiltered;
+    }
     public double velocity_info(){
         current = shooter.getCurrentPosition();
         current_time = time.seconds();
@@ -97,10 +93,11 @@ public class PIDF_Shooter {
 
         // V = wR Unit: m/s
         if (delta_time >= time_delay) {
-            omega = ((((current - previous_current) / PPR) * (2 * Math.PI))) / delta_time;
-            kalman.update(omega);
 
-            omega =  kalman.get_Omega();
+            omega = ((((current - previous_current) / PPR) * (2 * Math.PI))) / delta_time;
+
+
+
             velocity = omega * (radian / 1000);
             previous_current = shooter.getCurrentPosition();
             previous_time = current_time;
@@ -116,16 +113,16 @@ public class PIDF_Shooter {
         return velocity * 0.38082347482092361511705462852966 * 39.37 ;
     }
 
-    public double acceleration_info(){
-        current_velocity = velocity_info();
-        current_time_2 = time.seconds();
-        delta_time_2 = current_time_2 - previous_time_2;
-        acceleration = (current_velocity - previous_velocity) / delta_time_2;
-        previous_time_2 = current_time_2;
-        previous_velocity = current_velocity;
-
-        return acceleration;
-    }
+//    public double acceleration_info(){
+//        current_velocity = velocity_info();
+//        current_time_2 = time.seconds();
+//        delta_time_2 = current_time_2 - previous_time_2;
+//        acceleration = (current_velocity - previous_velocity) / delta_time_2;
+//        previous_time_2 = current_time_2;
+//        previous_velocity = current_velocity;
+//
+//        return acceleration;
+//    }
 
     public double pidf(double targetVelocity, double theta, boolean can_reverse) {
         double output = 0;
@@ -158,7 +155,6 @@ public class PIDF_Shooter {
         else {output = secondary_kP * error + secondary_kI * integral + secondary_kD * derivative + (kV * targetVelocity + kS);}
 
         previousError = error;
-        if (!can_reverse && output < 0){output = 0;}
         return output;
     }
 
@@ -233,9 +229,7 @@ public class PIDF_Shooter {
     public double getVelocity(){
         return velocity_info();
     }
-    public double getAcceleration(){
-        return acceleration_info();
-    }
+    //public double getAcceleration(){return acceleration_info();}
     public double getVelocity_X(){
         return velocity_info() * Math.cos(Math.toRadians(defau));
     }

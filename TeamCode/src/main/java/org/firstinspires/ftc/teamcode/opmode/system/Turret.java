@@ -24,17 +24,15 @@ public class Turret {
     public static double Per_round = 537.7;
     public static double condition = 10;
     public static double feedForward = 0;
-    public static double gear_motor = 59;
-    public static double gear_turret = 99;
-    public static double kD = 1e-7;
-    public static double kD_secondary = 9e-8;
+    public static double gear_motor = 39;
+    public static double gear_turret = 89;
+    public static double kD = 0.01;
+    public static double kD_secondary = 0.015;
     public static double kI = 0;
-    public static double kP = 0.04;
-    public static double kP_secondary = 0.045;
-    public static double limit = 75;
-
-
-
+    public static double kI_secondary = 0;
+    public static double kP = 0.02;
+    public static double kP_secondary = 0.035;
+    public static double limit = 80;
 
     private double power_turret = 0;
 
@@ -47,10 +45,6 @@ public class Turret {
 
         time = Time;
     }
-    public void manual(double power){
-        critical_fx = power;
-    }
-
     public void to_position(double target, boolean manual){
         double delta = current.getCurrentPosition() - previous;
         double error = target - convert_current_to_degree(current.getCurrentPosition());
@@ -76,14 +70,17 @@ public class Turret {
 //        count = 0;
 //        }
 
-
         if (Math.abs(error) > condition) {
             output = kP * error + kI * integral + kD * derivative + feedForward;
         }
         else {
-            output = kP_secondary * error + kI * integral + kD_secondary * derivative + feedForward;
+            output = kP_secondary * error + kI_secondary * integral + kD_secondary * derivative;
         }
+
+        if (Math.abs(output) < 0.07){output = 0;}
+
         turn(output);
+
         previousError = error;
         previous = current.getCurrentPosition();
     }
@@ -119,9 +116,6 @@ public class Turret {
 
     public double convert_current_to_degree(double position){
         return (position / Per_round) * 360 * gear_motor / gear_turret;
-    }
-    public double convert_d_2_c(double position){
-        return position * 7.48;
     }
     public double get_degree(){return current.getCurrentPosition();}
     public double get_angle(){

@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Config
 public class Constants {
-    public static double forwardPodY = 2.25;
+    public static double forwardPodY = 2.5;
     public static double strafePodX = -5.30;
     public static double breaking = 1;
     public static double breaking_start = 1;

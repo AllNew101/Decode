@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.opmode.system.gamepad;
 import org.firstinspires.ftc.teamcode.opmode.system.Distance_Sensor;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
-import org.firstinspires.ftc.teamcode.opmode.Calculate.Dynamics;
-import org.firstinspires.ftc.teamcode.opmode.Calculate.Voltage_Drop;
+//import org.firstinspires.ftc.teamcode.opmode.Calculate.Dynamics;
+import org.firstinspires.ftc.teamcode.opmode.Indev.PIDF_intake;
 import org.firstinspires.ftc.teamcode.opmode.system.localization_limelight;
 
 
@@ -46,13 +46,14 @@ public class Mecanum_Drive extends OpMode {
     private angular_set angle;
     private Turret Turret;
     private Closer closer;
-    private Dynamics dynamics;
+//    private Dynamics dynamics;
     private telemetryX telemetryX;
     private Distance_Sensor sensor;
     private Distance distance;
     private localization_limelight camera;
+    private PIDF_intake intake_PID;
     ElapsedTime time;
-    public static double[] multiplier = {-1,-1,1};
+    public static double[] multiplier = {1,1,1};
 
     //Tuning
     public static boolean break_shooter = false;
@@ -62,29 +63,26 @@ public class Mecanum_Drive extends OpMode {
     public static boolean check_out = false;
     public static boolean check_shooter = false;
     public static boolean is_red = true;
-    public static int key = 1;
+    public static int key = 8;
     public static double lock_position = 0.5799999999999998;
     public static boolean manual = false;
-    public static double maximum = 0.85;
-    public static double minimum = 0.7;
+    public static double maximum = 0.55;
+    public static double minimum = 0.45;
     public static double moving_Coff = 9;
+    public static double offset = 0;
     public static double origin = 0.5;
     public static int position = 4;
-    public static double ratio_shooter = 0.8499999999999999;
-    public static double reduce_coff = 0.8;
+    public static double ratio_shooter = 0.958;
+    public static double reduce_coff = 1;
     public static double speed_eshooter = 0.003;
     public static double speed_intake_far = 0.6;
     public static double speed_intake_near = 0.75;
     public static double speed_offset = 1;
-    public static double speed_servo = 16;
+    public static double speed_servo = 10;
     public static boolean theseus = false;
 
 
-
-
-    private double offset = 0;
     public double ratio = 1;
-
 
     boolean camera_status = false;
     boolean check_one = false;
@@ -110,10 +108,10 @@ public class Mecanum_Drive extends OpMode {
         closer = new Closer();
         time = new ElapsedTime();
         gamepad0 = new gamepad();
-        dynamics = new Dynamics();
+        //dynamics = new Dynamics();
         sensor = new Distance_Sensor();
         camera = new localization_limelight();
-        sup_servo = new Intake_sup_servo();
+        intake_PID = new PIDF_intake();
         time.reset();
 
         check_intake = false;
@@ -123,7 +121,7 @@ public class Mecanum_Drive extends OpMode {
 
         Ying.init_vel(hardwareMap, follower, time);
         intake.init_intake(hardwareMap);
-        sup_servo.int_sup_servo(hardwareMap);
+        intake_PID.init_PIDF_intake(hardwareMap,time);
         angle.init_angular(hardwareMap);
 
         Turret.init_turret(hardwareMap,time);
@@ -162,6 +160,7 @@ public class Mecanum_Drive extends OpMode {
         }
 
         //Slow Mode
+
         //lead = dynamics.lead(follower.getPose(),follower.getVelocity(),Ying.getVelocity(),Turret.get_angle() / 180 * Math.PI, is_red);
         tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), is_red, follower.getPose().getHeading() / Math.PI * 180, offset, Turret.get_limit()) ;
         adj = Ying.distance_adjustment(follower.getPose().getX(), follower.getPose().getY(), is_red);
@@ -187,13 +186,9 @@ public class Mecanum_Drive extends OpMode {
             check_one = false;
         }
         else if (!check_intake && !check_out) {
-            intake.stop_intake();
+            intake_PID.stop_intake();
         }
 
-        if (gamepad1.squareWasPressed()){
-            multiplier[0] *= -1;
-            multiplier[1] *= -1;
-        }
 
         if (gamepad2.dpad_left) {
             offset -= speed_offset;
@@ -207,37 +202,34 @@ public class Mecanum_Drive extends OpMode {
 
 
 
-        if (check_shooter) {Ying.run_shooter(adj * ratio_shooter * ratio, angle.get_angle(), manual, can_reverse);}
+        if (check_shooter) {Ying.run_shooter(adj * ratio_shooter, angle.get_angle(), manual, can_reverse);}
         else if (!check_shooter) {Ying.stop_shooter(break_shooter);}
 
         if (gamepad2.squareWasPressed()) {
             check_X = !check_X;
-            if (check_X == false){
-                ratio = reduce_coff;
-                can_reverse = false;
-            }
-            else{
-                ratio = 1;
-                can_reverse = true;
-            }
         }
         if (check_X) {
             closer.open();
-            ratio = 1;
             check_intake = true;
+            gamepad2.rumble(100);
+
             if (follower.getPose().getX() > 40){
-                if (theseus){
-                angle.angular_on(-1 * Ying.getAcceleration() / 90 * moving_Coff, minimum, maximum);}
-                else {angle.angular_on(-1 * speed_servo, minimum, maximum);}
-                intake.intake(speed_intake_near);
+//                if (theseus){
+//                angle.angular_on(-1 * Ying.getAcceleration() / 90 * moving_Coff, minimum, maximum);}
+//                else {angle.angular_on(-1 * speed_servo, minimum, maximum);}
+                angle.angular_on(-1 * speed_servo, minimum, maximum);
+                //intake.intake(speed_intake_near);
+                intake_PID.start_intake(speed_intake_near);
             }
             else{
                 angle.setPosition(maximum);
-                intake.intake(speed_intake_far);
+                intake_PID.start_intake(speed_intake_far);
             }
         }
         else if (!check_X) {
             closer.close();
+            gamepad2.stopRumble();
+
             if (theseus) {angle.setPosition(lock_position);}
             else{angle.setOrigin();}
         }
@@ -253,7 +245,6 @@ public class Mecanum_Drive extends OpMode {
         if (gamepad2.triangleWasPressed()){check_turret = !check_turret;}
         if (check_turret){
             ratio = 1;
-            can_reverse = true;
             Turret.to_position(tracking,manual);
 
         }
@@ -285,6 +276,7 @@ public class Mecanum_Drive extends OpMode {
         else{telemetryX.addData("Mode","Manual Mode",2);}
 
         telemetryX.addData("position",follower.getPose(),2);
+        telemetryX.addData("Turn",follower.getPose().getHeading(),2);
         telemetryX.addData("automatedDrive",automatedDrive,2);
         telemetryX.addData("target (m/s)",adj * ratio_shooter,2);
         telemetryX.addData("displacement",Ying.getDisplacement(follower.getPose().getX(),follower.getPose().getY()),2);
@@ -301,7 +293,7 @@ public class Mecanum_Drive extends OpMode {
         switch (key){
             case 1:
                 telemetryX.addData("velocity",Ying.getVelocity(),0);
-                telemetryX.addData("acceleration",Ying.getAcceleration(),0);
+//                telemetryX.addData("acceleration",Ying.getAcceleration(),0);
                 telemetryX.addData("velocity_X",Ying.getVelocity_X(),0);
                 telemetryX.addData("current_position",Ying.getCurrentposition(),0);
                 telemetryX.addData("current",Ying.get_output(adj * ratio_shooter * ratio),0);
@@ -322,17 +314,17 @@ public class Mecanum_Drive extends OpMode {
                 telemetryX.addData("angle",angle.get_angle(),0);
                 break;
 
-            case 4:
-                telemetryX.addData("Velo",follower.getVelocity(),2);
-                telemetryX.addData("Lead",lead.getPose(),2);
-                telemetryX.addData("t",dynamics.get_t(),0);
-                telemetryX.addData("a",dynamics.get_a(),0);
-                telemetryX.addData("b",dynamics.get_b(),0);
-                telemetryX.addData("c",dynamics.get_c(),0);
-                telemetryX.addData("vb",dynamics.get_vb(),0);
-                telemetryX.addData("dis",dynamics.get_dis(),0);
-                telemetryX.addData("dot",dynamics.get_dot(follower.getVelocity()),0);
-                break;
+//            case 4:
+//                telemetryX.addData("Velo",follower.getVelocity(),2);
+//                telemetryX.addData("Lead",lead.getPose(),2);
+//                telemetryX.addData("t",dynamics.get_t(),0);
+//                telemetryX.addData("a",dynamics.get_a(),0);
+//                telemetryX.addData("b",dynamics.get_b(),0);
+//                telemetryX.addData("c",dynamics.get_c(),0);
+//                telemetryX.addData("vb",dynamics.get_vb(),0);
+//                telemetryX.addData("dis",dynamics.get_dis(),0);
+//                telemetryX.addData("dot",dynamics.get_dot(follower.getVelocity()),0);
+//                break;
 
             case 5:
                 telemetryX.addData("DISTANCE",sensor.get_dis(),2);
@@ -348,6 +340,9 @@ public class Mecanum_Drive extends OpMode {
                 telemetryX.addData("Y",esti[2],2);
                 telemetryX.addData("heading",esti[3],2);
                 break;
+            case 8:
+                telemetryX.addData("velo",intake_PID.get_velocity(),2);
+                telemetryX.addData("power",intake_PID.getpower(),2);
         }
         previous_key = key;
     }
