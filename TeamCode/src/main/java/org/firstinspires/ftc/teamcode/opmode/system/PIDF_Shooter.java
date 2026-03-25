@@ -17,17 +17,14 @@ import org.firstinspires.ftc.teamcode.opmode.Calculate.Kalman_filter_1d;
 public class PIDF_Shooter {
     public DcMotor shooter;
     public DcMotor shooter2;
-    public double acceleration, current_velocity, previous_velocity, displacement, omega, current, previous_current, power, rpm, velocity, previous_time, delta_time,delta_time_2,previous_time_2,current_time_2, current_time , integral, derivative, error, previousError;
+    public double  previous_velocity, omega, current, previous_current, power, rpm, velocity, previous_time, delta_time,delta_time_2,previous_time_2,current_time_2, current_time , integral, derivative, error, previousError;
     ElapsedTime time;
     Follower follower;
     boolean critical = false;
-    double omegaFiltered = 0;
     int index;
 
     // Encoder counts per revolution
     public static double PPR = 28;
-    public static double Q = 0.5;
-    public static double R = 1.5;
     public static double alpha = 0.6;
     public static double defau = 58.6;
     public static double kD = 0.0001;
@@ -45,14 +42,10 @@ public class PIDF_Shooter {
 
     public double[] distance_list = {0.0, 49.65, 58.0, 68.21, 82.8, 95.3, 190.00, 300.00};
     public double[] target_list =   {101.5, 101.5, 101.5, 102.2, 106.2, 106.2, 110.2, 110.2};
-    double[] voltage;
-    double angles = 0.0;
     double prev = 0.0;
-    Kalman_filter_1d kalman = new Kalman_filter_1d(Q,R);
     Distance distance = new Distance();
     Interpolation inter = new Interpolation();
     BinarySearch BS = new BinarySearch(distance_list);
-    Voltage_Drop voltageDrop = new Voltage_Drop();
 
 
 
@@ -79,13 +72,8 @@ public class PIDF_Shooter {
         previous_current = shooter.getCurrentPosition();
         previous_time = time.seconds();
         previous_velocity = 0;
-        voltageDrop.init_Voltage(hardwareMap);
     }
 
-    public double filter(double omegaRaw){
-        omegaFiltered = alpha * omegaFiltered + (1 - alpha) * omegaRaw;
-        return omegaFiltered;
-    }
     public double velocity_info(){
         current = shooter.getCurrentPosition();
         current_time = time.seconds();
@@ -111,36 +99,6 @@ public class PIDF_Shooter {
              prev = velocity;
         }
         return velocity * 0.38082347482092361511705462852966 * 39.37 ;
-    }
-
-//    public double acceleration_info(){
-//        current_velocity = velocity_info();
-//        current_time_2 = time.seconds();
-//        delta_time_2 = current_time_2 - previous_time_2;
-//        acceleration = (current_velocity - previous_velocity) / delta_time_2;
-//        previous_time_2 = current_time_2;
-//        previous_velocity = current_velocity;
-//
-//        return acceleration;
-//    }
-
-    public double pidf(double targetVelocity, double theta, boolean can_reverse) {
-        double output = 0;
-        double velocity_shooter = velocity_info();
-
-        angles = theta;
-        error = Math.abs(targetVelocity) - (velocity_shooter * Math.cos(Math.toRadians(angles)));
-
-        integral += error * delta_time;
-        derivative = (error - previousError) / delta_time;
-
-        if (Math.abs(velocity_shooter * Math.cos(Math.toRadians(angles)) - targetVelocity) > 30) {output = kP * error + kI * integral + kD * derivative + (kV * targetVelocity + kS);}
-        else {output = secondary_kP * error + secondary_kI * integral + secondary_kD * derivative + (kV * targetVelocity + kS);}
-
-        previousError = error;
-
-        if (!can_reverse && output < 0){output = 0;}
-        return output;
     }
 
     public double pidf(double targetVelocity, boolean can_reverse) {
@@ -183,7 +141,6 @@ public class PIDF_Shooter {
     }
 
     public void run_shooter(double targetVelocity, double theta, boolean manual, boolean can_reverse) {
-        voltage = voltageDrop.Voltage_checker();
 
         power = pidf(targetVelocity,can_reverse);
         if (!is_working(power,velocity) || manual){
@@ -192,7 +149,6 @@ public class PIDF_Shooter {
         }
         else{critical = false;}
 
-        //if (voltage[1] < 11){power *= voltage[2];}
 
         shooter.setPower(power);
         shooter2.setPower(power);
@@ -229,7 +185,6 @@ public class PIDF_Shooter {
     public double getVelocity(){
         return velocity_info();
     }
-    //public double getAcceleration(){return acceleration_info();}
     public double getVelocity_X(){
         return velocity_info() * Math.cos(Math.toRadians(defau));
     }
@@ -254,5 +209,4 @@ public class PIDF_Shooter {
     public double get_output(double targetVelocity) {
         return pidf(targetVelocity,true);
     }
-    public double[] get_voltage(){return voltage;}
 }

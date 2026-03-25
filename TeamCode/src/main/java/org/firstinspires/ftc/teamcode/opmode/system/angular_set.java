@@ -10,16 +10,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 public class angular_set {
     private Servo angle;
-    public double speed_angular = 100;
-    public static int divided_COF = 800;
-    public static double origin_POSE = 0.55;
 
     public void init_angular(HardwareMap hardwareMap) {
         angle = hardwareMap.get(Servo.class, "angle");
     }
     public void angular_on(double speed_angular , double minimum, double maximum){
         double angularx;
-        angularx = angle.getPosition() + (speed_angular / divided_COF);
+        angularx = angle.getPosition() + (speed_angular / 800);
         if (angularx < minimum){angularx = minimum;}
         if (angularx > maximum){angularx = maximum;}
         angle.setPosition(angularx);
@@ -27,7 +24,7 @@ public class angular_set {
 
     public double angular_on(double speed_angular , double angular , double minimum, double maximum){
         double angularx;
-        angularx = angular + (speed_angular / divided_COF);
+        angularx = angular + (speed_angular / 800);
         if (angularx < minimum){angularx = minimum;}
         if (angularx > maximum){angularx = maximum;}
         angle.setPosition(angularx);
@@ -38,34 +35,23 @@ public class angular_set {
         double angularx;
         int indicator = 1;
         if (angle.getPosition() < position){indicator = -1;}
-        if (angle.getPosition() != position){angularx =  + (speed_angular / divided_COF) * indicator;}
-        angularx = angle.getPosition() + (speed_angular / divided_COF) * indicator;
+        if (angle.getPosition() != position){angularx =  + (speed_angular / 800) * indicator;}
+        angularx = angle.getPosition() + (speed_angular / 800) * indicator;
         angle.setPosition(angularx);
     }
     public double angular_to_position(double speed_angular , double angular , double position){
         double angularx = angular;
         int indicator = 1;
         if (angular < position){indicator = -1;}
-        if (angular != position){angularx = angular + (speed_angular / divided_COF) * indicator;}
+        if (angular != position){angularx = angular + (speed_angular / 800) * indicator;}
         angle.setPosition(angularx);
         return angularx;
-    }
-
-    public void set_offset(double position){
-        angle.setPosition(angle.getPosition() + position);
     }
 
     public void setPosition(double position){
         angle.setPosition(position);
     }
 
-    public void setOrigin(){
-        angle.setPosition(origin_POSE);
-    }
-
-    public void setup_servo(){
-        angle.setPosition(0.5);
-    }
 
     public double get_position(){
         return angle.getPosition();

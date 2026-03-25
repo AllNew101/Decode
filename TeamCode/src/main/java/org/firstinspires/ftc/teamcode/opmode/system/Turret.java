@@ -141,9 +141,6 @@ public class Turret {
     public boolean get_critical(){
         return critical;
     }
-    public double get_derivative(){
-        return derivative;
-    }
     public double get_limit(){
         return limit;
     }

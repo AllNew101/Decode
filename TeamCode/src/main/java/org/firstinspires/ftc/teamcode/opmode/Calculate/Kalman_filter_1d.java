@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmode.Calculate;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
+@Disabled
 public class Kalman_filter_1d {
     private double omega;
 

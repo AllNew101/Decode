@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmode.Calculate;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
+@Disabled
 public class LowPass_filter {
     double omegaFiltered = 0;
     double alpha;
