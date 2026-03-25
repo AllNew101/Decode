@@ -12,7 +12,7 @@ public class angular_set {
     private Servo angle;
     public double speed_angular = 100;
     public static int divided_COF = 800;
-    public static double origin_POSE = 0.85;
+    public static double origin_POSE = 0.55;
 
     public void init_angular(HardwareMap hardwareMap) {
         angle = hardwareMap.get(Servo.class, "angle");

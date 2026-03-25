@@ -30,6 +30,8 @@ public class Distance {
         double targeting = distance(X ,Y ,is_red)[2];
         double result = targeting + stabilizer + offset;
 
+        if (result > limit){result = limit;}
+        else if (result < -limit){result = -limit;}
         return AngleUnit.normalizeDegrees(result);
     }
 }

@@ -33,6 +33,7 @@ public class Dynamics {
         dis = new Vector(dist[3],Math.toRadians(dist[2]));
         vb = new Vector(vball,theta);
         ti = time(dis,vb,vr);
+        if (ti > 5){ti = 5;}
         Pose lead_XY = new Pose(vr.getXComponent() * ti, vr.getYComponent() * ti);
 
         return new Pose(position.getX() + lead_XY.getX(), position.getY() + lead_XY.getY() , position.getHeading());

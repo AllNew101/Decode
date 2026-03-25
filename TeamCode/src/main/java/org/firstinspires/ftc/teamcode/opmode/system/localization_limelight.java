@@ -55,6 +55,9 @@ public class localization_limelight {
         }
         else{
             ava = 1.0;
+            X = 0.0;
+            Y = 0.0;
+            heading = -37;
         }
         double[] n = {ava, 144 - (X * 39.37 + 72) + offset_X * Math.cos(Math.toRadians(angle)) - offset_Y * Math.sin(Math.toRadians(angle)), Y * -39.37 - 72 + offset_X * Math.sin(Math.toRadians(angle)) + offset_Y * Math.cos(Math.toRadians(angle)), Math.toRadians(heading)};
 

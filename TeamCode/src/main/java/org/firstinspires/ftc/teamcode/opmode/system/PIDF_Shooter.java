@@ -44,7 +44,7 @@ public class PIDF_Shooter {
 
 
     public double[] distance_list = {0.0, 49.65, 58.0, 68.21, 82.8, 95.3, 190.00, 300.00};
-    public double[] target_list =   {106.0, 106.0, 106.0, 106.7, 110.9, 126.0, 126.0, 126.0};
+    public double[] target_list =   {101.5, 101.5, 101.5, 102.2, 106.2, 106.2, 110.2, 110.2};
     double[] voltage;
     double angles = 0.0;
     double prev = 0.0;
@@ -184,7 +184,7 @@ public class PIDF_Shooter {
 
     public void run_shooter(double targetVelocity, double theta, boolean manual, boolean can_reverse) {
         voltage = voltageDrop.Voltage_checker();
-        //power = pidf(targetVelocity,theta,can_reverse);
+
         power = pidf(targetVelocity,can_reverse);
         if (!is_working(power,velocity) || manual){
             power = manual(targetVelocity);

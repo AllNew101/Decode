@@ -15,6 +15,7 @@ public class Turret {
     DcMotor turret,current;
     private double integral, derivative, previousError, delta_time , time_current , previous_time;
     boolean critical;
+    boolean checking = false;
     double critical_fx = 0.0;
     double previous = 0.0;
     int count = 0;
@@ -27,15 +28,15 @@ public class Turret {
     public static double gear_motor = 39;
     public static double gear_turret = 89;
     public static double kD = 0.01;
-    public static double kD_secondary = 0.015;
+    public static double kD_secondary = 0.02;
     public static double kI = 0;
-    public static double kI_secondary = 0;
-    public static double kP = 0.02;
-    public static double kP_secondary = 0.035;
-    public static double limit = 80;
+    public static double varikI_secondary = 0;
+    public static double kP = 0.04;
+    public static double kP_secondary = 0.05;
+    public static double limit = 120;
 
     private double power_turret = 0;
-
+    private double kI_secondary = varikI_secondary;
 
     public void init_turret(HardwareMap hardwareMap, ElapsedTime Time) {
         turret = hardwareMap.get(DcMotor.class, "Turret");
@@ -45,7 +46,7 @@ public class Turret {
 
         time = Time;
     }
-    public void to_position(double target, boolean manual){
+    public void to_position(double target, boolean manual, boolean check_open , boolean check_ki){
         double delta = current.getCurrentPosition() - previous;
         double error = target - convert_current_to_degree(current.getCurrentPosition());
         double output = 0;
@@ -77,6 +78,18 @@ public class Turret {
             output = kP_secondary * error + kI_secondary * integral + kD_secondary * derivative;
         }
 
+        if (!check_open && checking) {
+            integral = 0 ;
+            checking = false;
+        }
+        if (check_open){
+            checking = true;
+        }
+
+        if (check_ki){
+            kI_secondary = 0;
+        }else{kI_secondary = varikI_secondary;}
+
         if (Math.abs(output) < 0.07){output = 0;}
 
         turn(output);
@@ -84,6 +97,7 @@ public class Turret {
         previousError = error;
         previous = current.getCurrentPosition();
     }
+
 
 
 
