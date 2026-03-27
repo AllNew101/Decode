@@ -25,9 +25,7 @@ public class localization_limelight {
     double X = 0.0;
     double Y = 0.0;
     double heading = 0.0;
-    double ava = 1.0;
-    double previous_fps = 0;
-    double fps = 0;
+    double ava = 0.0;
     public static double offset_X = -5;
     public static double offset_Y = -5;
 
@@ -47,14 +45,14 @@ public class localization_limelight {
         if (result != null && result.isValid() ) {
             Pose3D botpose_mt = result.getBotpose();
             if (botpose_mt != null) {
-                ava = 0.0;
+                ava = 1.0;
                 X = botpose_mt.getPosition().x;
                 Y = botpose_mt.getPosition().y;
                 heading = 180 + botpose_mt.getOrientation().getYaw(AngleUnit.DEGREES);
             }
         }
         else{
-            ava = 1.0;
+            ava = 0.0;
             X = 0.0;
             Y = 0.0;
             heading = -37;

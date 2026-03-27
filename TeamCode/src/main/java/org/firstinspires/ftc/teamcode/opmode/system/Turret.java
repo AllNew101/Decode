@@ -22,19 +22,20 @@ public class Turret {
     ElapsedTime time;
     Distance distance = new Distance();
 
-    public static double Per_round = 537.7;
-    public static double condition = 10;
+
+
     public static double feedForward = 0;
-    public static double gear_motor = 39;
-    public static double gear_turret = 89;
-    public static double kD = 0.01;
-    public static double kD_secondary = 0.02;
-    public static double kI = 0;
+    public static double kD = 0.0000001;
+    public static double kD_secondary = 0.01;
     public static double varikI_secondary = 0;
-    public static double kP = 0.04;
-    public static double kP_secondary = 0.05;
+    public static double kP = 0.038;
+    public static double kP_secondary = 0.047;
     public static double limit = 120;
 
+    private double gear_motor = 39;
+    private double gear_turret = 89;
+    private double condition = 10;
+    private double Per_round = 537.7;
     private double power_turret = 0;
     private double kI_secondary = varikI_secondary;
 
@@ -72,7 +73,7 @@ public class Turret {
 //        }
 
         if (Math.abs(error) > condition) {
-            output = kP * error + kI * integral + kD * derivative + feedForward;
+            output = kP * error + kD * derivative + feedForward;
         }
         else {
             output = kP_secondary * error + kI_secondary * integral + kD_secondary * derivative;

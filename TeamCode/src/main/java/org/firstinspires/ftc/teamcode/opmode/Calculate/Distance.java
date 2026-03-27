@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 public class Distance {
 
     public static double[] red = {128.80923076923077 , -140.4923076923077 , 33.0};
-    public static double[] blue = {122, -12 , 50.0};
+    public static double[] blue = {123, -18 , 50.0};
 
     private double[] target = {0.0 , 0.0 , 0.0};
 
@@ -29,8 +29,11 @@ public class Distance {
         double targeting = distance(X ,Y ,is_red)[2];
         double result = targeting + stabilizer + offset;
 
-        if (result > limit){result = limit;}
-        else if (result < -limit){result = -limit;}
+        //Red
+        if (Math.abs(result) > limit && is_red){result = -limit;}
+        //Blue
+        else if (Math.abs(result) > limit && !is_red){result = limit;}
+
         return AngleUnit.normalizeDegrees(result);
     }
 }

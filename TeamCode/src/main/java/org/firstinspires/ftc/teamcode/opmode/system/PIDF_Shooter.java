@@ -10,8 +10,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.BinarySearch;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Interpolation;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
-import org.firstinspires.ftc.teamcode.opmode.Calculate.Voltage_Drop;
-import org.firstinspires.ftc.teamcode.opmode.Calculate.Kalman_filter_1d;
 
 @Config
 public class PIDF_Shooter {
@@ -22,20 +20,19 @@ public class PIDF_Shooter {
     Follower follower;
     boolean critical = false;
     int index;
+    private double radian = 48;
+    private double PPR = 28;
 
     // Encoder counts per revolution
-    public static double PPR = 28;
-    public static double alpha = 0.6;
     public static double defau = 58.6;
     public static double kD = 0.0001;
     public static double kI = 0;
     public static double kP = 0.04;
     public static double kS = 0.043;
     public static double kV = 0.00398;
-    public static double radian = 48;
     public static double secondary_kD = 0.00001;
     public static double secondary_kI = 0;
-    public static double secondary_kP = 0.035;
+    public static double secondary_kP = 0.039;
     public static double time_delay = 0.08;
 
 
@@ -98,7 +95,7 @@ public class PIDF_Shooter {
         else{
              prev = velocity;
         }
-        return velocity * 0.38082347482092361511705462852966 * 39.37 ;
+        return velocity * 0.381 * 39.37 ;
     }
 
     public double pidf(double targetVelocity, boolean can_reverse) {
@@ -126,17 +123,11 @@ public class PIDF_Shooter {
         return 0;
     }
 
-    public void stop_shooter(boolean break_active) {
+    public void stop_shooter() {
         shooter.setPower(0);
         shooter2.setPower(0);
-        if (break_active){
-            shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            shooter2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
-        else {
-            shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            shooter2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        }
+        shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        shooter2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
     }
 

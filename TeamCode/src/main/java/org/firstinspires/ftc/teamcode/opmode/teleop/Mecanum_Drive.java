@@ -47,24 +47,24 @@ public class Mecanum_Drive extends OpMode {
     private PIDF_intake intake_PID;
     private gamepad gamepad0;
     ElapsedTime time;
-    public static double[] multiplier = {1,1,1};
+    public static double[] multiplier = {1, 1, 0.95};
 
     //Tuning
-    public static boolean break_shooter = false;
+    public static double X_autodrive = 90;
+    public static double Y_autodrive = -80;
+    public static boolean debug = false;
     public static boolean is_red = true;
     public static int key = 1;
     public static boolean manual = false;
-    public static boolean debug = false;
-    public static double maximum = 0.55;
+    public static double maximum = 0.45;
     public static double minimum = 0.3;
     public static double ratio_shooter = 1;
-    public static double speed_eshooter = 0.003;
+    public static double speed_eshooter = 0.008;
     public static double speed_intake_far = 0.6;
-    public static double speed_intake_near = 0.75;
-    public static double X_autodrive = 90;
-    public static double Y_autodrive = -80;
+    public static double speed_intake_near = 0.8;
+    public static double speed_servo = 10;
     public static double theta_autodrive = -100;
-    public static double speed_servo = 7;
+    public static double speed_offset = 0.5;
 
     private boolean check_X = false;
     private boolean check_intake = false;
@@ -73,8 +73,7 @@ public class Mecanum_Drive extends OpMode {
     private boolean check_shooter = false;
     private boolean is_trigger = false;
     private double offset = 0;
-    private double speed_offset = 1;
-    boolean camera_status = false;
+
     boolean check_one = false;
     boolean can_reverse = true;
     int previous_key = 0;
@@ -118,7 +117,7 @@ public class Mecanum_Drive extends OpMode {
 
         telemetryX.init(telemetry);
         closer.init_angular(hardwareMap);
-        sensor.init_Distance_senser(hardwareMap);
+        sensor.init_Distance_senser(hardwareMap, time);
         camera.init(hardwareMap);
 
         follower = Constants.createFollower(hardwareMap);
@@ -129,8 +128,6 @@ public class Mecanum_Drive extends OpMode {
                 .addPath(new Path(new BezierLine(follower::getPose, new Pose(X_autodrive, Y_autodrive))))
                 .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(theta_autodrive), 0.8))
                 .build();
-
-
     }
 
     @Override
@@ -180,7 +177,7 @@ public class Mecanum_Drive extends OpMode {
                     angle.angular_on(-1 * speed_servo, minimum, maximum);
                     intake_PID.start_intake(speed_intake_near);
                 } else {
-                    angle.setPosition(maximum);
+                    angle.angular_on(-1 * speed_servo, minimum, maximum);
                     intake_PID.start_intake(speed_intake_far);
                 }
             } else if (!check_X) {
@@ -243,34 +240,28 @@ public class Mecanum_Drive extends OpMode {
         if (check_shooter) {
             Ying.run_shooter(adj * ratio_shooter, angle.get_angle(), manual, can_reverse);
         } else if (!check_shooter) {
-            Ying.stop_shooter(break_shooter);
+            Ying.stop_shooter();
+        }
+        if (gamepad1.dpadDownWasPressed()) {
+              check_loca = true;
+        } else {
+              check_loca = false;
+        }
+
+        if (check_loca) {
+            estimate = new Pose(esti[1], esti[2], esti[3]);
+            follower.setPose(estimate);
         }
 
 
-
-
-
-            if (gamepad1.dpadDownWasPressed()) {
-                check_loca = true;
-            } else {
-                check_loca = false;
-            }
-
-            if (check_loca) {
-                estimate = new Pose(esti[1], esti[2], esti[3]);
-                follower.setPose(estimate);
-                camera_status = true;
-            }
-
-
-            if (gamepad2.triangleWasPressed()) {
-                check_turret = !check_turret;
-            }
-            if (check_turret) {
-                Turret.to_position(tracking, manual , check_X , false);
-            } else {
-                Turret.to_position(offset, manual , true,true); //not using ki
-            }
+        if (gamepad2.triangleWasPressed()) {
+            check_turret = !check_turret;
+        }
+        if (check_turret) {
+            Turret.to_position(tracking, manual , check_X , false);
+        } else {
+            Turret.to_position(offset, manual , true,true); //not using ki
+        }
 
             drawing.drawRobot(follower.getPose(), "red");
             drawing.sendPacket();
@@ -285,7 +276,6 @@ public class Mecanum_Drive extends OpMode {
         }
     }
     public void standard(){
-        if (previous_key != key){telemetryX.clear();}
         if (!manual){telemetryX.addData("Mode","Automation Mode",2);}
         else{telemetryX.addData("Mode","Manual Mode",2);}
 
@@ -294,7 +284,7 @@ public class Mecanum_Drive extends OpMode {
         telemetryX.addData("automatedDrive",automatedDrive,2);
         telemetryX.addData("target (m/s)",adj * ratio_shooter,2);
         telemetryX.addData("displacement",Ying.getDisplacement(follower.getPose().getX(),follower.getPose().getY()),2);
-        telemetryX.addData("camera_working",camera_status,2);
+        telemetryX.addData("check_cameraWorking" , esti[0],2);
 
         if (Ying.get_critical()){telemetryX.addData("Danger!!!!","Shooter is in manual mode",2);}
         if (is_red){
