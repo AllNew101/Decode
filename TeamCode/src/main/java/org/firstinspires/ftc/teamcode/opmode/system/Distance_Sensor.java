@@ -16,7 +16,8 @@ public class Distance_Sensor {
     public static double test = 14;
     double current ;
     double previos;
-    public static double time_delay = 0.3;
+    public static double time_delay = 0.35;
+    boolean error = false;
     ElapsedTime Time;
 
 
@@ -28,17 +29,20 @@ public class Distance_Sensor {
         previos = Time.seconds();
     }
 
-    public double get_dis() {return Dis_sen.getDistance(DistanceUnit.CM);}
+    public double get_dis() {
+        double distance = Dis_sen.getDistance(DistanceUnit.CM);
+        return distance;
+    }
 
     public void check_led() {
         current = Time.seconds() - previos;
         if (get_dis() < test && current > time_delay){
             LED.setPosition(ready);
         }
-        else if (get_dis() < test) {;}
-        else {
+        else if (get_dis() > test ) {
             LED.setPosition(not_ready);
             previos = Time.seconds();
         }
+
     }
 }

@@ -56,9 +56,9 @@ public class Mecanum_Drive extends OpMode {
     public static boolean is_red = true;
     public static int key = 1;
     public static boolean manual = false;
-    public static double maximum = 0.45;
-    public static double minimum = 0.3;
-    public static double ratio_shooter = 1;
+    public static double maximum = 0.16;
+    public static double minimum = 0.06;
+    public static double ratio_shooter = 1.05;
     public static double speed_eshooter = 0.008;
     public static double speed_intake_far = 0.6;
     public static double speed_intake_near = 0.8;
@@ -75,6 +75,7 @@ public class Mecanum_Drive extends OpMode {
     private double offset = 0;
 
     boolean check_one = false;
+    boolean error = false;
     boolean can_reverse = true;
     int previous_key = 0;
     double adj, tracking;
@@ -150,6 +151,10 @@ public class Mecanum_Drive extends OpMode {
             );
 
         }
+
+        if (gamepad2.dpadDownWasPressed()){error = true;}
+        if (!error){sensor.check_led();}
+
         if (gamepad1.dpadUpWasPressed()) {
             follower.followPath(pathChain.get());
             automatedDrive = true;
@@ -271,7 +276,7 @@ public class Mecanum_Drive extends OpMode {
             standard();
             telemetryX.update();
             follower.update();
-            sensor.check_led();
+
 
         }
     }

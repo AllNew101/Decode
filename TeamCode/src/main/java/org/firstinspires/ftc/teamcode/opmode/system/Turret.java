@@ -25,12 +25,12 @@ public class Turret {
 
 
     public static double feedForward = 0;
-    public static double kD = 0.0000001;
-    public static double kD_secondary = 0.01;
-    public static double varikI_secondary = 0;
-    public static double kP = 0.038;
-    public static double kP_secondary = 0.047;
+    public static double kD = 1e-7;
+    public static double kD_secondary = 0.009;
+    public static double kP = 0.04;
+    public static double kP_secondary = 0.048;
     public static double limit = 120;
+    public static double varikI_secondary = 0;
 
     private double gear_motor = 39;
     private double gear_turret = 89;
@@ -60,22 +60,17 @@ public class Turret {
 
 //        if (!is_working(output ,delta) || manual) {
 //            count += 1;
-//            if (count > 3) {
-//                critical = true;
-//                output = critical_fx;
-//            }
-//            else{
-//                critical = false;
-//            }
-//        }
-//        else{critical = false;
-//        count = 0;
+//            if (count > 3) {critical = true;}
+//            else{critical = false;}
 //        }
 
+
         if (Math.abs(error) > condition) {
+            turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             output = kP * error + kD * derivative + feedForward;
         }
         else {
+            turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             output = kP_secondary * error + kI_secondary * integral + kD_secondary * derivative;
         }
 
@@ -146,9 +141,5 @@ public class Turret {
         return limit;
     }
 
-    public void reset(){
-        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
 
 }
