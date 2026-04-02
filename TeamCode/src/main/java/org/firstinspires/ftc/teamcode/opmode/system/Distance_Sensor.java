@@ -16,7 +16,7 @@ public class Distance_Sensor {
     public static double test = 14;
     double current ;
     double previos;
-    public static double time_delay = 0.35;
+    public static double time_delay = 0.34;
     boolean error = false;
     ElapsedTime Time;
 

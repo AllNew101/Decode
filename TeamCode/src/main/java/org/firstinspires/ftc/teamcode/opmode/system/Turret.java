@@ -3,16 +3,21 @@ package org.firstinspires.ftc.teamcode.opmode.system;
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
 
 
 
 @Config
 public class Turret {
-    DcMotor turret,current;
+    DcMotorEx turret;
+    AnalogInput poten;
     private double integral, derivative, previousError, delta_time , time_current , previous_time;
     boolean critical;
     boolean checking = false;
@@ -24,32 +29,45 @@ public class Turret {
 
 
 
-    public static double feedForward = 0;
-    public static double kD = 1e-7;
-    public static double kD_secondary = 0.009;
-    public static double kP = 0.04;
-    public static double kP_secondary = 0.048;
+    public static double kS = 0.17;
+    public static double kD = 1;
+    public static double kD_secondary = 0.9;
+    public static double kP = 0.02;
+    public static double kP_secondary = 0.01;
     public static double limit = 120;
     public static double varikI_secondary = 0;
+    public static double condition = 20;
 
     private double gear_motor = 39;
     private double gear_turret = 89;
-    private double condition = 10;
+
+    private double gear_potentiometer = 12;
+    private double gear_potentiometer_out = 42;
+
+    private double middle_poten = 1.107;
+
     private double Per_round = 537.7;
     private double power_turret = 0;
     private double kI_secondary = varikI_secondary;
-
+    private double target_velo = 0;
+    private double output = 0;
+    private double offset = 0;
     public void init_turret(HardwareMap hardwareMap, ElapsedTime Time) {
-        turret = hardwareMap.get(DcMotor.class, "Turret");
-        current = hardwareMap.get(DcMotor.class, "leftRear");
-        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        turret.setDirection(DcMotorSimple.Direction.REVERSE);
+        poten = hardwareMap.get(AnalogInput.class, "poten");
+        turret = hardwareMap.get(DcMotorEx.class, "Turret");
+        turret.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        turret.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        turret.setDirection(DcMotorEx.Direction.REVERSE);
+        offset = convert_potentiometer_to_degree(poten.getVoltage());
 
         time = Time;
     }
-    public void to_position(double target, boolean manual, boolean check_open , boolean check_ki){
-        double delta = current.getCurrentPosition() - previous;
-        double error = target - convert_current_to_degree(current.getCurrentPosition());
+
+    public void to_position(double target){
+        double error = target - (convert_current_to_degree(turret.getCurrentPosition()) + offset);
+        if (Math.abs(error) < 1){
+            error = 0;
+        }
         double output = 0;
         time_current = time.seconds();
         delta_time = (time_current - previous_time) ;
@@ -67,31 +85,19 @@ public class Turret {
 
         if (Math.abs(error) > condition) {
             turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            output = kP * error + kD * derivative + feedForward;
+            output = kP * error + kD * derivative + kS * Math.signum(error);
         }
         else {
             turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            output = kP_secondary * error + kI_secondary * integral + kD_secondary * derivative;
+            output = kP_secondary * error + kI_secondary * integral + kD_secondary * derivative + kS * Math.signum(error);
         }
 
-        if (!check_open && checking) {
-            integral = 0 ;
-            checking = false;
-        }
-        if (check_open){
-            checking = true;
-        }
 
-        if (check_ki){
-            kI_secondary = 0;
-        }else{kI_secondary = varikI_secondary;}
-
-        if (Math.abs(output) < 0.07){output = 0;}
 
         turn(output);
 
         previousError = error;
-        previous = current.getCurrentPosition();
+        previous = turret.getCurrentPosition();
     }
 
 
@@ -102,10 +108,10 @@ public class Turret {
         boolean check_over = false;
 
 
-        if (convert_current_to_degree(current.getCurrentPosition()) > limit && power_turret > 0){check_over = true;}
-        if (convert_current_to_degree(current.getCurrentPosition()) < -limit && power_turret < 0){check_over = true;}
-        if (convert_current_to_degree(current.getCurrentPosition()) > limit && power_turret < 0){check_over = false;}
-        if (convert_current_to_degree(current.getCurrentPosition()) < -limit && power_turret > 0){check_over = false;}
+        if (convert_current_to_degree(turret.getCurrentPosition()) > limit && power_turret > 0){check_over = true;}
+        if (convert_current_to_degree(turret.getCurrentPosition()) < -limit && power_turret < 0){check_over = true;}
+        if (convert_current_to_degree(turret.getCurrentPosition()) > limit && power_turret < 0){check_over = false;}
+        if (convert_current_to_degree(turret.getCurrentPosition()) < -limit && power_turret > 0){check_over = false;}
         if (check_over){stop();}
         else{
             turret.setPower(power_turret);
@@ -119,6 +125,7 @@ public class Turret {
 
 
 
+
     public void stop(){
         turret.setPower(0);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -127,9 +134,13 @@ public class Turret {
     public double convert_current_to_degree(double position){
         return (position / Per_round) * 360 * gear_motor / gear_turret;
     }
-    public double get_degree(){return current.getCurrentPosition();}
+    public double convert_potentiometer_to_degree(double position){
+        return ((position - middle_poten) / poten.getMaxVoltage()) * 270 * gear_motor / gear_turret * gear_potentiometer_out / gear_potentiometer;
+    }
+
+    public double get_degree(){return turret.getCurrentPosition();}
     public double get_angle(){
-        return convert_current_to_degree(current.getCurrentPosition());
+        return convert_current_to_degree(turret.getCurrentPosition()) + offset;
     }
     public double get_power(){
         return power_turret;
@@ -137,9 +148,15 @@ public class Turret {
     public boolean get_critical(){
         return critical;
     }
+    public double get_poten_angle(){return  convert_potentiometer_to_degree(poten.getVoltage());}
+    public double get_velocity() {return turret.getVelocity();}
+    public double get_target_velocity() {return target_velo;}
     public double get_limit(){
         return limit;
     }
-
+    public double get_output(){
+        return output;
+    }
+    public double get_offset(){ return offset;}
 
 }

@@ -23,8 +23,8 @@ public class Constants {
     public static double breaking_start = 0.6;
 
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .forwardZeroPowerAcceleration(-29.35704687)
-            .lateralZeroPowerAcceleration(-62.6986021737)
+            .forwardZeroPowerAcceleration(-31.942)
+            .lateralZeroPowerAcceleration(-66.909)
             .useSecondaryTranslationalPIDF(true)
             .useSecondaryHeadingPIDF(true)
             .useSecondaryDrivePIDF(true)
@@ -35,7 +35,7 @@ public class Constants {
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.2,0,0.0001,0.6,0.8))
             .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.04,0,0.000028,0.6,0.1))
             .centripetalScaling(0.4)
-            .mass(11.86);
+            .mass(12.06);
 
 
 
@@ -45,8 +45,8 @@ public class Constants {
             .rightRearMotorName("rightRear")
             .leftRearMotorName("leftRear")
             .leftFrontMotorName("leftFront")
-            .xVelocity(41.743954)
-            .yVelocity(53.64)
+            .xVelocity(80.0094)
+            .yVelocity(59.993)
             .useBrakeModeInTeleOp(true)
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)

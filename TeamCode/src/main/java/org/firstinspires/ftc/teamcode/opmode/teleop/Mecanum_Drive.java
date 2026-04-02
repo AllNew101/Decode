@@ -20,8 +20,10 @@ import org.firstinspires.ftc.teamcode.opmode.system.gamepad;
 import org.firstinspires.ftc.teamcode.opmode.system.Distance_Sensor;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
+import org.firstinspires.ftc.teamcode.opmode.Calculate.Dynamics;
 import org.firstinspires.ftc.teamcode.opmode.Indev.PIDF_intake;
 import org.firstinspires.ftc.teamcode.opmode.system.localization_limelight;
+
 
 
 import org.firstinspires.ftc.teamcode.opmode.system.Turret;
@@ -46,8 +48,9 @@ public class Mecanum_Drive extends OpMode {
     private localization_limelight camera;
     private PIDF_intake intake_PID;
     private gamepad gamepad0;
+    private Dynamics dynamics;
     ElapsedTime time;
-    public static double[] multiplier = {1, 1, 0.95};
+    public static double[] multiplier = {1, 1, 0.5};
 
     //Tuning
     public static double X_autodrive = 90;
@@ -64,7 +67,7 @@ public class Mecanum_Drive extends OpMode {
     public static double speed_intake_near = 0.8;
     public static double speed_servo = 10;
     public static double theta_autodrive = -100;
-    public static double speed_offset = 0.5;
+    public static double speed_offset = 1;
 
     private boolean check_X = false;
     private boolean check_intake = false;
@@ -72,14 +75,14 @@ public class Mecanum_Drive extends OpMode {
     private boolean check_out = false;
     private boolean check_shooter = false;
     private boolean is_trigger = false;
-    private double offset = 0;
+    public static double offset = 0;
 
     boolean check_one = false;
     boolean error = false;
     boolean can_reverse = true;
     int previous_key = 0;
     double adj, tracking;
-    Pose estimate;
+    Pose estimate, lead;
     double[] esti;
     private boolean check_turret = false;
     public static Pose startingPose = new Pose(109.01567398119123, -34.08150470219436 , Math.toRadians(0));
@@ -101,6 +104,7 @@ public class Mecanum_Drive extends OpMode {
         camera = new localization_limelight();
         intake_PID = new PIDF_intake();
         gamepad0 = new gamepad();
+        dynamics = new Dynamics();
         time.reset();
 
         check_intake = false;
@@ -114,7 +118,6 @@ public class Mecanum_Drive extends OpMode {
         angle.init_angular(hardwareMap);
 
         Turret.init_turret(hardwareMap, time);
-
 
         telemetryX.init(telemetry);
         closer.init_angular(hardwareMap);
@@ -191,7 +194,7 @@ public class Mecanum_Drive extends OpMode {
                 angle.setPosition(maximum);
             }
 
-        //lead = dynamics.lead(follower.getPose(),follower.getVelocity(),Ying.getVelocity(),Turret.get_angle() / 180 * Math.PI, is_red);
+        lead = dynamics.lead(follower.getPose(),follower.getVelocity(),Ying.getVelocity(),Turret.get_angle() / 180 * Math.PI, is_red);
         tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), is_red, follower.getPose().getHeading() / Math.PI * 180, offset, Turret.get_limit());
         adj = Ying.distance_adjustment(follower.getPose().getX(), follower.getPose().getY(), is_red);
         esti = camera.getRobotPoseFromCamera(follower.getPose().getHeading());
@@ -263,9 +266,9 @@ public class Mecanum_Drive extends OpMode {
             check_turret = !check_turret;
         }
         if (check_turret) {
-            Turret.to_position(tracking, manual , check_X , false);
+            Turret.to_position(tracking);
         } else {
-            Turret.to_position(offset, manual , true,true); //not using ki
+            Turret.to_position(offset);
         }
 
             drawing.drawRobot(follower.getPose(), "red");
@@ -290,7 +293,6 @@ public class Mecanum_Drive extends OpMode {
         telemetryX.addData("target (m/s)",adj * ratio_shooter,2);
         telemetryX.addData("displacement",Ying.getDisplacement(follower.getPose().getX(),follower.getPose().getY()),2);
         telemetryX.addData("check_cameraWorking" , esti[0],2);
-
         if (Ying.get_critical()){telemetryX.addData("Danger!!!!","Shooter is in manual mode",2);}
         if (is_red){
             telemetryX.addData("Alliance","Red",2);
@@ -314,18 +316,24 @@ public class Mecanum_Drive extends OpMode {
                 break;
 
             case 2:
+
                 telemetryX.addData("angle",Turret.get_angle(),0);
                 telemetryX.addData("degree",Turret.get_degree(),0);
                 telemetryX.addData("power",Turret.get_power(),0);
                 telemetryX.addData("offset",offset,0);
                 telemetryX.addData("Turret",tracking,0);
+                telemetryX.addData("velocity_turret",Turret.get_velocity(),2);
+                telemetryX.addData("velocity_turret_target",Turret.get_target_velocity(),2);
+                telemetryX.addData("poten angle",Turret.get_poten_angle(),2);
+                telemetryX.addData("output",Turret.get_output(),2);
+                telemetryX.addData("offset_turret",Turret.get_offset(),2);
                 break;
 
             case 3:
                 telemetryX.addData("angular",angle.get_position(),0);
                 telemetryX.addData("angle",angle.get_angle(),0);
                 break;
-
+            case 4:
 
             case 5:
                 telemetryX.addData("DISTANCE",sensor.get_dis(),2);

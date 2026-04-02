@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.system;
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,8 +14,8 @@ import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
 
 @Config
 public class PIDF_Shooter {
-    public DcMotor shooter;
-    public DcMotor shooter2;
+    public DcMotorEx shooter;
+    public DcMotorEx shooter2;
     public double  previous_velocity, omega, current, previous_current, power, rpm, velocity, previous_time, delta_time,delta_time_2,previous_time_2,current_time_2, current_time , integral, derivative, error, previousError;
     ElapsedTime time;
     Follower follower;
@@ -48,19 +49,19 @@ public class PIDF_Shooter {
 
     public void init_vel(HardwareMap hardwareMap, Follower position, ElapsedTime Time){
         // Hardware map change name here
-        shooter2 = hardwareMap.get(DcMotor.class,"Shooter2");
-        shooter = hardwareMap.get(DcMotor.class,"Shooter");
+        shooter2 = hardwareMap.get(DcMotorEx.class,"Shooter2");
+        shooter = hardwareMap.get(DcMotorEx.class,"Shooter");
 
         // Direction set-up
-        shooter.setDirection(DcMotorSimple.Direction.FORWARD);
-        shooter2.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooter.setDirection(DcMotorEx.Direction.FORWARD);
+        shooter2.setDirection(DcMotorEx.Direction.REVERSE);
 
-        shooter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        shooter2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooter2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        shooter2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        shooter.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        shooter2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        shooter.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        shooter2.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        shooter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        shooter2.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
 
         time = Time;
         follower = position;
