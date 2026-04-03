@@ -31,8 +31,8 @@ public class Turret {
     public static double kP = 0.03;
     public static double kP_secondary = 0.02;
     public static double kS = 0.17;
-    public static double kShooter = -0.00002;
-    public static double limit = 170;
+    public static double kShooter = -0.000025;
+    public static double limit = 175;
     public static double middle_poten = 1.12;
 
 

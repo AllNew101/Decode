@@ -13,7 +13,7 @@ public class Distance_Sensor {
 
     public static double not_ready = 0.28;
     public static double ready = 0.5;
-    public static double test = 14;
+    public static double test = 18;
     double current ;
     double previos;
     public static double time_delay = 0.34;
@@ -36,7 +36,7 @@ public class Distance_Sensor {
 
     public void check_led() {
         current = Time.seconds() - previos;
-        if (get_dis() < test && current > time_delay){
+        if (get_dis() < test && current >= time_delay){
             LED.setPosition(ready);
         }
         else if (get_dis() > test) {
