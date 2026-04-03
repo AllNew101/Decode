@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.system;
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -16,27 +14,30 @@ import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
 
 @Config
 public class Turret {
-    DcMotorEx turret;
+    DcMotor turret;
     AnalogInput poten;
-    private double integral, derivative, previousError, delta_time , time_current , previous_time;
+    private double  derivative, previousError, delta_time , time_current , previous_time;
     boolean critical;
     boolean checking = false;
     double critical_fx = 0.0;
     double previous = 0.0;
-    int count = 0;
     ElapsedTime time;
-    Distance distance = new Distance();
 
 
 
+    public static double condition = 15;
+    public static double kD = 0.1;
+    public static double kD_secondary = 0.01;
+    public static double kP = 0.03;
+    public static double kP_secondary = 0.02;
     public static double kS = 0.17;
-    public static double kD = 1;
-    public static double kD_secondary = 0.9;
-    public static double kP = 0.02;
-    public static double kP_secondary = 0.01;
-    public static double limit = 120;
-    public static double varikI_secondary = 0;
-    public static double condition = 20;
+    public static double kShooter = -0.00002;
+    public static double limit = 170;
+    public static double middle_poten = 1.12;
+
+
+
+
 
     private double gear_motor = 39;
     private double gear_turret = 89;
@@ -44,26 +45,24 @@ public class Turret {
     private double gear_potentiometer = 12;
     private double gear_potentiometer_out = 42;
 
-    private double middle_poten = 1.107;
 
     private double Per_round = 537.7;
     private double power_turret = 0;
-    private double kI_secondary = varikI_secondary;
     private double target_velo = 0;
     private double output = 0;
     private double offset = 0;
     public void init_turret(HardwareMap hardwareMap, ElapsedTime Time) {
         poten = hardwareMap.get(AnalogInput.class, "poten");
-        turret = hardwareMap.get(DcMotorEx.class, "Turret");
-        turret.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        turret.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        turret.setDirection(DcMotorEx.Direction.REVERSE);
+        turret = hardwareMap.get(DcMotor.class, "Turret");
+        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turret.setDirection(DcMotorSimple.Direction.REVERSE);
         offset = convert_potentiometer_to_degree(poten.getVoltage());
 
         time = Time;
     }
 
-    public void to_position(double target){
+    public void to_position(double target, double velocity_shooter){
         double error = target - (convert_current_to_degree(turret.getCurrentPosition()) + offset);
         if (Math.abs(error) < 1){
             error = 0;
@@ -72,24 +71,18 @@ public class Turret {
         time_current = time.seconds();
         delta_time = (time_current - previous_time) ;
 
-        integral += error * delta_time;
         derivative = (error - previousError) / delta_time;
 
-
-//        if (!is_working(output ,delta) || manual) {
-//            count += 1;
-//            if (count > 3) {critical = true;}
-//            else{critical = false;}
-//        }
+        if (error > 100){condition = 40;}
 
 
         if (Math.abs(error) > condition) {
-            turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            output = kP * error + kD * derivative + kS * Math.signum(error);
+            output = kP * error + kD * derivative + kS * Math.signum(error) + kShooter * velocity_shooter * Math.signum(error);
         }
         else {
-            turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            output = kP_secondary * error + kI_secondary * integral + kD_secondary * derivative + kS * Math.signum(error);
+            output = kP_secondary * error + kD_secondary * derivative + kS * Math.signum(error) + kShooter * velocity_shooter * Math.signum(error);
+            if (output > 0.3){power_turret = 0.3;}
+            else if(output < -0.3){power_turret = -0.3;}
         }
 
 
@@ -105,17 +98,26 @@ public class Turret {
 
     public void turn(double power){
         power_turret = power;
+        if (power_turret > 0.64){power_turret = 0.64;}
+        else if(power_turret < -0.64){power_turret = -0.64;}
+
         boolean check_over = false;
 
 
-        if (convert_current_to_degree(turret.getCurrentPosition()) > limit && power_turret > 0){check_over = true;}
-        if (convert_current_to_degree(turret.getCurrentPosition()) < -limit && power_turret < 0){check_over = true;}
-        if (convert_current_to_degree(turret.getCurrentPosition()) > limit && power_turret < 0){check_over = false;}
-        if (convert_current_to_degree(turret.getCurrentPosition()) < -limit && power_turret > 0){check_over = false;}
+        if (get_angle() > limit && power_turret >= 0){check_over = true;}
+        if (get_angle()  < -limit && power_turret <= 0){check_over = true;}
+        if (get_angle()  > limit && power_turret < 0){check_over = false;}
+        if (get_angle()  < -limit && power_turret > 0){check_over = false;}
+
+        if (get_angle() > limit * 1.1){power_turret = -0.3;}
+        if (get_angle()  < -limit * 1.1){power_turret = 0.3;}
+
+        if (get_angle() > limit * 1.2){check_over = true;}
+        if (get_angle()  < -limit * 1.2){check_over = true;}
+
         if (check_over){stop();}
         else{
-            turret.setPower(power_turret);
-        }
+            turret.setPower(power_turret);}
     }
 
     public boolean is_working(double power, double velocity){
@@ -149,7 +151,6 @@ public class Turret {
         return critical;
     }
     public double get_poten_angle(){return  convert_potentiometer_to_degree(poten.getVoltage());}
-    public double get_velocity() {return turret.getVelocity();}
     public double get_target_velocity() {return target_velo;}
     public double get_limit(){
         return limit;

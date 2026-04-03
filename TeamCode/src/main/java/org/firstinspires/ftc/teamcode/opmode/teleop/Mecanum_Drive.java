@@ -48,7 +48,6 @@ public class Mecanum_Drive extends OpMode {
     private localization_limelight camera;
     private PIDF_intake intake_PID;
     private gamepad gamepad0;
-    private Dynamics dynamics;
     ElapsedTime time;
     public static double[] multiplier = {1, 1, 0.5};
 
@@ -59,11 +58,11 @@ public class Mecanum_Drive extends OpMode {
     public static boolean is_red = true;
     public static int key = 1;
     public static boolean manual = false;
-    public static double maximum = 0.16;
-    public static double minimum = 0.06;
+    public static double maximum = 0.3;
+    public static double minimum = 0.3;
     public static double ratio_shooter = 1.05;
     public static double speed_eshooter = 0.008;
-    public static double speed_intake_far = 0.6;
+    public static double speed_intake_far = 0.55;
     public static double speed_intake_near = 0.8;
     public static double speed_servo = 10;
     public static double theta_autodrive = -100;
@@ -104,7 +103,6 @@ public class Mecanum_Drive extends OpMode {
         camera = new localization_limelight();
         intake_PID = new PIDF_intake();
         gamepad0 = new gamepad();
-        dynamics = new Dynamics();
         time.reset();
 
         check_intake = false;
@@ -194,7 +192,7 @@ public class Mecanum_Drive extends OpMode {
                 angle.setPosition(maximum);
             }
 
-        lead = dynamics.lead(follower.getPose(),follower.getVelocity(),Ying.getVelocity(),Turret.get_angle() / 180 * Math.PI, is_red);
+        //lead = dynamics.lead(follower.getPose(),follower.getVelocity(),Ying.getVelocity(),Turret.get_angle() / 180 * Math.PI, is_red);
         tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), is_red, follower.getPose().getHeading() / Math.PI * 180, offset, Turret.get_limit());
         adj = Ying.distance_adjustment(follower.getPose().getX(), follower.getPose().getY(), is_red);
         esti = camera.getRobotPoseFromCamera(follower.getPose().getHeading());
@@ -266,9 +264,12 @@ public class Mecanum_Drive extends OpMode {
             check_turret = !check_turret;
         }
         if (check_turret) {
-            Turret.to_position(tracking);
+
+            Turret.to_position(tracking ,Ying.getVelocity_X());
+
+
         } else {
-            Turret.to_position(offset);
+            Turret.to_position(offset ,Ying.getVelocity_X());
         }
 
             drawing.drawRobot(follower.getPose(), "red");
@@ -322,7 +323,6 @@ public class Mecanum_Drive extends OpMode {
                 telemetryX.addData("power",Turret.get_power(),0);
                 telemetryX.addData("offset",offset,0);
                 telemetryX.addData("Turret",tracking,0);
-                telemetryX.addData("velocity_turret",Turret.get_velocity(),2);
                 telemetryX.addData("velocity_turret_target",Turret.get_target_velocity(),2);
                 telemetryX.addData("poten angle",Turret.get_poten_angle(),2);
                 telemetryX.addData("output",Turret.get_output(),2);

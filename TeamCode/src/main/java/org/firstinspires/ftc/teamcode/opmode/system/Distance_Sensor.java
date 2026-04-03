@@ -39,7 +39,7 @@ public class Distance_Sensor {
         if (get_dis() < test && current > time_delay){
             LED.setPosition(ready);
         }
-        else if (get_dis() > test ) {
+        else if (get_dis() > test) {
             LED.setPosition(not_ready);
             previos = Time.seconds();
         }
