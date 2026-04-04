@@ -19,8 +19,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class Constants {
     public static double forwardPodY = 2.5;
     public static double strafePodX = -5.30;
-    public static double breaking = 0.4;
-    public static double breaking_start = 0.6;
+    public static double breaking = 1;
+    public static double breaking_start = 1;
 
     public static FollowerConstants followerConstants = new FollowerConstants()
             .forwardZeroPowerAcceleration(-31.942)
@@ -28,13 +28,13 @@ public class Constants {
             .useSecondaryTranslationalPIDF(true)
             .useSecondaryHeadingPIDF(true)
             .useSecondaryDrivePIDF(true)
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.04,0,0.001,0.0000002))
-            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.5,0,0.01,0.028))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.1,0,0.001,2e-7))
+            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.15,0,0.01,0.028))
             .headingPIDFCoefficients(new PIDFCoefficients(1,0,0.08,0.01))
             .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1,0,0.08,0.01))
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.2,0,0.0001,0.6,0.8))
-            .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.04,0,0.000028,0.6,0.1))
-            .centripetalScaling(0.4)
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.92,0,0.000000005,0.6,1))
+            .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.018,0,0.00000001,0.6,0))
+            .centripetalScaling(0.1)
             .mass(12.06);
 
 

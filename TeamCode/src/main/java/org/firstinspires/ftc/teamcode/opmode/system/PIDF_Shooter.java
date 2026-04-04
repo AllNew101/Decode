@@ -26,14 +26,14 @@ public class PIDF_Shooter {
 
     // Encoder counts per revolution
     public static double defau = 58.6;
-    public static double kD = 0.00009;
+    public static double kD = 0.0001;
     public static double kI = 0;
     public static double kP = 0.04;
     public static double kS = 0.043;
     public static double kV = 0.00398;
-    public static double secondary_kD = 0.000015;
+    public static double secondary_kD = 0.00001;
     public static double secondary_kI = 0;
-    public static double secondary_kP = 0.042;
+    public static double secondary_kP = 0.039;
     public static double time_delay = 0.08;
 
 
@@ -134,7 +134,7 @@ public class PIDF_Shooter {
 
     }
 
-    public void run_shooter(double targetVelocity, double theta, boolean manual, boolean can_reverse) {
+    public void run_shooter(double targetVelocity, boolean manual, boolean can_reverse) {
 
         power = pidf(targetVelocity,can_reverse);
         if (!is_working(power,velocity) || manual){

@@ -27,6 +27,8 @@ public class PIDF_intake {
     public static double KS = 0.18;
     public static double P = 0.07;
 
+    public static double near = 0.8;
+    public static double far = 0.55;
 
     ElapsedTime time;
     DcMotor Front;
@@ -62,8 +64,23 @@ public class PIDF_intake {
 
     }
 
-    public void start_intake(double target){
+    public void start_intakepidf(double target){
         Front.setPower(PIDF(target));
+        Front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+    }
+
+    public void intake_near(){
+        Front.setPower(PIDF(near));
+        Front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+    }
+
+    public void intake_far(){
+        Front.setPower(PIDF(far));
+        Front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+    }
+
+    public void intake(double target){
+        Front.setPower(target);
         Front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 

@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.opmode.system.PIDF_Shooter;
-import org.firstinspires.ftc.teamcode.opmode.system.Intake;
 import org.firstinspires.ftc.teamcode.opmode.system.telemetryX;
 import org.firstinspires.ftc.teamcode.opmode.system.angular_set;
 import org.firstinspires.ftc.teamcode.opmode.system.Closer;
@@ -20,7 +19,6 @@ import org.firstinspires.ftc.teamcode.opmode.system.gamepad;
 import org.firstinspires.ftc.teamcode.opmode.system.Distance_Sensor;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
-import org.firstinspires.ftc.teamcode.opmode.Calculate.Dynamics;
 import org.firstinspires.ftc.teamcode.opmode.Indev.PIDF_intake;
 import org.firstinspires.ftc.teamcode.opmode.system.localization_limelight;
 
@@ -38,7 +36,6 @@ public class Mecanum_Drive extends OpMode {
     private Follower follower;
     private Supplier<PathChain> pathChain;
     private PIDF_Shooter Ying;
-    private Intake intake;
     private angular_set angle;
     private Turret Turret;
     private Closer closer;
@@ -58,12 +55,10 @@ public class Mecanum_Drive extends OpMode {
     public static boolean is_red = true;
     public static int key = 1;
     public static boolean manual = false;
-    public static double maximum = 0.3;
-    public static double minimum = 0.3;
-    public static double ratio_shooter = 1.05;
-    public static double speed_eshooter = 0.008;
-    public static double speed_intake_far = 0.55;
-    public static double speed_intake_near = 0.8;
+    public static double maximum = 0.15;
+    public static double minimum = 0.13;
+    public static double ratio_shooter = 1.1;
+    public static double speed_eshooter = 0.005;
     public static double speed_servo = 10;
     public static double theta_autodrive = -100;
     public static double speed_offset = 1;
@@ -93,7 +88,6 @@ public class Mecanum_Drive extends OpMode {
         distance = new Distance();
         drawing = new Drawing();
         Ying = new PIDF_Shooter();
-        intake = new Intake();
         angle = new angular_set();
         Turret = new Turret();
         telemetryX = new telemetryX();
@@ -111,7 +105,6 @@ public class Mecanum_Drive extends OpMode {
         check_out = false;
 
         Ying.init_vel(hardwareMap, follower, time);
-        intake.init_intake(hardwareMap);
         intake_PID.init_PIDF_intake(hardwareMap, time);
         angle.init_angular(hardwareMap);
 
@@ -181,10 +174,10 @@ public class Mecanum_Drive extends OpMode {
 
                 if (follower.getPose().getX() > 40) {
                     angle.angular_on(-1 * speed_servo, minimum, maximum);
-                    intake_PID.start_intake(speed_intake_near);
+                    intake_PID.intake_near();
                 } else {
                     angle.angular_on(-1 * speed_servo, minimum, maximum);
-                    intake_PID.start_intake(speed_intake_far);
+                    intake_PID.intake_far();
                 }
             } else if (!check_X) {
                 closer.close();
@@ -221,11 +214,11 @@ public class Mecanum_Drive extends OpMode {
 
 
         if (check_intake && !check_X) {
-            intake.intake(1);
+            intake_PID.intake(1);
             check_out = false;
 
         } else if (check_out) {
-            intake.intake(-1);
+            intake_PID.intake(-1);
             check_intake = false;
             check_one = false;
 
@@ -244,7 +237,7 @@ public class Mecanum_Drive extends OpMode {
 
 
         if (check_shooter) {
-            Ying.run_shooter(adj * ratio_shooter, angle.get_angle(), manual, can_reverse);
+            Ying.run_shooter(adj * ratio_shooter, manual, can_reverse);
         } else if (!check_shooter) {
             Ying.stop_shooter();
         }
