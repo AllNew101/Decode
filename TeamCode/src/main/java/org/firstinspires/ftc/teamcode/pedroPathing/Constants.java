@@ -29,17 +29,18 @@ public class Constants {
             .useSecondaryHeadingPIDF(true)
             .useSecondaryDrivePIDF(true)
             .translationalPIDFCoefficients(new PIDFCoefficients(0.1,0,0.001,2e-7))
-            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.15,0,0.01,0.028))
-            .headingPIDFCoefficients(new PIDFCoefficients(1,0,0.08,0.01))
-            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1,0,0.08,0.01))
+            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.12,0,0.01,0.028))
+            .headingPIDFCoefficients(new PIDFCoefficients(0.8,0,0.08,0.01))
+            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(0.8,0,0.08,0.01))
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.92,0,0.000000005,0.6,1))
             .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.018,0,0.00000001,0.6,0))
-            .centripetalScaling(0.1)
+            .centripetalScaling(0.05)
+            .automaticHoldEnd(false)
             .mass(12.06);
 
 
-
     public static MecanumConstants driveConstants = new MecanumConstants()
+            .staticFrictionCoefficient(0.4)
             .maxPower(1)
             .rightFrontMotorName("rightFront")
             .rightRearMotorName("rightRear")
@@ -48,6 +49,7 @@ public class Constants {
             .xVelocity(80.0094)
             .yVelocity(59.993)
             .useBrakeModeInTeleOp(true)
+            .useVoltageCompensation(true)
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)

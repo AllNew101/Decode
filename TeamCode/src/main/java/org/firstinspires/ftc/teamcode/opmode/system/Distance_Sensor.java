@@ -9,39 +9,36 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Config
 public class Distance_Sensor {
     public Servo LED;
-    public DistanceSensor Dis_sen;
+    public DistanceSensor Front_Dissen;
+    public DistanceSensor Center_Dissen;
 
-    public static double not_ready = 0.28;
-    public static double ready = 0.5;
-    public static double test = 18;
-    double current ;
-    double previos;
-    public static double time_delay = 0.34;
-    boolean error = false;
+    public double not_ready = 0.28;
+    public double ready = 0.5;;
     ElapsedTime Time;
 
 
 
-    public void init_Distance_senser (HardwareMap hardwareMap , ElapsedTime time) {
-        Dis_sen = hardwareMap.get(DistanceSensor.class,"dis_sen");
+    public void init_Distance_senser (HardwareMap hardwareMap) {
+        Front_Dissen = hardwareMap.get(DistanceSensor.class,"dis_sen");
+        Center_Dissen = hardwareMap.get(DistanceSensor.class,"Dis_sen2");
         LED = hardwareMap.get(Servo.class , "LED");
-        Time = time;
-        previos = Time.seconds();
+
     }
 
-    public double get_dis() {
-        double distance = Dis_sen.getDistance(DistanceUnit.CM);
+    public double get_Front_dis() {
+        double distance = Front_Dissen.getDistance(DistanceUnit.CM);
         return distance;
     }
-
+    public double get_Center_dis() {
+        double distance = Center_Dissen.getDistance(DistanceUnit.CM);
+        return distance;
+    }
     public void check_led() {
-        current = Time.seconds() - previos;
-        if (get_dis() < test && current >= time_delay){
+        if (get_Front_dis() <= 14 && get_Center_dis() <= 14){
             LED.setPosition(ready);
         }
-        else if (get_dis() > test) {
+        else{
             LED.setPosition(not_ready);
-            previos = Time.seconds();
         }
 
     }

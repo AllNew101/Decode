@@ -40,7 +40,7 @@ public class Mecanum_Drive extends OpMode {
     private Turret Turret;
     private Closer closer;
     private telemetryX telemetryX;
-    private Distance_Sensor sensor;
+    private Distance_Sensor distance_sensor;
     private Distance distance;
     private localization_limelight camera;
     private PIDF_intake intake_PID;
@@ -93,7 +93,7 @@ public class Mecanum_Drive extends OpMode {
         telemetryX = new telemetryX();
         closer = new Closer();
         time = new ElapsedTime();
-        sensor = new Distance_Sensor();
+        distance_sensor = new Distance_Sensor();
         camera = new localization_limelight();
         intake_PID = new PIDF_intake();
         gamepad0 = new gamepad();
@@ -112,7 +112,7 @@ public class Mecanum_Drive extends OpMode {
 
         telemetryX.init(telemetry);
         closer.init_angular(hardwareMap);
-        sensor.init_Distance_senser(hardwareMap, time);
+        distance_sensor.init_Distance_senser(hardwareMap);
         camera.init(hardwareMap);
 
         follower = Constants.createFollower(hardwareMap);
@@ -147,7 +147,7 @@ public class Mecanum_Drive extends OpMode {
         }
 
         if (gamepad2.dpadDownWasPressed()){error = true;}
-        if (!error){sensor.check_led();}
+        if (!error){distance_sensor.check_led();}
 
         if (gamepad1.dpadUpWasPressed()) {
             follower.followPath(pathChain.get());
@@ -327,9 +327,10 @@ public class Mecanum_Drive extends OpMode {
                 telemetryX.addData("angle",angle.get_angle(),0);
                 break;
             case 4:
-
+                break;
             case 5:
-                telemetryX.addData("DISTANCE",sensor.get_dis(),2);
+                telemetryX.addData("Front_dissen",distance_sensor.get_Front_dis(),2);
+                telemetryX.addData("Center_dissen",distance_sensor.get_Center_dis(),2);
                 break;
             case 7:
                 telemetryX.addData("available",esti[0],2);
