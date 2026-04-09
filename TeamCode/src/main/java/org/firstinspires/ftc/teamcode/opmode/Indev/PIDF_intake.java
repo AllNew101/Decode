@@ -27,7 +27,7 @@ public class PIDF_intake {
     public static double KS = 0.18;
     public static double P = 0.07;
 
-    public static double near = 0.9;
+    public static double near = 0.92;
     public static double far = 0.55;
 
     ElapsedTime time;

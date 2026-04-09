@@ -270,14 +270,14 @@ public class Autonomous_opengate extends OpMode {
     public void mechanicPathUpdate(){
         switch (pathMec) {
             case 1:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, -2, Turret.get_limit());
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, -2, Turret.get_limit(),1);
                 Ying.run_shooter(116, false, false);
-                Turret.to_position(tracking, 0);
+                Turret.to_position(tracking, 0,1);
                 break;
             case 2:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, -1, Turret.get_limit());
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, -1, Turret.get_limit(),1);
                 Ying.run_shooter(105.5, false, false);
-                Turret.to_position(tracking, 0);
+                Turret.to_position(tracking, 0,1);
                 break;
         }
     }

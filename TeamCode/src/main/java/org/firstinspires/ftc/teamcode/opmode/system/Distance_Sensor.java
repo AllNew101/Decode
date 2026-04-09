@@ -40,6 +40,8 @@ public class Distance_Sensor {
         else{
             LED.setPosition(not_ready);
         }
-
+    }
+    public boolean led_status (){
+            return (LED.getPosition() == ready);
     }
 }

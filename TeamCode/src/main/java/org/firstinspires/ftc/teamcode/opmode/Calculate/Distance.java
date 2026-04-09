@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.Calculate;
 
 import com.acmerobotics.dashboard.config.Config;
-
+import org.firstinspires.ftc.teamcode.opmode.system.Turret;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @Config
@@ -11,7 +11,7 @@ public class Distance {
     public static double[] blue = {123, -18 , 50.0};
 
     private double[] target = {0.0 , 0.0 , 0.0};
-
+    private Turret turret;
     public double[] distance(double X, double Y, boolean is_red){
         if (is_red){target = red;}
         else{target = blue;}
@@ -24,15 +24,20 @@ public class Distance {
         return distances;
     }
 
-    public double targeting(double X, double Y, boolean is_red , double theta, double offset, double limit){
+    public double targeting(double X, double Y, boolean is_red , double theta, double offset, double limit, int mode){
         double stabilizer = theta;
         double targeting = distance(X ,Y ,is_red)[2];
         double result = targeting + stabilizer + offset;
 
-        //Red
-        if (Math.abs(result) > limit && is_red){result = -limit;}
-        //Blue
-        else if (Math.abs(result) > limit && !is_red){result = limit;}
+            //Red
+        if (Math.abs(result) > limit && is_red) {
+                result = -limit;
+        }
+            //Blue
+        else if (Math.abs(result) > limit && !is_red) {
+                result = limit;
+        }
+
 
         return AngleUnit.normalizeDegrees(result);
     }

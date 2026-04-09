@@ -28,13 +28,14 @@ public class PIDF_Shooter {
     public static double defau = 58.6;
     public static double kD = 0.0001;
     public static double kI = 0;
-    public static double kP = 0.04;
+    public static double kP = 0.038;
     public static double kS = 0.043;
     public static double kV = 0.00398;
-    public static double secondary_kD = 0.00001;
+    public static double secondary_kD = 0.000012;
     public static double secondary_kI = 0;
-    public static double secondary_kP = 0.039;
+    public static double secondary_kP = 0.034;
     public static double time_delay = 0.08;
+
 
 
 
@@ -55,8 +56,8 @@ public class PIDF_Shooter {
         shooter = hardwareMap.get(DcMotorEx.class,"Shooter");
 
         // Direction set-up
-        shooter.setDirection(DcMotorEx.Direction.FORWARD);
-        shooter2.setDirection(DcMotorEx.Direction.REVERSE);
+        shooter.setDirection(DcMotorEx.Direction.REVERSE);
+        shooter2.setDirection(DcMotorEx.Direction.FORWARD);
 
         shooter.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         shooter2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -68,14 +69,14 @@ public class PIDF_Shooter {
         time = Time;
         follower = position;
         //default position
-        current = shooter.getCurrentPosition();
-        previous_current = shooter.getCurrentPosition();
+        current = -1 * shooter.getCurrentPosition();
+        previous_current = -1 * shooter.getCurrentPosition();
         previous_time = time.seconds();
         previous_velocity = 0;
     }
 
     public double velocity_info(){
-        current = shooter.getCurrentPosition();
+        current = -1 * shooter.getCurrentPosition();
         current_time = time.seconds();
         delta_time = (current_time - previous_time) ;
 
@@ -87,7 +88,7 @@ public class PIDF_Shooter {
 
 
             velocity = omega * (radian / 1000);
-            previous_current = shooter.getCurrentPosition();
+            previous_current = -1 * shooter.getCurrentPosition();
             previous_time = current_time;
         }
 
