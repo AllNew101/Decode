@@ -220,7 +220,9 @@ public class Autonomous_solo_red extends OpMode {
                     break;
                 }
             case 2011 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(1);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(4);}
                     break;}}
             case 1:
                 if (!follower.isBusy()){
@@ -253,7 +255,9 @@ public class Autonomous_solo_red extends OpMode {
                     break;
                 }
             case 2022 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(3);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(3);}
                     break;}}
             case 3:
                 if (!follower.isBusy()){
@@ -294,7 +298,9 @@ public class Autonomous_solo_red extends OpMode {
                     break;
                 }
             case 2044 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(20);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(20);}
                     break;}}
             case 20:
                 if (!follower.isBusy()){
@@ -332,7 +338,9 @@ public class Autonomous_solo_red extends OpMode {
                     break;
                 }
             case 2200 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(5);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(5);}
                     break;}}
             //////////////////////////////////////////////////////////////////////////
             case 5:
@@ -392,7 +400,9 @@ public class Autonomous_solo_red extends OpMode {
                     break;
                 }
             case 2066 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(8);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(4);}
                     break;}}
             //////////////////////////////////////////////////////////////////////////
 
@@ -449,7 +459,9 @@ public class Autonomous_solo_red extends OpMode {
                     break;
                 }
             case 2077 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(10);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(8);}
                     break;}}
             //////////////////////////////////////////////////////////////////////
 

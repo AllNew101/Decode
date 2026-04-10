@@ -60,11 +60,11 @@ public class Autonomous_far_red extends OpMode {
     boolean check_delay = false;
     boolean check_delay2 = false;
     private final Pose startPose = new Pose(8.000, -98.000, Math.toRadians(-90));
-    private final Pose Pre_keep1 = new Pose(40.000, -100.00, Math.toRadians(-90));
+    private final Pose Pre_keep1 = new Pose(34.000, -100.00, Math.toRadians(-90));
     private final Pose keep1 = new Pose(40.000, -125.00, Math.toRadians(-90));
-    private final Pose shoot1 = new Pose(8.000, -98.00, Math.toRadians(-90));
-    private final Pose keep_loop = new Pose(8.000, -142.000, Math.toRadians(-90));
-    private final Pose shoot_loop = new Pose(8.000, -98.000, Math.toRadians(-90));
+    private final Pose shoot1 = new Pose(10.000, -98.00, Math.toRadians(-90));
+    private final Pose keep_loop = new Pose(8.000, -138.000, Math.toRadians(-90));
+    private final Pose shoot_loop = new Pose(10.000, -98.000, Math.toRadians(-90));
     ////////////////////////////////////////////////////////////////////////////////////////
     private PathChain go_Pre_keep1,keeping1,Pre_loop,shooting1,keeping_loop,shooting_loop;
 
@@ -116,11 +116,8 @@ public class Autonomous_far_red extends OpMode {
                 setPathState(201);
             case 201:
                 if (!follower.isBusy()) {
-                    if (delay.seconds() > 4) {
-                        setPathState(101);
-                    }
-                    break;
-                }
+                    if (delay.seconds() > 4) {setPathState(101);}
+                    break;}
 
             case 101:
                 if (!follower.isBusy()) {
@@ -132,23 +129,23 @@ public class Autonomous_far_red extends OpMode {
                     break;
                 }
             case 2011:
-                if (!follower.isBusy()) {
-                    if (delay.seconds() > 1) {
-                        setPathState(1);
-                    }
-                    break;
-                }
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(1);
+                    break;}}
             case 1:
                 if (!follower.isBusy()) {
                     closer.close();
                     follower.setMaxPower(1);
                     follower.followPath(go_Pre_keep1);
+                    setPathState(2);
                     break;
                 }
             case 2:
                 if (!follower.isBusy()) {
                     follower.setMaxPower(0.8);
                     follower.followPath(keeping1);
+                    setPathState(3);
                     break;
                 }
             case 3:
@@ -160,12 +157,12 @@ public class Autonomous_far_red extends OpMode {
                     delay.reset();
                     follower.setMaxPower(1);
                     follower.followPath(shooting1);
-                    setPathState(201);
+                    setPathState(202);
                     break;
                     }
             case 202 :
                 if (!follower.isBusy()){
-                    if(delay.seconds() > 4){setPathState(101);}
+                    if(delay.seconds() > 1){setPathState(102);}
                     break;}
             case 102:
                 if (!follower.isBusy()){
@@ -173,14 +170,64 @@ public class Autonomous_far_red extends OpMode {
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
-                    setPathState(2011);
+                    setPathState(2022);
                     break;
                 }
             case 2022 :
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(1);}
-                    break;}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(4);
+                    break;}}
             //////////////////////////////////////////////////////////////////////
-
+            case 4:
+                if (!follower.isBusy()) {
+                    closer.close();
+                    follower.setMaxPower(1);
+                    follower.followPath(Pre_loop);
+                    setPathState(5);
+                    break;
+                }
+            //////////////////////////////////////////////////////////////////////
+            case 5:
+                if (!follower.isBusy()) {
+                    count += 1;
+                    setMecState(2);
+                    closer.close();
+                    delay.reset();
+                    if (count < 4) {
+                        follower.setMaxPower(1);
+                        follower.followPath(shooting_loop);
+                        setPathState(203);
+                    }else{;}
+                    break;
+                }
+            case 203 :
+                if (!follower.isBusy()){
+                    if(delay.seconds() > 1){setPathState(103);}
+                    break;}
+            case 103:
+                if (!follower.isBusy()){
+                    intake_PID.intake(0.8);
+                    closer.open();
+                    setMecintake_augularState(1);
+                    delay.reset();
+                    setPathState(2033);
+                    break;
+                }
+            case 2033 :
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(6);
+                    break;}}
+            case 6:
+                if (!follower.isBusy()) {
+                    closer.close();
+                    intake_PID.intake(1);
+                    follower.setMaxPower(1);
+                    follower.followPath(keeping_loop);
+                    setPathState(5);
+                    break;
+                }
     }}
     public void mechanicPathUpdate(){
         switch (pathMec) {
@@ -199,7 +246,7 @@ public class Autonomous_far_red extends OpMode {
     public void mechanicaugularPathUpdate(){
         switch (pathMec) {
             case 1:
-                angle.angular_on(-1 * Mecanum_Drive.speed_servo, 0.15, maximum );
+                angle.angular_on(-1 * Mecanum_Drive.speed_servo, 0.15, maximum);
                 break;
 
         }

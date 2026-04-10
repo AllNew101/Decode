@@ -67,10 +67,10 @@ public class Turret {
     public void init_turret_teleop(HardwareMap hardwareMap, ElapsedTime Time) {
         poten = hardwareMap.get(AnalogInput.class, "poten");
         turret = hardwareMap.get(DcMotor.class, "Turret");
-        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setDirection(DcMotorSimple.Direction.REVERSE);
-        offset = convert_potentiometer_to_degree(poten.getVoltage());
+        offset = 0;
 
         time = Time;
     }

@@ -188,7 +188,7 @@ public class Autonomous_co_op_red extends OpMode {
             }
             case 101:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.8);
+                    intake_PID.intake(0.7);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -196,7 +196,9 @@ public class Autonomous_co_op_red extends OpMode {
                     break;
                 }
             case 2011 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(1);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(8);}
                     break;}}
             case 1:
                 if (!follower.isBusy()){
@@ -221,7 +223,7 @@ public class Autonomous_co_op_red extends OpMode {
                     break;}}
             case 102:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.8);
+                    intake_PID.intake(0.7);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -229,7 +231,9 @@ public class Autonomous_co_op_red extends OpMode {
                     break;
                 }
             case 2022 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(3);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(3);}
                     break;}}
             case 3:
                 if (!follower.isBusy()){
@@ -258,7 +262,9 @@ public class Autonomous_co_op_red extends OpMode {
                     setPathState(204);
                     break;}
             case 204 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(103);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(103);}
                     break;}}
             case 103:
                 if (!follower.isBusy()){
@@ -330,7 +336,9 @@ public class Autonomous_co_op_red extends OpMode {
                     break;
                 }
             case 2066 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(8);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(8);}
                     break;}}
             //////////////////////////////////////////////////////////////////////////
 
@@ -387,7 +395,9 @@ public class Autonomous_co_op_red extends OpMode {
                     break;
                 }
             case 2077 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(8);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(8);}
                     break;}}
             //////////////////////////////////////////////////////////////////////
 

@@ -53,10 +53,10 @@ public class Mecanum_Drive extends OpMode {
     public static boolean is_red = true;
     public static int key = 1;
     public static boolean manual = false;
-    public static double maximum = 0.15;
-    public static double minimum = 0.13;
+    public static double maximum = 0.18;
+    public static double minimum = 0.15;
     public static double ratio_shooter = 1.1;
-    public static double speed_eshooter = 0.005;
+    public static double speed_eshooter = 0.004;
     public static double speed_servo = 10;
     public static double theta_autodrive = -100;
     public static double speed_offset = 1;
@@ -98,6 +98,7 @@ public class Mecanum_Drive extends OpMode {
         intake_PID = new PIDF_intake();
         gamepad0 = new gamepad();
         time.reset();
+        Master_variable master = new Master_variable();
 
         check_intake = false;
         check_shooter = false;
@@ -117,12 +118,18 @@ public class Mecanum_Drive extends OpMode {
 
         follower = Constants.createFollower(hardwareMap);
 
-        switch (Master_variable.starting_auto){
-            case 1:startingPose = new Pose(74.000, -95.000, Math.toRadians(-90));
+        switch (master.getStarting_auto()){
+            case 1:
+                startingPose = new Pose(86.000, -90.000, Math.toRadians(-90));
+                break;
+            case 2:
+                startingPose = new Pose(84.000, -56.000, Math.toRadians(90));
+                break;
+
             default:startingPose = new Pose(72, -72, Math.toRadians(0));
         }
 
-        follower.setStartingPose(startingPose == null ? new Pose() : startingPose);
+        follower.setStartingPose(startingPose);
         follower.update();
 
         pathChain = () -> follower.pathBuilder() //Lazy Curve Generation
@@ -224,7 +231,7 @@ public class Mecanum_Drive extends OpMode {
 
         if (check_intake && !check_X) {
             if (distance_sensor.led_status()){
-                intake_PID.intake(0.6);
+                intake_PID.intake(1);
             }else{
                 intake_PID.intake(1);
                 check_out = false;}

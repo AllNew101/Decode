@@ -61,20 +61,20 @@ public class Autonomous_solo_blue extends OpMode {
     boolean check_delay2 = false;
     private final Pose startPose = new Pose(125.500, -12.000, Math.toRadians(145));
     private final Pose scorepreload = new Pose(90.000, -38.000, Math.toRadians(90));
-    private final Pose keep1 = new Pose(85.000, -16.000, Math.toRadians(90));
+    private final Pose keep1 = new Pose(82.000, -16.000, Math.toRadians(90));
     private final Pose shoot1 = new Pose(90.000, -32, Math.toRadians(90));
-    private final Pose Pre_keep2 = new Pose(58.000, -40.000, Math.toRadians(90));
+    private final Pose Pre_keep2 = new Pose(60.000, -40.000, Math.toRadians(90));
     private final Pose keep2 = new Pose(65.000, -16.000, Math.toRadians(90));
     private final Pose shoot2 = new Pose(90.000, -32.000, Math.toRadians(90));
-    private final Pose Pre_keep3 = new Pose(41.000, -40.000, Math.toRadians(90));
-    private final Pose keep3 = new Pose(41.000, -16.000, Math.toRadians(90));
+    private final Pose Pre_keep3 = new Pose(39.000, -40.000, Math.toRadians(90));
+    private final Pose keep3 = new Pose(38.000, -8.000, Math.toRadians(90));
     private final Pose shoot3 = new Pose(90.000, -32.000, Math.toRadians(90));
     /////////////////////////////////////////////////////////////////////////////////////
     private final Pose openhuman = new Pose(69.000, -10.500, Math.toRadians(170));
-    private final Pose keepopen = new Pose(14.000, -4.000, Math.toRadians(180));
+    private final Pose keepopen = new Pose(14.000, 0.000, Math.toRadians(180));
     private final Pose keepopensec = new Pose(12.000, -17.500, Math.toRadians(180));
     ///////////////////////////////////////////////////////////1//////////////////////////
-    private final Pose keeploop = new Pose(14.000, 1.500, Math.toRadians(180));
+    private final Pose keeploop = new Pose(14.000, 3.000, Math.toRadians(180));
     private final Pose keeploopsec = new Pose(12.000, -6.000, Math.toRadians(180));
     private final Pose shootloop = new Pose(78.000, -36.000, Math.toRadians(90));
     ///////////////////////////////////////////////////////////////////////////////////
@@ -82,7 +82,7 @@ public class Autonomous_solo_blue extends OpMode {
 
     //    private final Pose keep3BE = new Pose(45.500,-130.000,Math.toRadians(-180));
     private final Pose keepopen_BE = new Pose(48.500,15.000,Math.toRadians(180));
-    private final Pose keeploop_BE = new Pose(75.000,0.000,Math.toRadians(180));
+    private final Pose keeploop_BE = new Pose(75.000,3.000,Math.toRadians(180));
 
     ////////////////////////////////////////////////////////////////////////////////////////
     private PathChain Path1,Path2,Path3,Path4,Path44,Path5,Path6,Path7,Path8,Path88,Path9,Path10,Path101,Path11,go_prekeep3,keeping3,shooting3;
@@ -252,7 +252,9 @@ public class Autonomous_solo_blue extends OpMode {
                     break;
                 }
             case 2022 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(3);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(3);}
                     break;}}
             case 3:
                 if (!follower.isBusy()){
@@ -293,7 +295,9 @@ public class Autonomous_solo_blue extends OpMode {
                     break;
                 }
             case 2044 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(20);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(20);}
                     break;}}
             case 20:
                 if (!follower.isBusy()){
@@ -331,7 +335,9 @@ public class Autonomous_solo_blue extends OpMode {
                     break;
                 }
             case 2200 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(5);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(5);}
                     break;}}
             //////////////////////////////////////////////////////////////////////////
             case 5:
@@ -391,7 +397,9 @@ public class Autonomous_solo_blue extends OpMode {
                     break;
                 }
             case 2066 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(8);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(8);}
                     break;}}
             //////////////////////////////////////////////////////////////////////////
 
@@ -447,20 +455,22 @@ public class Autonomous_solo_blue extends OpMode {
                     break;
                 }
             case 2077 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(10);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(8);}
                     break;}}
             //////////////////////////////////////////////////////////////////////
     }}
     public void mechanicPathUpdate(){
         switch (pathMec) {
             case 1:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -10, Turret.get_limit(),1);
-                Ying.run_shooter(104, false, false);
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -11, Turret.get_limit(),1);
+                Ying.run_shooter(103, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
             case 2:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -10, Turret.get_limit(),1);
-                Ying.run_shooter(105, false, false);
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -11, Turret.get_limit(),1);
+                Ying.run_shooter(103, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
         }
@@ -519,7 +529,7 @@ public class Autonomous_solo_blue extends OpMode {
     @Override
     public void init() {
         Master_variable master = new Master_variable();
-        master.set_starting_point(1);
+        master.set_starting_point(2);
 
         pathTimer = new Timer();
         opmodeTimer = new Timer();

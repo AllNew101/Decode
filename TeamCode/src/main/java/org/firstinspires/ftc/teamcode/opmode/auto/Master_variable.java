@@ -4,14 +4,16 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class Master_variable {
-    public static double velocity_shooter_near = 104;
-    public static double turret_angle = -44;
-    public static double velocity_shooter_far = 130;
-    public static int starting_auto = 0;
+    public static int starting_auto;
+    public static double intake_shoot = 0.7;
 
     public void set_starting_point(int starting){
         starting_auto = starting;
     }
+    public int getStarting_auto(){
+        return starting_auto;
+    }
+
 
 
 
