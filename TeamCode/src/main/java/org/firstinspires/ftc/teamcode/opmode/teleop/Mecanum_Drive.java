@@ -108,7 +108,7 @@ public class Mecanum_Drive extends OpMode {
         intake_PID.init_PIDF_intake(hardwareMap, time);
         angle.init_angular(hardwareMap);
 
-        Turret.init_turret(hardwareMap, time);
+        Turret.init_turret_teleop(hardwareMap, time);
 
         telemetryX.init(telemetry);
         closer.init_angular(hardwareMap);

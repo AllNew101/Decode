@@ -30,8 +30,8 @@ import java.util.function.Supplier;
  * git commit -m "***********" */
 
 @Config
-@Autonomous(name = "RED SOLO")
-public class Autonomous_solo_red extends OpMode {
+@Autonomous(name = "BLUE SOLO")
+public class Autonomous_solo_blue extends OpMode {
 
     private DcMotor rightRear;
     private DcMotor rightFront;
@@ -59,31 +59,30 @@ public class Autonomous_solo_red extends OpMode {
     double count = 0;
     boolean check_delay = false;
     boolean check_delay2 = false;
-    private final Pose startPose = new Pose(125.500, -132.000, Math.toRadians(-145));
-    private final Pose scorepreload = new Pose(90.000, -100.000, Math.toRadians(-90));
-    private final Pose keep1 = new Pose(85.000, -125.00, Math.toRadians(-90));
-    private final Pose shoot1 = new Pose(90.000, -104.000, Math.toRadians(-90));
-    private final Pose Pre_keep2 = new Pose(64.000, -100.000, Math.toRadians(-90));
-    private final Pose keep2 = new Pose(64.000, -128.000, Math.toRadians(-90));
-    private final Pose shoot2 = new Pose(90.000, -110.000, Math.toRadians(-90));
-    private final Pose Pre_keep3 = new Pose(40.000, -100.000, Math.toRadians(-90));
-    private final Pose keep3 = new Pose(40.000, -128.000, Math.toRadians(-90));
-    private final Pose shoot3 = new Pose(90.000, -110.000, Math.toRadians(-90));
+    private final Pose startPose = new Pose(125.500, -12.000, Math.toRadians(145));
+    private final Pose scorepreload = new Pose(90.000, -38.000, Math.toRadians(90));
+    private final Pose keep1 = new Pose(85.000, -16.000, Math.toRadians(90));
+    private final Pose shoot1 = new Pose(90.000, -32, Math.toRadians(90));
+    private final Pose Pre_keep2 = new Pose(58.000, -40.000, Math.toRadians(90));
+    private final Pose keep2 = new Pose(65.000, -16.000, Math.toRadians(90));
+    private final Pose shoot2 = new Pose(90.000, -32.000, Math.toRadians(90));
+    private final Pose Pre_keep3 = new Pose(41.000, -40.000, Math.toRadians(90));
+    private final Pose keep3 = new Pose(41.000, -16.000, Math.toRadians(90));
+    private final Pose shoot3 = new Pose(90.000, -32.000, Math.toRadians(90));
     /////////////////////////////////////////////////////////////////////////////////////
-    private final Pose openhuman = new Pose(70.000, -130.500, Math.toRadians(-170));
-    private final Pose keepopen = new Pose(14.000, -134.000, Math.toRadians(-180));
-    private final Pose keepopensec = new Pose(12.000, -127.500, Math.toRadians(-180));
+    private final Pose openhuman = new Pose(69.000, -10.500, Math.toRadians(170));
+    private final Pose keepopen = new Pose(14.000, -4.000, Math.toRadians(180));
+    private final Pose keepopensec = new Pose(12.000, -17.500, Math.toRadians(180));
     ///////////////////////////////////////////////////////////1//////////////////////////
-    private final Pose keeploop = new Pose(14.000, -142.000, Math.toRadians(-180));
-    private final Pose keeploopsec = new Pose(12.000, -138.000, Math.toRadians(-180));
-    private final Pose shootloop = new Pose(74.000, -95.000, Math.toRadians(-90));
+    private final Pose keeploop = new Pose(14.000, 1.500, Math.toRadians(180));
+    private final Pose keeploopsec = new Pose(12.000, -6.000, Math.toRadians(180));
+    private final Pose shootloop = new Pose(78.000, -36.000, Math.toRadians(90));
     ///////////////////////////////////////////////////////////////////////////////////
     //Bazier zone
 
-//    private final Pose keep3BE = new Pose(45.500,-130.000,Math.toRadians(-180));
-
-    private final Pose keepopen_BE = new Pose(48.500,-150.000,Math.toRadians(-180));
-    private final Pose keeploop_BE = new Pose(75.000,-138.500,Math.toRadians(-180));
+    //    private final Pose keep3BE = new Pose(45.500,-130.000,Math.toRadians(-180));
+    private final Pose keepopen_BE = new Pose(48.500,15.000,Math.toRadians(180));
+    private final Pose keeploop_BE = new Pose(75.000,0.000,Math.toRadians(180));
 
     ////////////////////////////////////////////////////////////////////////////////////////
     private PathChain Path1,Path2,Path3,Path4,Path44,Path5,Path6,Path7,Path8,Path88,Path9,Path10,Path101,Path11,go_prekeep3,keeping3,shooting3;
@@ -187,7 +186,6 @@ public class Autonomous_solo_red extends OpMode {
                 .setLinearHeadingInterpolation(keeploop.getHeading(), keeploopsec.getHeading())
                 .build();
         /////////////////////////////////////////////////////////////////////////////////
-
     }
 
 
@@ -220,14 +218,15 @@ public class Autonomous_solo_red extends OpMode {
                     break;
                 }
             case 2011 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(1);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){
+                    closer.close();
+                    setPathState(1);}
                     break;}}
             case 1:
                 if (!follower.isBusy()){
                     angle.setPosition(maximum);
-                    closer.close();
                     intake_PID.intake(1);
-                    follower.setMaxPower(1);
+                    follower.setMaxPower(0.8);
                     follower.followPath(Path2);
                     setPathState(2);
                     break;
@@ -434,7 +433,6 @@ public class Autonomous_solo_red extends OpMode {
                         follower.setMaxPower(1);
                         follower.followPath(Path10);
                         setPathState(207);
-
                 }
             case 207 :{
                 if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(105);}
@@ -452,18 +450,17 @@ public class Autonomous_solo_red extends OpMode {
                 if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(10);}
                     break;}}
             //////////////////////////////////////////////////////////////////////
-
     }}
     public void mechanicPathUpdate(){
         switch (pathMec) {
             case 1:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, 1, Turret.get_limit(),1);
-                Ying.run_shooter(108, false, false);
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -10, Turret.get_limit(),1);
+                Ying.run_shooter(104, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
             case 2:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, 1, Turret.get_limit(),1);
-                Ying.run_shooter(107.5, false, false);
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -10, Turret.get_limit(),1);
+                Ying.run_shooter(105, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
         }

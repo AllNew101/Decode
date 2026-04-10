@@ -29,7 +29,7 @@ public class Turret {
     public static double kD = 0.1;
     public static double kD_secondary = 0.01;
     public static double kP = 0.025;
-    public static double kP_secondary = 0.018;
+    public static double kP_secondary = 0.02;
     public static double kS = 0.17;
     public static double kShooter = -0.000025;
     public static double limit = 180;
@@ -54,6 +54,17 @@ public class Turret {
     private double output = 0;
     private double offset = 0;
     public void init_turret(HardwareMap hardwareMap, ElapsedTime Time) {
+        poten = hardwareMap.get(AnalogInput.class, "poten");
+        turret = hardwareMap.get(DcMotor.class, "Turret");
+        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turret.setDirection(DcMotorSimple.Direction.REVERSE);
+//        offset = convert_potentiometer_to_degree(poten.getVoltage());
+        offset = 0 ;
+
+        time = Time;
+    }
+    public void init_turret_teleop(HardwareMap hardwareMap, ElapsedTime Time) {
         poten = hardwareMap.get(AnalogInput.class, "poten");
         turret = hardwareMap.get(DcMotor.class, "Turret");
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

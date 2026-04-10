@@ -10,29 +10,28 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.opmode.system.PIDF_Shooter;
-import org.firstinspires.ftc.teamcode.opmode.system.Turret;
-import org.firstinspires.ftc.teamcode.opmode.system.telemetryX;
-import org.firstinspires.ftc.teamcode.opmode.system.angular_set;
-import org.firstinspires.ftc.teamcode.opmode.system.Closer;
-import org.firstinspires.ftc.teamcode.opmode.system.Distance_Sensor;
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
 import org.firstinspires.ftc.teamcode.opmode.Indev.PIDF_intake;
+import org.firstinspires.ftc.teamcode.opmode.system.Closer;
+import org.firstinspires.ftc.teamcode.opmode.system.Distance_Sensor;
+import org.firstinspires.ftc.teamcode.opmode.system.PIDF_Shooter;
+import org.firstinspires.ftc.teamcode.opmode.system.Turret;
+import org.firstinspires.ftc.teamcode.opmode.system.angular_set;
 import org.firstinspires.ftc.teamcode.opmode.system.localization_limelight;
-import org.firstinspires.ftc.teamcode.opmode.auto.Master_variable;
+import org.firstinspires.ftc.teamcode.opmode.system.telemetryX;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Mecanum_Drive;
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+
 import java.util.function.Supplier;
 /* git add .
  * git push origin master
  * git commit -m "***********" */
 
 @Config
-@Autonomous(name = "Auto Test")
-public class Autonomous_test extends OpMode {
+@Autonomous(name = "BLUE FAR")
+public class Autonomous_far_blue extends OpMode {
 
     private DcMotor rightRear;
     private DcMotor rightFront;
@@ -60,30 +59,34 @@ public class Autonomous_test extends OpMode {
     double count = 0;
     boolean check_delay = false;
     boolean check_delay2 = false;
-    private final Pose startPose = new Pose(125.500, -132.000, Math.toRadians(-145));
-    private final Pose scorepreload = new Pose(90.000, -100.000, Math.toRadians(-90));
-    private final Pose keep1 = new Pose(85.000, -125.00, Math.toRadians(-90));
-    private final Pose shoot1 = new Pose(90.000, -104.000, Math.toRadians(-90));
-    private final Pose Pre_keep2 = new Pose(64.000, -100.000, Math.toRadians(-90));
-    private final Pose keep2 = new Pose(64.000, -128.000, Math.toRadians(-90));
-    private final Pose shoot2 = new Pose(90.000, -110.000, Math.toRadians(-90));
+    private final Pose startPose = new Pose(8, -46.000, Math.toRadians(90));
+    private final Pose scorepreload = new Pose(90.000, -44.000, Math.toRadians(90));
+    private final Pose keep1 = new Pose(85.000, -19.00, Math.toRadians(90));
+    private final Pose shoot1 = new Pose(90.000, -40.000, Math.toRadians(90));
+    private final Pose Pre_keep2 = new Pose(64.000, -44.000, Math.toRadians(90));
+    private final Pose keep2 = new Pose(64.000, -16.000, Math.toRadians(90));
+    private final Pose shoot2 = new Pose(90.000, -34.000, Math.toRadians(90));
+    private final Pose Pre_keep3 = new Pose(40.000, -44.000, Math.toRadians(90));
+    private final Pose keep3 = new Pose(40.000, -16.000, Math.toRadians(90));
+    private final Pose shoot3 = new Pose(90.000, -34.000, Math.toRadians(90));
     /////////////////////////////////////////////////////////////////////////////////////
-    private final Pose openhuman = new Pose(70.000, -127.500, Math.toRadians(-170));
-    private final Pose keepopen = new Pose(14.000, -127.500, Math.toRadians(-180));
-    private final Pose keepopensec = new Pose(12.000, -127.500, Math.toRadians(-180));
-    /////////////////////////////////////////////////////////////////////////////////////
-    private final Pose keeploop = new Pose(14.000, -138.000, Math.toRadians(-180));
-    private final Pose keeploopsec = new Pose(12.000, -138.000, Math.toRadians(-180));
-    private final Pose shootloop = new Pose(74.000, -95.000, Math.toRadians(-90));
+    private final Pose openhuman = new Pose(70.000, -14.500, Math.toRadians(170));
+    private final Pose keepopen = new Pose(14.000, -10.000, Math.toRadians(180));
+    private final Pose keepopensec = new Pose(12.000, -17.500, Math.toRadians(180));
+    ///////////////////////////////////////////////////////////1//////////////////////////
+    private final Pose keeploop = new Pose(14.000, -2.000, Math.toRadians(180));
+    private final Pose keeploopsec = new Pose(12.000, -6.000, Math.toRadians(180));
+    private final Pose shootloop = new Pose(74.000, -49.000, Math.toRadians(90));
     ///////////////////////////////////////////////////////////////////////////////////
     //Bazier zone
 
 //    private final Pose keep3BE = new Pose(45.500,-130.000,Math.toRadians(-180));
-    private final Pose keepopen_BE = new Pose(48.500,-150.000,Math.toRadians(-180));
-    private final Pose keeploop_BE = new Pose(75.000,-138.500,Math.toRadians(-180));
+
+    private final Pose keepopen_BE = new Pose(48.500,6.000,Math.toRadians(180));
+    private final Pose keeploop_BE = new Pose(75.000,-6.500,Math.toRadians(180));
 
     ////////////////////////////////////////////////////////////////////////////////////////
-    private PathChain Path1,Path2,Path3,Path4,Path44,Path5,Path6,Path7,Path8,Path88,Path9,Path10,Path101,Path11;
+    private PathChain Path1,Path2,Path3,Path4,Path44,Path5,Path6,Path7,Path8,Path88,Path9,Path10,Path101,Path11,go_prekeep3,keeping3,shooting3;
 
 
     public void buildPaths() {
@@ -122,12 +125,30 @@ public class Autonomous_test extends OpMode {
                 .addPath(new BezierLine(keep2, shoot2))
                 .setLinearHeadingInterpolation(keep2.getHeading(), shoot2.getHeading())
                 .build();
+
+        go_prekeep3 = follower
+                .pathBuilder()
+                .addPath(new BezierLine(shoot2, Pre_keep3))
+                .setLinearHeadingInterpolation(shoot2.getHeading(), Pre_keep3.getHeading())
+                .build();
+
+        keeping3 = follower
+                .pathBuilder()
+                .addPath(new BezierLine(Pre_keep3, keep3))
+                .setLinearHeadingInterpolation(Pre_keep3.getHeading(), keep3.getHeading())
+                .build();
+
+        shooting3 = follower
+                .pathBuilder()
+                .addPath(new BezierLine(keep3, shoot3))
+                .setLinearHeadingInterpolation(keep3.getHeading(), shoot3.getHeading())
+                .build();
 ////////////////////////////////////////////////////////////////////////////////////////
 
         Path6 = follower
                 .pathBuilder()
-                .addPath(new BezierLine(shoot2, openhuman))
-                .setLinearHeadingInterpolation(shoot2.getHeading(), openhuman.getHeading())
+                .addPath(new BezierLine(shoot3, openhuman))
+                .setLinearHeadingInterpolation(shoot3.getHeading(), openhuman.getHeading())
                 .build();
 
         Path7 = follower
@@ -173,7 +194,7 @@ public class Autonomous_test extends OpMode {
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0: {
-                follower.setMaxPower(0.8);
+                follower.setMaxPower(1);
                 follower.followPath(Path1);
                 setMecState(2);
                 intake_PID.intake(1);
@@ -238,14 +259,14 @@ public class Autonomous_test extends OpMode {
                     intake_PID.intake(1);
                     angle.setPosition(maximum);
                     closer.close();
-                    follower.setMaxPower(0.8);
-                    follower.followPath(Path4);
+                    follower.setMaxPower(0.9);
+                    follower.followPath(Path4,true);
                     setPathState(33);
                     break;}
             case 33:
                 if (!follower.isBusy()){
                     intake_PID.intake(1);
-                    follower.setMaxPower(0.8);
+                    follower.setMaxPower(0.7);
                     follower.followPath(Path44);
                     setPathState(203);
                     break;}
@@ -272,6 +293,44 @@ public class Autonomous_test extends OpMode {
                     break;
                 }
             case 2044 :{
+                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(20);}
+                    break;}}
+            case 20:
+                if (!follower.isBusy()){
+                    intake_PID.intake(1);
+                    angle.setPosition(maximum);
+                    closer.close();
+                    follower.setMaxPower(1);
+                    follower.followPath(go_prekeep3,true);
+                    setPathState(2020);
+                    break;}
+            case 2020:
+                if (!follower.isBusy()){
+                    intake_PID.intake(1);
+                    follower.setMaxPower(0.8);
+                    follower.followPath(keeping3);
+                    setPathState(22);
+                    break;}
+            case 22:
+                if (!follower.isBusy()){
+                    follower.setMaxPower(0.8);
+                    follower.followPath(shooting3);
+                    delay.reset();
+                    setPathState(220);
+                    break;}
+            case 220 :{
+                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(120);}
+                    break;}}
+            case 120:
+                if (!follower.isBusy()){
+                    intake_PID.intake(0.8);
+                    closer.open();
+                    setMecintake_augularState(1);
+                    delay.reset();
+                    setPathState(2200);
+                    break;
+                }
+            case 2200 :{
                 if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(5);}
                     break;}}
             //////////////////////////////////////////////////////////////////////////
@@ -340,7 +399,7 @@ public class Autonomous_test extends OpMode {
                 if (!follower.isBusy()){
                     count += 1;
                     closer.close();
-                    if (count < 3){
+                    if (count < 2){
                         follower.setMaxPower(1);
                         follower.followPath(Path9);
                         setPathState(9);}
@@ -369,7 +428,7 @@ public class Autonomous_test extends OpMode {
                         setPathState(999);}
                 }
             case 999:
-                if ((delay_loop.seconds() > 1.5 && check_delay2 ) || !follower.isBusy()){
+                if ((delay_loop.seconds() > 1 && check_delay2 ) || !follower.isBusy()){
                         check_delay2 = false;
                         follower.setMaxPower(1);
                         follower.followPath(Path10);
@@ -389,20 +448,19 @@ public class Autonomous_test extends OpMode {
                     break;
                 }
             case 2077 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(8);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(10);}
                     break;}}
             //////////////////////////////////////////////////////////////////////
-
     }}
     public void mechanicPathUpdate(){
         switch (pathMec) {
             case 1:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, 0, Turret.get_limit(),1);
-                Ying.run_shooter(110, false, false);
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -1, Turret.get_limit(),1);
+                Ying.run_shooter(108, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
             case 2:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, 0, Turret.get_limit(),1);
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -1, Turret.get_limit(),1);
                 Ying.run_shooter(107.5, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
@@ -411,7 +469,7 @@ public class Autonomous_test extends OpMode {
     public void mechanicaugularPathUpdate(){
         switch (pathMec) {
             case 1:
-                angle.angular_on(-1 * Mecanum_Drive.speed_servo, 0.15, maximum);
+                angle.angular_on(-1 * Mecanum_Drive.speed_servo, 0.15, maximum );
                 break;
 
         }
@@ -463,6 +521,7 @@ public class Autonomous_test extends OpMode {
     public void init() {
         Master_variable master = new Master_variable();
         master.set_starting_point(1);
+
         pathTimer = new Timer();
         opmodeTimer = new Timer();
 
