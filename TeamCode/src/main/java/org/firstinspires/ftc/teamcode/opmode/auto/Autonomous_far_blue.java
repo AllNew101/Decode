@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
-import org.firstinspires.ftc.teamcode.opmode.Indev.PIDF_intake;
+import org.firstinspires.ftc.teamcode.opmode.system.PIDF_intake;
 import org.firstinspires.ftc.teamcode.opmode.system.Closer;
 import org.firstinspires.ftc.teamcode.opmode.system.Distance_Sensor;
 import org.firstinspires.ftc.teamcode.opmode.system.PIDF_Shooter;
@@ -59,159 +59,93 @@ public class Autonomous_far_blue extends OpMode {
     double count = 0;
     boolean check_delay = false;
     boolean check_delay2 = false;
-    private final Pose startPose = new Pose(8, -46.000, Math.toRadians(90));
-    private final Pose scorepreload = new Pose(90.000, -44.000, Math.toRadians(90));
-    private final Pose keep1 = new Pose(85.000, -19.00, Math.toRadians(90));
-    private final Pose shoot1 = new Pose(90.000, -40.000, Math.toRadians(90));
-    private final Pose Pre_keep2 = new Pose(64.000, -44.000, Math.toRadians(90));
-    private final Pose keep2 = new Pose(64.000, -16.000, Math.toRadians(90));
-    private final Pose shoot2 = new Pose(90.000, -34.000, Math.toRadians(90));
-    private final Pose Pre_keep3 = new Pose(40.000, -44.000, Math.toRadians(90));
-    private final Pose keep3 = new Pose(40.000, -16.000, Math.toRadians(90));
-    private final Pose shoot3 = new Pose(90.000, -34.000, Math.toRadians(90));
-    /////////////////////////////////////////////////////////////////////////////////////
-    private final Pose openhuman = new Pose(70.000, -14.500, Math.toRadians(170));
-    private final Pose keepopen = new Pose(14.000, -10.000, Math.toRadians(180));
-    private final Pose keepopensec = new Pose(12.000, -17.500, Math.toRadians(180));
-    ///////////////////////////////////////////////////////////1//////////////////////////
-    private final Pose keeploop = new Pose(14.000, -2.000, Math.toRadians(180));
-    private final Pose keeploopsec = new Pose(12.000, -6.000, Math.toRadians(180));
-    private final Pose shootloop = new Pose(74.000, -49.000, Math.toRadians(90));
+    private final Pose startPose = new Pose(8.000, -30.000, Math.toRadians(90));
+    private final Pose Pre_keep1 = new Pose(34.000, -30.00, Math.toRadians(90));
+    private final Pose keep1 = new Pose(36.000, -2.00, Math.toRadians(90));
+    private final Pose shoot1 = new Pose(10.000, -28.000, Math.toRadians(90));
+    private final Pose keep_loop = new Pose(8.000, 0.000, Math.toRadians(90)); //ชิดกำแพง
+    private final Pose keep_loopsec = new Pose(22.000, 0.000, Math.toRadians(90)); //ไม่ชิดกำแพง
+    private final Pose shoot_loop = new Pose(10.000, -24.000, Math.toRadians(90));
     ///////////////////////////////////////////////////////////////////////////////////
+    private final Pose Final = new Pose(14,-18,Math.toRadians(90));
     //Bazier zone
 
-//    private final Pose keep3BE = new Pose(45.500,-130.000,Math.toRadians(-180));
-
-    private final Pose keepopen_BE = new Pose(48.500,6.000,Math.toRadians(180));
-    private final Pose keeploop_BE = new Pose(75.000,-6.500,Math.toRadians(180));
 
     ////////////////////////////////////////////////////////////////////////////////////////
-    private PathChain Path1,Path2,Path3,Path4,Path44,Path5,Path6,Path7,Path8,Path88,Path9,Path10,Path101,Path11,go_prekeep3,keeping3,shooting3;
-
+    private PathChain go_Pre_keep1,keeping1,Pre_loop,shooting1,keeping_loop,keeping_loopsec,shooting_loop,shooting_loopsec,finish;
 
     public void buildPaths() {
-        Path1 = follower
+        go_Pre_keep1 = follower
                 .pathBuilder()
-                .addPath(new BezierLine(startPose, scorepreload))
-                .setLinearHeadingInterpolation(startPose.getHeading(), scorepreload.getHeading())
+                .addPath(new BezierLine(startPose, Pre_keep1))
+                .setLinearHeadingInterpolation(startPose.getHeading(), Pre_keep1.getHeading())
                 .build();
-
-        Path2 = follower
+        keeping1 = follower
                 .pathBuilder()
-                .addPath(new BezierLine(scorepreload, keep1))
-                .setLinearHeadingInterpolation(scorepreload.getHeading(), keep1.getHeading())
+                .addPath(new BezierLine(Pre_keep1, keep1))
+                .setLinearHeadingInterpolation(Pre_keep1.getHeading(), keep1.getHeading())
                 .build();
-
-        Path3 = follower
+        shooting1 = follower
                 .pathBuilder()
                 .addPath(new BezierLine(keep1, shoot1))
                 .setLinearHeadingInterpolation(keep1.getHeading(), shoot1.getHeading())
                 .build();
-
-        Path4 = follower
+        Pre_loop = follower
                 .pathBuilder()
-                .addPath(new BezierLine(shoot1, Pre_keep2))
-                .setLinearHeadingInterpolation(shoot1.getHeading(), Pre_keep2.getHeading())
-                .build();
-
-        Path44 = follower
-                .pathBuilder()
-                .addPath(new BezierLine(Pre_keep2, keep2))
-                .setLinearHeadingInterpolation(Pre_keep2.getHeading(), keep2.getHeading())
-                .build();
-
-        Path5 = follower
-                .pathBuilder()
-                .addPath(new BezierLine(keep2, shoot2))
-                .setLinearHeadingInterpolation(keep2.getHeading(), shoot2.getHeading())
-                .build();
-
-        go_prekeep3 = follower
-                .pathBuilder()
-                .addPath(new BezierLine(shoot2, Pre_keep3))
-                .setLinearHeadingInterpolation(shoot2.getHeading(), Pre_keep3.getHeading())
-                .build();
-
-        keeping3 = follower
-                .pathBuilder()
-                .addPath(new BezierLine(Pre_keep3, keep3))
-                .setLinearHeadingInterpolation(Pre_keep3.getHeading(), keep3.getHeading())
-                .build();
-
-        shooting3 = follower
-                .pathBuilder()
-                .addPath(new BezierLine(keep3, shoot3))
-                .setLinearHeadingInterpolation(keep3.getHeading(), shoot3.getHeading())
-                .build();
-////////////////////////////////////////////////////////////////////////////////////////
-
-        Path6 = follower
-                .pathBuilder()
-                .addPath(new BezierLine(shoot3, openhuman))
-                .setLinearHeadingInterpolation(shoot3.getHeading(), openhuman.getHeading())
-                .build();
-
-        Path7 = follower
-                .pathBuilder()
-                .addPath(new BezierCurve(openhuman,keepopen_BE,keepopen))
-                .setLinearHeadingInterpolation(openhuman.getHeading(), keepopen.getHeading())
-                .build();
-
-        Path8 = follower
-                .pathBuilder()
-                .addPath(new BezierLine(keepopen,shootloop))
-                .setLinearHeadingInterpolation(keepopen.getHeading(), shootloop.getHeading())
-                .build();
-
-        Path88 = follower
-                .pathBuilder()
-                .addPath(new BezierLine(keepopen,keepopensec))
-                .setLinearHeadingInterpolation(keepopen.getHeading(), keepopensec.getHeading())
-                .build();
-/////////////////////////////////////////////////////////////////////////////////////////
-        Path9 = follower
-                .pathBuilder()
-                .addPath(new BezierCurve(shootloop,keeploop_BE, keeploop))
-                .setLinearHeadingInterpolation(shootloop.getHeading(), keeploop.getHeading())
-                .build();
-
-        Path10 = follower
-                .pathBuilder()
-                .addPath(new BezierLine(keeploop,shootloop))
-                .setLinearHeadingInterpolation(keeploop.getHeading(), shootloop.getHeading())
-                .build();
-
-        Path101 = follower
-                .pathBuilder()
-                .addPath(new BezierLine(keeploop,keeploopsec))
-                .setLinearHeadingInterpolation(keeploop.getHeading(), keeploopsec.getHeading())
+                .addPath(new BezierLine(shoot1, keep_loop))
+                .setLinearHeadingInterpolation(shoot1.getHeading(), keep_loop.getHeading())
                 .build();
         /////////////////////////////////////////////////////////////////////////////////
+        shooting_loop = follower
+                .pathBuilder()
+                .addPath(new BezierLine(keep_loop, shoot_loop))
+                .setLinearHeadingInterpolation(keep_loop.getHeading(), shoot_loop.getHeading())
+                .build();
+        keeping_loopsec = follower
+                .pathBuilder()
+                .addPath(new BezierLine(shoot_loop, keep_loopsec))
+                .setLinearHeadingInterpolation(shoot_loop.getHeading(), keep_loopsec.getHeading())
+                .build();
+        shooting_loopsec = follower
+                .pathBuilder()
+                .addPath(new BezierLine(keep_loopsec, shoot_loop))
+                .setLinearHeadingInterpolation(keep_loopsec.getHeading(), shoot_loop.getHeading())
+                .build();
+        keeping_loop = follower
+                .pathBuilder()
+                .addPath(new BezierLine(shoot_loop, keep_loop))
+                .setLinearHeadingInterpolation(shoot_loop.getHeading(), keep_loop.getHeading())
+                .build();
+        //////////////////////////////////////////////////////////////////////////////////
+        finish = follower
+                .pathBuilder()
+                .addPath(new BezierLine(keep_loop, Final))
+                .setLinearHeadingInterpolation(keep_loop.getHeading(), Final.getHeading())
+                .build();
     }
+
 
 
 
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0: {
-                follower.setMaxPower(1);
-                follower.followPath(Path1);
                 setMecState(2);
                 intake_PID.intake(1);
                 closer.close();
-                angle.setPosition(maximum);
+                angle.setPosition(0.4);
                 delay.reset();
-                setPathState(101);
+                setPathState(201);
                 break;
             }
             case 201 :{
                 if (!follower.isBusy()){
-                    if(delay.seconds() > 1){setPathState(101);}
-                break;}
+                    if(delay.seconds() > 4){setPathState(101);}
+                    break;}
             }
             case 101:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.8);
+                    intake_PID.intake(0.72);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -225,63 +159,27 @@ public class Autonomous_far_blue extends OpMode {
                     break;}}
             case 1:
                 if (!follower.isBusy()){
-                    angle.setPosition(maximum);
-                    closer.close();
+                    angle.setPosition(0.4);
                     intake_PID.intake(1);
-                    follower.setMaxPower(1);
-                    follower.followPath(Path2);
+                    follower.setMaxPower(0.8);
+                    follower.followPath(go_Pre_keep1);
                     setPathState(2);
                     break;
                 }
             case 2:
                 if (!follower.isBusy()){
                     follower.setMaxPower(0.9);
-                    follower.followPath(Path3);
-                    delay.reset();
-                    setPathState(202);
+                    follower.followPath(keeping1);
+                    setPathState(3);
                     break;}
 
-            case 202 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(102);}
-                    break;}}
-            case 102:
-                if (!follower.isBusy()){
-                    intake_PID.intake(0.8);
-                    closer.open();
-                    setMecintake_augularState(1);
-                    delay.reset();
-                    setPathState(2022);
-                    break;
-                }
-            case 2022 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){
-                    closer.close();
-                    setPathState(3);}
-                    break;}}
             case 3:
                 if (!follower.isBusy()){
                     intake_PID.intake(1);
-                    angle.setPosition(maximum);
-                    closer.close();
-                    follower.setMaxPower(0.9);
-                    follower.followPath(Path4,true);
-                    setPathState(33);
-                    break;}
-            case 33:
-                if (!follower.isBusy()){
-                    intake_PID.intake(1);
-                    follower.setMaxPower(0.7);
-                    follower.followPath(Path44);
-                    setPathState(203);
-                    break;}
-            case 203 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1.5){setPathState(4);}
-                    break;}}
-            case 4:
-                if (!follower.isBusy()){
-                    follower.setMaxPower(0.8);
-                    follower.followPath(Path5);
+                    angle.setPosition(0.4);
                     delay.reset();
+                    follower.setMaxPower(0.9);
+                    follower.followPath(shooting1);
                     setPathState(204);
                     break;}
             case 204 :{
@@ -289,7 +187,7 @@ public class Autonomous_far_blue extends OpMode {
                     break;}}
             case 103:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.8);
+                    intake_PID.intake(0.72);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -304,153 +202,74 @@ public class Autonomous_far_blue extends OpMode {
             case 20:
                 if (!follower.isBusy()){
                     intake_PID.intake(1);
-                    angle.setPosition(maximum);
-                    closer.close();
+                    delay.reset();
+                    angle.setPosition(0.4);
                     follower.setMaxPower(1);
-                    follower.followPath(go_prekeep3,true);
-                    setPathState(2020);
+                    follower.followPath(Pre_loop);
+                    setPathState(200);
                     break;}
-            case 2020:
+            case 200:
                 if (!follower.isBusy()){
-                    intake_PID.intake(1);
-                    follower.setMaxPower(0.8);
-                    follower.followPath(keeping3);
-                    setPathState(22);
+                    if (delay.seconds() > 2){
+                    setPathState(4);}
                     break;}
-            case 22:
+                ////////////////////////////////////////////////////////////////////////////////////
+            case 4:
                 if (!follower.isBusy()){
-                    follower.setMaxPower(0.8);
-                    follower.followPath(shooting3);
-                    delay.reset();
-                    setPathState(220);
-                    break;}
-            case 220 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(120);}
-                    break;}}
-            case 120:
-                if (!follower.isBusy()){
-                    intake_PID.intake(0.8);
-                    closer.open();
-                    setMecintake_augularState(1);
-                    delay.reset();
-                    setPathState(2200);
-                    break;
-                }
-            case 2200 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){
-                    closer.close();
-                    setPathState(5);}
-                    break;}}
-            //////////////////////////////////////////////////////////////////////////
-            case 5:
-                if (!follower.isBusy()){
-                    setMecState(1);
                     intake_PID.intake(1);
                     delay.reset();
                     follower.setMaxPower(0.8);
-                    follower.followPath(Path6);
+                    follower.followPath(shooting_loop);
                     setPathState(205);
                     break;}
             case 205 :{
-                if (!follower.isBusy()){if(delay.seconds() > 2){setPathState(6);}
-                    break;}}
-            case 6:
-                if (!follower.isBusy()){
-                    closer.close();
-                    follower.setMaxPower(1);
-                    follower.followPath(Path7);
-                    setPathState(7);
-                    break;}
-
-            case 7:
-                if (!follower.isBusy()){
-                    if (distance_sensor.get_Front_dis() < 14 && distance_sensor.get_Center_dis() < 14) {
-                        // go shooting
-                        follower.setMaxPower(1);
-                        follower.followPath(Path8);
-                        setPathState(206);
-                    }else{
-                        // continue keep
-                        delay_loop.reset();
-                        check_delay = true;
-//                        follower.setMaxPower(0.6);
-//                        follower.followPath(Path88);
-                        setPathState(77);
-                    }
-                    break;}
-
-            case 77:
-                if ((delay_loop.seconds() > 1.5 && check_delay ) || !follower.isBusy()){
-                    check_delay = false;
-                    follower.setMaxPower(1);
-                    follower.followPath(Path8);
-                    setPathState(206);
-                    }
-            case 206 :{
                 if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(104);}
                     break;}}
             case 104:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.8);
+                    intake_PID.intake(0.72);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
-                    setPathState(2066);
+                    setPathState(2055);
                     break;
                 }
-            case 2066 :{
+            case 2055 :{
                 if (!follower.isBusy()){if(delay.seconds() > 1){
                     closer.close();
-                    setPathState(8);}
+                    setPathState(5);}
                     break;}}
-            //////////////////////////////////////////////////////////////////////////
-
-            case 8:
+            case 5:
                 if (!follower.isBusy()){
                     count += 1;
-                    closer.close();
-                    if (count < 2){
-                        follower.setMaxPower(1);
-                        follower.followPath(Path9);
-                        setPathState(9);}
-                    else {;}
-                    break;}
-            case 9:
-                if (!follower.isBusy()){
-                    if (distance_sensor.get_Front_dis() < 14 && distance_sensor.get_Center_dis() < 14) {
-                        // go shooting
-                        follower.setMaxPower(1);
-                        follower.followPath(Path10);
-                        setPathState(207);
-                    }else{
-                        // continue keep
-                        delay.reset();
-//                        follower.setMaxPower(0.6);
-//                        follower.followPath(Path101);
-                        setPathState(99);
+                    if (count < 4){
+                    delay.reset();
+                    follower.setMaxPower(0.8);
+                    follower.followPath(keeping_loopsec);
+                    setPathState(206);}
+                    else{
+                        setPathState(10);
                     }
                     break;}
-            case 99:
+            case 206 :{
+                if (!follower.isBusy()){if(delay.seconds() > 2){
+                    closer.close();
+                    setPathState(6);}
+                    break;}}
+            case 6:
                 if (!follower.isBusy()){
-                    if (delay.seconds() > 2){
-                        delay_loop.reset();
-                        check_delay2 = true;
-                        setPathState(999);}
-                }
-            case 999:
-                if ((delay_loop.seconds() > 1 && check_delay2 ) || !follower.isBusy()){
-                        check_delay2 = false;
-                        follower.setMaxPower(1);
-                        follower.followPath(Path10);
-                        setPathState(207);
-
-                }
+                    intake_PID.intake(1);
+                    delay.reset();
+                    follower.setMaxPower(0.8);
+                    follower.followPath(shooting_loop);
+                    setPathState(207);
+                    break;}
             case 207 :{
                 if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(105);}
                     break;}}
             case 105:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.8);
+                    intake_PID.intake(0.72);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -460,10 +279,35 @@ public class Autonomous_far_blue extends OpMode {
             case 2077 :{
                 if (!follower.isBusy()){if(delay.seconds() > 1){
                     closer.close();
-                    setPathState(10);}
+                    setPathState(7);}
                     break;}}
-            //////////////////////////////////////////////////////////////////////
-    }}
+            case 7:
+                if (!follower.isBusy()){
+                    count += 1;
+                    if (count < 4){
+                        delay.reset();
+                        follower.setMaxPower(0.8);
+                        follower.followPath(keeping_loop);
+                        setPathState(208);}
+                    else{
+                        setPathState(10);
+                    }
+                    break;}
+            case 208 :{
+                if (!follower.isBusy()){if(delay.seconds() > 2){
+                    closer.close();
+                    setPathState(4);}
+                    break;}}
+                ///////////////////////////////////////////////////////////////////////////////////
+            case 10:
+                if (!follower.isBusy()){
+                    follower.setMaxPower(0.8);
+                    follower.followPath(finish,true);
+                    setPathState(-1);
+                    break;
+                }
+                //////////////////////////////////////////////////////////////////////
+        }}
     public void mechanicPathUpdate(){
         switch (pathMec) {
             case 1:
@@ -472,8 +316,8 @@ public class Autonomous_far_blue extends OpMode {
                 Turret.to_position(tracking, 0,1);
                 break;
             case 2:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -1, Turret.get_limit(),1);
-                Ying.run_shooter(107.5, false, false);
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -12, Turret.get_limit(),1);
+                Ying.run_shooter(128.5, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
         }
@@ -481,7 +325,7 @@ public class Autonomous_far_blue extends OpMode {
     public void mechanicaugularPathUpdate(){
         switch (pathMec) {
             case 1:
-                angle.angular_on(-1 * Mecanum_Drive.speed_servo, 0.15, maximum );
+                angle.angular_on(-1 * Mecanum_Drive.speed_servo, 0.36, 0.4 );
                 break;
 
         }
@@ -532,7 +376,7 @@ public class Autonomous_far_blue extends OpMode {
     @Override
     public void init() {
         Master_variable master = new Master_variable();
-        master.set_starting_point(1);
+        master.set_starting_point(4);
 
         pathTimer = new Timer();
         opmodeTimer = new Timer();

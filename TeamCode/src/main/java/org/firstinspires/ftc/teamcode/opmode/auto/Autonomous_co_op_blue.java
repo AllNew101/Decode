@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.opmode.system.Closer;
 import org.firstinspires.ftc.teamcode.opmode.system.Distance_Sensor;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
-import org.firstinspires.ftc.teamcode.opmode.Indev.PIDF_intake;
+import org.firstinspires.ftc.teamcode.opmode.system.PIDF_intake;
 import org.firstinspires.ftc.teamcode.opmode.system.localization_limelight;
 import org.firstinspires.ftc.teamcode.opmode.teleop.Mecanum_Drive;
 import java.util.function.Supplier;
@@ -189,7 +189,7 @@ public class Autonomous_co_op_blue extends OpMode {
             }
             case 101:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.7);
+                    intake_PID.intake(0.8);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -248,7 +248,7 @@ public class Autonomous_co_op_blue extends OpMode {
             case 33:
                 if (!follower.isBusy()){
                     intake_PID.intake(1);
-                    follower.setMaxPower(0.8);
+                    follower.setMaxPower(0.68);
                     follower.followPath(Path44);
                     setPathState(203);
                     break;}

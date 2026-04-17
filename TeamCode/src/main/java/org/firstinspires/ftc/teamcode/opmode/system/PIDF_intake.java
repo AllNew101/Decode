@@ -1,8 +1,6 @@
-package org.firstinspires.ftc.teamcode.opmode.Indev;
+package org.firstinspires.ftc.teamcode.opmode.system;
 import com.acmerobotics.dashboard.config.Config;
-import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -27,8 +25,8 @@ public class PIDF_intake {
     public static double KS = 0.18;
     public static double P = 0.07;
 
-    public static double near = 0.8;
-    public static double far = 0.55;
+//    public static double near = 0.8;
+//    public static double far = 0.7;
 
     ElapsedTime time;
     DcMotor Front;
@@ -69,13 +67,13 @@ public class PIDF_intake {
         Front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
-    public void intake_near(){
-        Front.setPower(PIDF(near));
+    public void intake_near(double near){
+        Front.setPower(PIDF(near));// origin power 0.8
         Front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
-    public void intake_far(){
-        Front.setPower(PIDF(far));
+    public void intake_far(double far){
+        Front.setPower(PIDF(far));// origin power 0.7
         Front.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
