@@ -28,19 +28,16 @@ public class Turret {
     public static double condition = 15;
     public static double kD = 0.1;
     public static double kD_secondary = 0.01;
-    public static double kP = 0.025;
+    public static double kP = 0.022;
     public static double kP_secondary = 0.02;
     public static double kS = 0.17;
     public static double kShooter = -0.000025;
     public static double limit = 180;
+    public static double limit_max = limit;
+    public static double limit_min = -limit;
     public static double middle_poten = 1.365;
 
 
-
-
-
-    public static double limit_max = limit;
-    public static double limit_min = -limit;
     private double gear_motor = 39;
     private double gear_turret = 89;
 

@@ -64,7 +64,7 @@ public class Autonomous_solo_red extends OpMode {
     private final Pose keep1 = new Pose(85.000, -125.00, Math.toRadians(-90));
     private final Pose shoot1 = new Pose(90.000, -104.000, Math.toRadians(-90));
     private final Pose Pre_keep2 = new Pose(60.000, -100.000, Math.toRadians(-90));
-    private final Pose keep2 = new Pose(64.000, -128.000, Math.toRadians(-90));
+    private final Pose keep2 = new Pose(64.000, -127.000, Math.toRadians(-90));
     private final Pose shoot2 = new Pose(90.000, -110.000, Math.toRadians(-90));
 //    private final Pose Pre_keep3 = new Pose(39.000, -100.000, Math.toRadians(-90));
 //    private final Pose keep3 = new Pose(39.000, -128.000, Math.toRadians(-90));
@@ -75,17 +75,17 @@ public class Autonomous_solo_red extends OpMode {
 //    private final Pose keepopen = new Pose(14.000, -134.000, Math.toRadians(-180));
 //    private final Pose keepopensec = new Pose(12.000, -127.500, Math.toRadians(-180));
     ///////////////////////////////////////////////////////////1//////////////////////////
-    private final Pose keeploop = new Pose(18.000, -128.000, Math.toRadians(-180));
+    private final Pose keeploop = new Pose(18.000, -132.000, Math.toRadians(-180));
     private final Pose keeploopsec = new Pose(12.000, -138.000, Math.toRadians(-180));
     private final Pose shootloop = new Pose(74.000, -95.000, Math.toRadians(-90));
     ///////////////////////////////////////////////////////////////////////////////////
-    private final Pose Final = new Pose(70,-130,Math.toRadians(-90));
+    private final Pose Final = new Pose(70,-100,Math.toRadians(-90));
     //Bazier zone
 
 //    private final Pose keep3BE = new Pose(45.500,-130.000,Math.toRadians(-180));
 
     private final Pose keepopen_BE = new Pose(48.500,-150.000,Math.toRadians(-180));
-    private final Pose keeploop_BE = new Pose(75.000,-138.500,Math.toRadians(-180));
+    private final Pose keeploop_BE = new Pose(75.000,-132.500,Math.toRadians(-180));
 
     ////////////////////////////////////////////////////////////////////////////////////////
     private PathChain Path1,Path2,Path3,Path4,Path44,Path5,Path6,Path7,Path8,Path88,Path9,Path10,Path101,Path11,go_prekeep3,keeping3,shooting3,finish;
