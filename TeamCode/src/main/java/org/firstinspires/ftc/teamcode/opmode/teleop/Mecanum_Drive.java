@@ -51,8 +51,8 @@ public class Mecanum_Drive extends OpMode {
     public static boolean is_red = true;
     public static int key = 1;
     public static boolean manual = false;
-    public static double maximum = 0.36;
-    public static double minimum = 0.3;
+    public static double maximum = 0.3;
+    public static double minimum = 0.26;
     public static double ratio_shooter = 1.1;
     public static double speed_eshooter = 0.003;
     public static double speed_servo = 10;
@@ -135,7 +135,7 @@ public class Mecanum_Drive extends OpMode {
                 break;
             case 2:
                 startingPose = new Pose(58.000, -28.000, Math.toRadians(90));
-                offset = 0;
+                offset = -2;
                 break;
             case 3:
                 startingPose = new Pose(2.000, -90.000, Math.toRadians(-90));
@@ -168,7 +168,14 @@ public class Mecanum_Drive extends OpMode {
 
     @Override
     public void loop() {
-
+        if (gamepad2.left_stick_y > 0.1){
+            maximum -= 0.002;
+            minimum -= 0.002;
+        }
+        else if(gamepad2.left_stick_y < -0.1){
+            maximum += 0.002;
+            minimum += 0.002;
+        }
         if (!automatedDrive) {
             follower.setTeleOpDrive(
                     -gamepad1.left_stick_y * multiplier[0],
@@ -278,8 +285,8 @@ public class Mecanum_Drive extends OpMode {
                 //// curve 4.7
 //                maximum = 0.36;
 //                minimum = 0.3;
-//                ratio_shooter = 1;// shoot speed near
-//                speed_intake_near = 0.75;
+                ratio_shooter = 1;// shoot speed near
+                speed_intake_near = 0.85;
 
             }
         }
@@ -288,7 +295,7 @@ public class Mecanum_Drive extends OpMode {
 
         if (check_intake && !check_X) {
             if (distance_sensor.led_status()){
-                intake_PID.intake(0.8);
+                intake_PID.intake(0.7);
             }else{
                 intake_PID.intake(1);
                 check_out = false;}
@@ -389,6 +396,7 @@ public class Mecanum_Drive extends OpMode {
         telemetryX.addData("speed_shoot_near",speed_intake_near,2);
         telemetryX.addData("speed_shoot_far",speed_intake_far,2);
         telemetryX.addData("check_far",check_far,2);
+        telemetryX.addData("Maximum",maximum,2);
 
         if (Ying.get_critical()){telemetryX.addData("Danger!!!!","Shooter is in manual mode",2);}
         if (is_red){

@@ -57,8 +57,8 @@ public class Autonomous_solo_blue extends OpMode {
 //    double maximum = 0.36;
 //    double minimum = 0.3;
     //// curve 5
-    double maximum = 0.34;
-    double minimum = 0.3;
+    double maximum = 0.3;
+    double minimum = 0.26;
     double tracking;
     double count = 0;
     boolean check_delay = false;
@@ -66,14 +66,14 @@ public class Autonomous_solo_blue extends OpMode {
     boolean check_final =false;
     private final Pose startPose = new Pose(125.500, -12.000, Math.toRadians(145));
     private final Pose scorepreload = new Pose(90.000, -40.000, Math.toRadians(90));
-    private final Pose keep1 = new Pose(81.000, -16.000, Math.toRadians(90));
+    private final Pose keep1 = new Pose(84.000, -16.000, Math.toRadians(90));
     private final Pose shoot1 = new Pose(90.000, -32, Math.toRadians(90));
-    private final Pose Pre_keep2 = new Pose(56.000, -40.000, Math.toRadians(90));
-    private final Pose keep2 = new Pose(63.000, -15.000, Math.toRadians(90));
+    private final Pose Pre_keep2 = new Pose(56.000, -46.000, Math.toRadians(90));
+    private final Pose keep2 = new Pose(65.000, -16.500, Math.toRadians(92));
     private final Pose shoot2 = new Pose(90.000, -32.000, Math.toRadians(90));
 //    private final Pose Pre_keep3 = new Pose(39.000, -40.000, Math.toRadians(90));
 //    private final Pose keep3 = new Pose(36.000, -8.000, Math.toRadians(90));
-    private final Pose keep3 = new Pose(26.000, -14.000, Math.toRadians(180));
+    private final Pose keep3 = new Pose(20.000, -18.000, Math.toRadians(180));
     private final Pose shoot3 = new Pose(78.000, -40.000, Math.toRadians(90));
     /////////////////////////////////////////////////////////////////////////////////////
     private final Pose openhuman = new Pose(74.000, -12.000, Math.toRadians(198));
@@ -206,7 +206,7 @@ public class Autonomous_solo_blue extends OpMode {
             }
             case 101:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.68);
+                    intake_PID.intake(1);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -240,7 +240,7 @@ public class Autonomous_solo_blue extends OpMode {
                     break;}}
             case 102:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.68);
+                    intake_PID.intake(1);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -270,7 +270,7 @@ public class Autonomous_solo_blue extends OpMode {
                     setPathState(203);
                     break;}
             case 203 :{
-                if (!follower.isBusy()){if(delay.seconds() > 2){setPathState(4);}
+                if (!follower.isBusy()){if(delay.seconds() > 2.5){setPathState(4);}
                     break;}}
             case 4:
                 if (!follower.isBusy()){
@@ -284,7 +284,7 @@ public class Autonomous_solo_blue extends OpMode {
                     break;}}
             case 103:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.8);
+                    intake_PID.intake(1);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -324,7 +324,7 @@ public class Autonomous_solo_blue extends OpMode {
                     break;}}
             case 120:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.8);
+                    intake_PID.intake(1);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -375,7 +375,7 @@ public class Autonomous_solo_blue extends OpMode {
                     break;}}
             case 104:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.8);
+                    intake_PID.intake(1);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -408,7 +408,7 @@ public class Autonomous_solo_blue extends OpMode {
             case 9:
                 if (!follower.isBusy()){
                     follower.setMaxPower(1);
-                    follower.followPath(finish);
+                    follower.followPath(finish,true);
                     setPathState(-1);
                     break;}
 //            case 10:

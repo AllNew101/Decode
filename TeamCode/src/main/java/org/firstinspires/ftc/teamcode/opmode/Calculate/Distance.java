@@ -11,7 +11,6 @@ public class Distance {
     public static double[] blue = {123, -18 , 50.0};
 
     private double[] target = {0.0 , 0.0 , 0.0};
-    private Turret turret;
     public double[] distance(double X, double Y, boolean is_red){
         if (is_red){target = red;}
         else{target = blue;}
