@@ -34,7 +34,7 @@ public class Distance_Sensor {
         return distance;
     }
     public void check_led() {
-        if (get_Front_dis() <= 14 && get_Center_dis() <= 14){
+        if (get_Front_dis() <= 14 && get_Center_dis() <= 16){
             LED.setPosition(ready);
         }
         else{
