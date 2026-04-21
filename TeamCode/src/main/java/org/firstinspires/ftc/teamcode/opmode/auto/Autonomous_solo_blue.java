@@ -53,7 +53,12 @@ public class Autonomous_solo_blue extends OpMode {
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState, pathMec, pathMec2;
 
-    double maximum = 0.36;
+    //// curve 4.7
+//    double maximum = 0.36;
+//    double minimum = 0.3;
+    //// curve 5
+    double maximum = 0.34;
+    double minimum = 0.3;
     double tracking;
     double count = 0;
     boolean check_delay = false;
@@ -79,7 +84,7 @@ public class Autonomous_solo_blue extends OpMode {
     private final Pose keeploopsec = new Pose(12.000, -6.000, Math.toRadians(180));
     private final Pose shootloop = new Pose(78.000, -40.000, Math.toRadians(90));
     ///////////////////////////////////////////////////////////////////////////////////
-    private final Pose Final = new Pose(58.000, -24.000, Math.toRadians(90));
+    private final Pose Final = new Pose(48.000, -30.000, Math.toRadians(90));
     //Bazier zone
 
     //    private final Pose keep3BE = new Pose(45.500,-130.000,Math.toRadians(-180));
@@ -454,7 +459,7 @@ public class Autonomous_solo_blue extends OpMode {
     public void mechanicaugularPathUpdate(){
         switch (pathMec) {
             case 1:
-                angle.angular_on(-1 * Mecanum_Drive.speed_servo, 0.3, maximum );
+                angle.angular_on(-1 * Mecanum_Drive.speed_servo, minimum, maximum );
                 break;
 
         }

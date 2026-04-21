@@ -33,8 +33,8 @@ public class PIDF_Shooter {
     public static double kV = 0.00398;
     public static double secondary_kD = 0.000012;
     public static double secondary_kI = 0;
-    public static double secondary_kP = 0.034;
-    public static double time_delay = 0.08;
+    public static double secondary_kP = 0.032;
+    public static double time_delay = 0.1;
 
 
 
@@ -42,7 +42,7 @@ public class PIDF_Shooter {
 
 
     public double[] distance_list = {0.0, 49.65, 58.0, 68.21, 82.8, 95.3, 190.00, 300.00};
-    public double[] target_list =   {106.2, 106.2, 106.2, 108.2, 110.2, 110.2, 112.2, 112.2};
+    public double[] target_list = {108.2, 108.2, 108.2, 108.2, 110.2, 110.2, 110.2, 110.2};
     double prev = 0.0;
     Distance distance = new Distance();
     Interpolation inter = new Interpolation();

@@ -53,8 +53,12 @@ public class Autonomous_solo_red extends OpMode {
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState, pathMec, pathMec2;
 
-
-    double maximum = 0.36;
+    //// curve 4.7
+//    double maximum = 0.36;
+//    double minimum = 0.3;
+    //// curve 5
+    double maximum = 0.34;
+    double minimum = 0.3;
     double tracking;
     double count = 0;
     boolean check_delay = false;
@@ -64,22 +68,22 @@ public class Autonomous_solo_red extends OpMode {
     private final Pose keep1 = new Pose(85.000, -125.00, Math.toRadians(-90));
     private final Pose shoot1 = new Pose(90.000, -104.000, Math.toRadians(-90));
     private final Pose Pre_keep2 = new Pose(60.000, -100.000, Math.toRadians(-90));
-    private final Pose keep2 = new Pose(64.000, -123.000, Math.toRadians(-90));
-    private final Pose shoot2 = new Pose(82.000, -92.000, Math.toRadians(-90));
+    private final Pose keep2 = new Pose(64.000, -126.000, Math.toRadians(-90));
+    private final Pose shoot2 = new Pose(86.000, -98.000, Math.toRadians(-90));
 //    private final Pose Pre_keep3 = new Pose(39.000, -100.000, Math.toRadians(-90));
 //    private final Pose keep3 = new Pose(39.000, -128.000, Math.toRadians(-90));
-    private final Pose keep3 = new Pose(22.000, -115.000, Math.toRadians(-180));
+    private final Pose keep3 = new Pose(22.000, -125.000, Math.toRadians(-180));
     private final Pose shoot3 = new Pose(82.000, -92.000, Math.toRadians(-90));
     /////////////////////////////////////////////////////////////////////////////////////
 //    private final Pose openhuman = new Pose(74.000, -127.000, Math.toRadians(-198));
 //    private final Pose keepopen = new Pose(14.000, -134.000, Math.toRadians(-180));
 //    private final Pose keepopensec = new Pose(12.000, -127.500, Math.toRadians(-180));
     ///////////////////////////////////////////////////////////1//////////////////////////
-    private final Pose keeploop = new Pose(16.000, -138.000, Math.toRadians(-180));
+    private final Pose keeploop = new Pose(16.000, -136.000, Math.toRadians(-180));
     private final Pose keeploopsec = new Pose(12.000, -138.000, Math.toRadians(-180));
     private final Pose shootloop = new Pose(74.000, -95.000, Math.toRadians(-90));
     ///////////////////////////////////////////////////////////////////////////////////
-    private final Pose Final = new Pose(70,-118,Math.toRadians(-90));
+    private final Pose Final = new Pose(48,-118,Math.toRadians(-90));
     //Bazier zone
 
 //    private final Pose keep3BE = new Pose(45.500,-130.000,Math.toRadians(-180));
@@ -149,7 +153,7 @@ public class Autonomous_solo_red extends OpMode {
 
         Path6 = follower
                 .pathBuilder()
-                .addPath(new BezierCurve(shoot3, keeploop))
+                .addPath(new BezierCurve(shoot3,keeploop_BE, keeploop))
                 .setLinearHeadingInterpolation(shoot3.getHeading(), keeploop.getHeading())
                 .build();
 
@@ -422,7 +426,7 @@ public class Autonomous_solo_red extends OpMode {
     public void mechanicaugularPathUpdate(){
         switch (pathMec) {
             case 1:
-                angle.angular_on(-1 * Mecanum_Drive.speed_servo, 0.3, maximum );
+                angle.angular_on(-1 * Mecanum_Drive.speed_servo, minimum, maximum );
                 break;
 
         }

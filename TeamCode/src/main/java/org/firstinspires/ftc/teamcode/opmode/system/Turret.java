@@ -150,6 +150,7 @@ public class Turret {
             turret.setPower(power_turret);}
     }
 
+
     public void stop(){
         turret.setPower(0);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

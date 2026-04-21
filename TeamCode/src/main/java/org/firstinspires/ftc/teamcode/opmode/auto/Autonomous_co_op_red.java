@@ -53,7 +53,12 @@ public class Autonomous_co_op_red extends OpMode {
     private int pathState, pathMec, pathMec2;
 
 
-    double maximum = 0.18;
+    //// curve 4.7
+//    double maximum = 0.36;
+//    double minimum = 0.3;
+    //// curve 5
+    double maximum = 0.34;
+    double minimum = 0.3;
     double tracking;
     double count = 0;
     boolean check_delay = false;
@@ -62,18 +67,20 @@ public class Autonomous_co_op_red extends OpMode {
     private final Pose scorepreload = new Pose(90.000, -100.000, Math.toRadians(-90));
     private final Pose keep1 = new Pose(85.000, -125.00, Math.toRadians(-90));
     private final Pose shoot1 = new Pose(90.000, -104.000, Math.toRadians(-90));
-    private final Pose Pre_keep2 = new Pose(64.000, -100.000, Math.toRadians(-90));
-    private final Pose keep2 = new Pose(64.000, -128.000, Math.toRadians(-90));
-    private final Pose shoot2 = new Pose(90.000, -110.000, Math.toRadians(-90));
+    private final Pose Pre_keep2 = new Pose(60.000, -100.000, Math.toRadians(-90));
+    private final Pose keep2 = new Pose(64.000, -125.000, Math.toRadians(-90));
+    private final Pose shoot2 = new Pose(86.000, -98.000, Math.toRadians(-90));
     /////////////////////////////////////////////////////////////////////////////////////
     private final Pose openhuman = new Pose(70.000, -127.500, Math.toRadians(-170));
     private final Pose keepopen = new Pose(14.000, -127.500, Math.toRadians(-180));
     private final Pose keepopensec = new Pose(12.000, -127.500, Math.toRadians(-180));
     /////////////////////////////////////////////////////////////////////////////////////
-    private final Pose keeploop = new Pose(14.000, -138.000, Math.toRadians(-180));
+    private final Pose keeploop = new Pose(16.000, -136.000, Math.toRadians(-180));
     private final Pose keeploopsec = new Pose(12.000, -138.000, Math.toRadians(-180));
     private final Pose shootloop = new Pose(74.000, -95.000, Math.toRadians(-90));
     ///////////////////////////////////////////////////////////////////////////////////
+    private final Pose Final = new Pose(70,-118,Math.toRadians(-90));
+
     //Bazier zone
 
 //    private final Pose keep3BE = new Pose(45.500,-130.000,Math.toRadians(-180));
@@ -81,7 +88,7 @@ public class Autonomous_co_op_red extends OpMode {
     private final Pose keeploop_BE = new Pose(75.000,-138.500,Math.toRadians(-180));
 
     ////////////////////////////////////////////////////////////////////////////////////////
-    private PathChain Path1,Path2,Path3,Path4,Path44,Path5,Path6,Path7,Path8,Path88,Path9,Path10,Path101,Path11;
+    private PathChain Path1,Path2,Path3,Path4,Path44,Path5,Path6,Path7,Path8,Path88,Path9,Path10,Path101,finish;
 
 
     public void buildPaths() {
@@ -164,6 +171,11 @@ public class Autonomous_co_op_red extends OpMode {
                 .setLinearHeadingInterpolation(keeploop.getHeading(), keeploopsec.getHeading())
                 .build();
         /////////////////////////////////////////////////////////////////////////////////
+        finish = follower
+                .pathBuilder()
+                .addPath(new BezierLine(shootloop,Final))
+                .setLinearHeadingInterpolation(shootloop.getHeading(), Final.getHeading())
+                .build();
     }
 
 
@@ -350,7 +362,7 @@ public class Autonomous_co_op_red extends OpMode {
                         follower.setMaxPower(1);
                         follower.followPath(Path9);
                         setPathState(9);}
-                    else {;}
+                    else {setPathState(100);}
                     break;}
             case 9:
                 if (!follower.isBusy()){
@@ -400,18 +412,24 @@ public class Autonomous_co_op_red extends OpMode {
                     setPathState(8);}
                     break;}}
             //////////////////////////////////////////////////////////////////////
+            case 100 :
+                if(!follower.isBusy()){
+                    follower.setMaxPower(1);
+                    follower.followPath(finish);
+                    break;
+                }
 
     }}
     public void mechanicPathUpdate(){
         switch (pathMec) {
             case 1:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, 1, Turret.get_limit(),1);
-                Ying.run_shooter(108, false, false);
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, 4, Turret.get_limit(),1);
+                Ying.run_shooter(103, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
             case 2:
                 tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, 1, Turret.get_limit(),1);
-                Ying.run_shooter(107.5, false, false);
+                Ying.run_shooter(110, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
         }
@@ -419,7 +437,7 @@ public class Autonomous_co_op_red extends OpMode {
     public void mechanicaugularPathUpdate(){
         switch (pathMec) {
             case 1:
-                angle.angular_on(-1 * Mecanum_Drive.speed_servo, 0.15, maximum);
+                angle.angular_on(-1 * Mecanum_Drive.speed_servo, minimum, maximum);
                 break;
 
         }

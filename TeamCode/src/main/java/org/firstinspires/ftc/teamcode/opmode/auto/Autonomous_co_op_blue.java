@@ -53,8 +53,12 @@ public class Autonomous_co_op_blue extends OpMode {
     private int pathState, pathMec, pathMec2;
 
 
-    double maximum = 0.18;
-    double tracking;
+    //// curve 4.7
+//    double maximum = 0.36;
+//    double minimum = 0.3;
+    //// curve 5
+    double maximum = 0.34;
+    double minimum = 0.3;    double tracking;
     double count = 0;
     boolean check_delay = false;
     boolean check_delay2 = false;
@@ -76,13 +80,14 @@ public class Autonomous_co_op_blue extends OpMode {
     private final Pose shootloop = new Pose(78.000, -34.000, Math.toRadians(90));
     ///////////////////////////////////////////////////////////////////////////////////
     //Bazier zone
+    private final Pose Final = new Pose(58.000, -24.000, Math.toRadians(90));
 
     //    private final Pose keep3BE = new Pose(45.500,-130.000,Math.toRadians(-180));
     private final Pose keepopen_BE = new Pose(48.500,15.000,Math.toRadians(180));
     private final Pose keeploop_BE = new Pose(75.000,0.000,Math.toRadians(180));
 
     ////////////////////////////////////////////////////////////////////////////////////////
-    private PathChain Path1,Path2,Path3,Path4,Path44,Path5,Path6,Path7,Path8,Path88,Path9,Path10,Path101,Path11;
+    private PathChain Path1,Path2,Path3,Path4,Path44,Path5,Path6,Path7,Path8,Path88,Path9,Path10,Path101,Path11,finish;
 
 
     public void buildPaths() {
@@ -165,6 +170,11 @@ public class Autonomous_co_op_blue extends OpMode {
                 .setLinearHeadingInterpolation(keeploop.getHeading(), keeploopsec.getHeading())
                 .build();
         /////////////////////////////////////////////////////////////////////////////////
+        finish = follower
+                .pathBuilder()
+                .addPath(new BezierLine(shootloop,Final))
+                .setLinearHeadingInterpolation(shootloop.getHeading(), Final.getHeading())
+                .build();
     }
 
 
@@ -360,7 +370,7 @@ public class Autonomous_co_op_blue extends OpMode {
                         follower.setMaxPower(1);
                         follower.followPath(Path9);
                         setPathState(9);}
-                    else {;}
+                    else {setPathState(100);}
                     break;}
             case 9:
                 if (!follower.isBusy()){
@@ -410,27 +420,31 @@ public class Autonomous_co_op_blue extends OpMode {
                     setPathState(8);}
                     break;}}
             //////////////////////////////////////////////////////////////////////
-
+            case 100:
+            if (!follower.isBusy()){
+                follower.setMaxPower(1);
+                follower.followPath(finish);
+                break;
+            }
         }}
     public void mechanicPathUpdate(){
         switch (pathMec) {
             case 1:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -11, Turret.get_limit(),1);
-                Ying.run_shooter(104, false, false);
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -9, Turret.get_limit(),1);
+                Ying.run_shooter(103, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
             case 2:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -11, Turret.get_limit(),1);
-                Ying.run_shooter(105, false, false);
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -9, Turret.get_limit(),1);
+                Ying.run_shooter(110, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
-
         }
     }
     public void mechanicaugularPathUpdate(){
         switch (pathMec) {
             case 1:
-                angle.angular_on(-1 * Mecanum_Drive.speed_servo, 0.15, maximum);
+                angle.angular_on(-1 * Mecanum_Drive.speed_servo, minimum, maximum);
                 break;
 
         }
