@@ -130,7 +130,7 @@ public class Mecanum_Drive extends OpMode {
 
         switch (master.getStarting_auto()){
             case 1:
-                startingPose = new Pose(58.000, -118.000, Math.toRadians(-90));
+                startingPose = new Pose(62.000, -98.000, Math.toRadians(-90));
                 offset = 2;
                 break;
             case 2:
