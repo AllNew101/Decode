@@ -28,14 +28,13 @@ public class Turret {
     public static double condition = 15;
     public static double kD = 0.1;
     public static double kD_secondary = 0.01;
-    public static double kP = 0.022;
-    public static double kP_secondary = 0.02;
+    public static double kP = 0.03;
+    public static double kP_secondary = 0.04;
     public static double kS = 0.17;
     public static double kShooter = -0.000025;
-    public static double limit = 180;
-    public static double limit_max = limit;
-    public static double limit_min = -limit;
+    public static double limit = 179;
     public static double middle_poten = 1.365;
+
 
 
     private double gear_motor = 39;
@@ -44,7 +43,8 @@ public class Turret {
     private double gear_potentiometer = 12;
     private double gear_potentiometer_out = 42;
 
-
+    public double limit_max = limit;
+    public double limit_min = -limit;
     private double Per_round = 537.7;
     private double power_turret = 0;
     private double target_velo = 0;
@@ -56,8 +56,7 @@ public class Turret {
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setDirection(DcMotorSimple.Direction.REVERSE);
-//        offset = convert_potentiometer_to_degree(poten.getVoltage());
-        offset = 0 ;
+
 
         time = Time;
     }
@@ -67,25 +66,22 @@ public class Turret {
 
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setDirection(DcMotorSimple.Direction.REVERSE);
-        offset = 0;
 
         time = Time;
     }
 
     public void to_position(double target, double velocity_shooter, int mode){
         if (mode == 1 || mode == 2){
-            double error = target - (convert_current_to_degree(turret.getCurrentPosition()) + offset);
-            if (Math.abs(error) < 1){
-                error = 0;
-            }
+            double error = target - (convert_current_to_degree(turret.getCurrentPosition()));
+            if (Math.abs(error) < 1){error = 0;}
             double output = 0;
+
             time_current = time.seconds();
             delta_time = (time_current - previous_time) ;
 
             derivative = (error - previousError) / delta_time;
 
-            if (error > 100){condition = 40;}
-            if (Math.abs(error) > 170){error = 0;}
+            if (mode == 1){if (Math.abs(error) > 170){error = 0;}}
 
             if (Math.abs(error) > condition) {
                 output = kP * error + kD * derivative + kS * Math.signum(error) + kShooter * velocity_shooter * Math.signum(error);
@@ -102,6 +98,8 @@ public class Turret {
 
             previousError = error;
             previous = turret.getCurrentPosition();}
+
+
     }
 
 
@@ -109,42 +107,30 @@ public class Turret {
 
     public void turn(double power, int mode){
         power_turret = power;
-        if (power_turret > 0.64){power_turret = 0.64;}
-        else if(power_turret < -0.64){power_turret = -0.64;}
+        if (power_turret > 0.7){power_turret = 0.7;}
+        else if(power_turret < -0.7){power_turret = -0.7;}
 
         boolean check_over = false;
 
-        if (mode == 0){
+        if (mode == 0) {
             check_over = false;
         }
-        else {
-            if (get_angle() > limit_max && power_turret >= 0) {
-                check_over = true;
-            }
-            if (get_angle() < limit_min && power_turret <= 0) {
-                check_over = true;
-            }
-            if (get_angle() > limit_max && power_turret < 0) {
-                check_over = false;
-            }
-            if (get_angle() < limit_min && power_turret > 0) {
-                check_over = false;
-            }
+        else if (mode == 1 || mode == 2){
+            if (get_angle() > limit_max && power_turret >= 0) {check_over = true;}
+            if (get_angle() < limit_min && power_turret <= 0) {check_over = true;}
+            if (get_angle() > limit_max && power_turret < 0) {check_over = false;}
+            if (get_angle() < limit_min && power_turret > 0) {check_over = false;}
 
-            if (get_angle() > limit_max * 1.1) {
-                power_turret = -0.3;
-            }
-            if (get_angle() < limit_min * 1.1) {
-                power_turret = 0.3;
-            }
+            if (get_angle() > limit_max * 1.1) {power_turret = -0.25;}
+            if (get_angle() < limit_min * 1.1) {power_turret = 0.25;}
 
-            if (get_angle() > limit_max * 1.2) {
-                check_over = true;
-            }
-            if (get_angle() < limit_min * 1.2) {
-                check_over = true;
-            }
+            if (get_angle() > limit_max * 1.2) {check_over = true;}
+            if (get_angle() < limit_min * 1.2) {check_over = true;}
+
         }
+        else {check_over = true;}
+        //////////////////////////////////////////////////////////
+
         if (check_over){stop();}
         else{
             turret.setPower(power_turret);}
@@ -159,9 +145,6 @@ public class Turret {
     public double convert_current_to_degree(double position){
         return (position / Per_round) * 360 * gear_motor / gear_turret;
     }
-    public double convert_potentiometer_to_degree(double position){
-        return ((position - middle_poten) / poten.getMaxVoltage()) * 270 * gear_motor / gear_turret * gear_potentiometer_out / gear_potentiometer;
-    }
 
     public double get_degree(){return turret.getCurrentPosition();}
     public double get_angle(){
@@ -173,7 +156,6 @@ public class Turret {
     public boolean get_critical(){
         return critical;
     }
-    public double get_poten_angle(){return  convert_potentiometer_to_degree(poten.getVoltage());}
     public double get_target_velocity() {return target_velo;}
     public double get_limit(){
         return limit;

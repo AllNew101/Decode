@@ -51,14 +51,14 @@ public class Mecanum_Drive extends OpMode {
     public static boolean is_red = true;
     public static int key = 1;
     public static boolean manual = false;
-    public static double maximum = 0.3;
-    public static double minimum = 0.26;
+    public static double maximum = 0.34;
+    public static double minimum = 0.3;
     public static double ratio_shooter = 1.1;
     public static double speed_eshooter = 0.003;
     public static double speed_servo = 10;
     public static double theta_autodrive = -54;
     public static double speed_offset = 0.8;
-    public static double speed_intake_near = 0.85;
+    public static double speed_intake_near = 1;
     public static double speed_intake_far = 0.75;
 
 
@@ -169,12 +169,12 @@ public class Mecanum_Drive extends OpMode {
     @Override
     public void loop() {
         if (gamepad2.left_stick_y > 0.1){
-            maximum -= 0.002;
-            minimum -= 0.002;
+            maximum -= 0.004;
+            minimum -= 0.004;
         }
         else if(gamepad2.left_stick_y < -0.1){
-            maximum += 0.002;
-            minimum += 0.002;
+            maximum += 0.004;
+            minimum += 0.004;
         }
         if (!automatedDrive) {
             follower.setTeleOpDrive(
@@ -188,7 +188,6 @@ public class Mecanum_Drive extends OpMode {
         if (gamepad2.dpadDownWasPressed()){
             error = true;
             mode = 0;
-            manual_turn = Turret.get_degree();
         }
         if (!error){distance_sensor.check_led();}
 
@@ -241,6 +240,7 @@ public class Mecanum_Drive extends OpMode {
 
         //lead = dynamics.lead(follower.getPose(),follower.getVelocity(),Ying.getVelocity(),Turret.get_angle() / 180 * Math.PI, is_red);
         tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), is_red, follower.getPose().getHeading() / Math.PI * 180, offset, Turret.get_limit(),mode);
+
         adj = Ying.distance_adjustment(follower.getPose().getX(), follower.getPose().getY(), is_red);
         esti = camera.getRobotPoseFromCamera(follower.getPose().getHeading());
 
@@ -278,7 +278,7 @@ public class Mecanum_Drive extends OpMode {
                 speed_intake_far = 0.75;
 
             }else{
-                // curve 5
+                //// curve 5
                 maximum = 0.34;
                 minimum = 0.3;
 
@@ -339,19 +339,15 @@ public class Mecanum_Drive extends OpMode {
         if (gamepad2.triangleWasPressed()) {
             check_turret = !check_turret;
         }
-        if (gamepad2.crossWasPressed()){mode += 1;}
+        if (gamepad2.crossWasPressed()){
+            mode += 1;
+            if (mode == 1){offset += 3;}
+            else if (mode == 2) {offset -= 3;}
+        }
         if(mode > 2){mode = 1;}
 
         if (gamepad1.squareWasPressed()){
             check_reverse = !check_reverse;
-        }
-        if (mode == 0){
-            if(gamepad2.dpadRightWasPressed()){
-                Turret.turn(-0.2,0);
-            }
-            else{
-                Turret.turn(0.2,0);
-            }
         }
         if(check_reverse){
             multiplier[0] = -1;
@@ -369,7 +365,13 @@ public class Mecanum_Drive extends OpMode {
                 Turret.to_position(offset, Ying.getVelocity_X(), mode);
             }
         }else{
-            Turret.stop();
+            if(gamepad2.dpadRightWasPressed()){
+                Turret.turn(-0.2,0);
+            }
+            else if (gamepad2.dpadLeftWasPressed()){
+                Turret.turn(0.2,0);
+            }
+            else {Turret.stop();}
         }
 
             drawing.drawRobot(follower.getPose(), "red");
@@ -430,7 +432,6 @@ public class Mecanum_Drive extends OpMode {
                 telemetryX.addData("offset",offset,0);
                 telemetryX.addData("Turret",tracking,0);
                 telemetryX.addData("velocity_turret_target",Turret.get_target_velocity(),2);
-                telemetryX.addData("poten angle",Turret.get_poten_angle(),2);
                 telemetryX.addData("output",Turret.get_output(),2);
                 telemetryX.addData("offset_turret",Turret.get_offset(),2);
                 break;

@@ -418,7 +418,7 @@ public class Autonomous_solo_red extends OpMode {
                 break;
             case 2:
                 tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, 1, Turret.get_limit(),1);
-                Ying.run_shooter(110, false, false);
+                Ying.run_shooter(112, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
         }
