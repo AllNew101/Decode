@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.opmode.system.PIDF_intake;
 import org.firstinspires.ftc.teamcode.opmode.system.localization_limelight;
 import org.firstinspires.ftc.teamcode.opmode.system.Turret;
 import org.firstinspires.ftc.teamcode.opmode.auto.Master_variable;
-
+import org.firstinspires.ftc.teamcode.opmode.Calculate.Dynamics;
 import java.util.function.Supplier;
 
 @Config
@@ -60,7 +60,8 @@ public class Mecanum_Drive extends OpMode {
     public static double speed_offset = 0.8;
     public static double speed_intake_near = 1;
     public static double speed_intake_far = 0.75;
-
+    public static double maximum_limit_servo = 0.45;
+    public static double minimum_limit_servo = 0;
 
 
     private boolean check_X = false;
@@ -98,6 +99,7 @@ public class Mecanum_Drive extends OpMode {
     public void init() {
         ratio_shooter = 1;
         distance = new Distance();
+
         drawing = new Drawing();
         Ying = new PIDF_Shooter();
         angle = new angular_set();
@@ -109,6 +111,7 @@ public class Mecanum_Drive extends OpMode {
         camera = new localization_limelight();
         intake_PID = new PIDF_intake();
         gamepad0 = new gamepad();
+
         time.reset();
         Master_variable master = new Master_variable();
 
@@ -169,12 +172,14 @@ public class Mecanum_Drive extends OpMode {
     @Override
     public void loop() {
         if (gamepad2.left_stick_y > 0.1){
+            if (minimum > minimum_limit_servo){
             maximum -= 0.004;
-            minimum -= 0.004;
+            minimum -= 0.004;}
         }
         else if(gamepad2.left_stick_y < -0.1){
+            if(maximum < maximum_limit_servo){
             maximum += 0.004;
-            minimum += 0.004;
+            minimum += 0.004;}
         }
         if (!automatedDrive) {
             follower.setTeleOpDrive(
@@ -186,8 +191,13 @@ public class Mecanum_Drive extends OpMode {
         }
 
         if (gamepad2.dpadDownWasPressed()){
-            error = true;
-            mode = 0;
+            if (!error){
+                error = true;
+                mode = 0;}
+            else {
+                error = false;
+                mode = 1;
+            }
         }
         if (!error){distance_sensor.check_led();}
 
@@ -272,10 +282,10 @@ public class Mecanum_Drive extends OpMode {
             check_far = !check_far;
             if (check_far){
                 //// curve 4.7
-                maximum = 0.4;
-                minimum = 0.35;
+                maximum = 0.45;
+                minimum = 0.45;
                 ratio_shooter = 1.17;// shoot speed far
-                speed_intake_far = 0.75;
+                speed_intake_far = 0.8;
 
             }else{
                 //// curve 5
@@ -365,11 +375,11 @@ public class Mecanum_Drive extends OpMode {
                 Turret.to_position(offset, Ying.getVelocity_X(), mode);
             }
         }else{
-            if(gamepad2.dpadRightWasPressed()){
-                Turret.turn(-0.2,0);
+            if(gamepad2.dpad_right){
+                Turret.turn(-0.35,0);
             }
-            else if (gamepad2.dpadLeftWasPressed()){
-                Turret.turn(0.2,0);
+            else if (gamepad2.dpad_left){
+                Turret.turn(0.35,0);
             }
             else {Turret.stop();}
         }
@@ -399,6 +409,7 @@ public class Mecanum_Drive extends OpMode {
         telemetryX.addData("speed_shoot_far",speed_intake_far,2);
         telemetryX.addData("check_far",check_far,2);
         telemetryX.addData("Maximum",maximum,2);
+        telemetryX.addData("ERROR_TURRET",error,2);
 
         if (Ying.get_critical()){telemetryX.addData("Danger!!!!","Shooter is in manual mode",2);}
         if (is_red){

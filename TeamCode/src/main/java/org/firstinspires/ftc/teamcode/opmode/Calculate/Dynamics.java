@@ -6,11 +6,15 @@ import com.pedropathing.math.Vector;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
 
 public class Dynamics {
-    public double XY_dynamics(double margin ,double theta){
-        double X = margin * Math.sin(Math.toRadians(theta + 37));
-        double Y = margin * Math.cos(Math.toRadians(theta + 37));
+    public Pose XY_dynamics(double x_robot,double y_robot,double distance, double vball, double margin, double theta){
+        double margin_vel = margin;
 
-        return 0;
+        if (margin > 30){margin_vel = 30;}
+        double X = margin_vel * Math.sin(Math.toRadians(theta));
+        double Y = margin_vel * Math.cos(Math.toRadians(theta));
+        double t = distance /  vball;
+        Pose pos = new Pose(x_robot + X * t,y_robot + Y * t);
+        return pos;
     }
 
 

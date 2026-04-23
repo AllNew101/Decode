@@ -57,8 +57,8 @@ public class Autonomous_solo_blue extends OpMode {
 //    double maximum = 0.36;
 //    double minimum = 0.3;
     //// curve 5
-    double maximum = 0.3;
-    double minimum = 0.26;
+    double maximum = 0.34;
+    double minimum = 0.3;
     double tracking;
     double count = 0;
     boolean check_delay = false;

@@ -57,8 +57,8 @@ public class Autonomous_solo_red extends OpMode {
 //    double maximum = 0.36;
 //    double minimum = 0.3;
     //// curve 5
-    double maximum = 0.3;
-    double minimum = 0.26;
+    double maximum = 0.34;
+    double minimum = 0.3;
     double tracking;
     double count = 0;
     boolean check_delay = false;
@@ -74,7 +74,7 @@ public class Autonomous_solo_red extends OpMode {
 //    private final Pose keep3 = new Pose(39.000, -128.000, Math.toRadians(-90));
     private final Pose keep3 = new Pose(22.000, -125.000, Math.toRadians(-180));
     private final Pose keepopen = new Pose(74.000 ,-132.000, Math.toRadians(-180));
-    private final Pose shoot3 = new Pose(76.000, -94.000, Math.toRadians(-90));
+    private final Pose shoot3 = new Pose(76.000, -90.000, Math.toRadians(-90));
     /////////////////////////////////////////////////////////////////////////////////////
 //    private final Pose openhuman = new Pose(74.000, -127.000, Math.toRadians(-198));
 //    private final Pose keepopen = new Pose(14.000, -134.000, Math.toRadians(-180));
