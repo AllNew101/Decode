@@ -214,7 +214,7 @@ public class Autonomous_solo_red extends OpMode {
                     break;
                 }
             case 2011 :{
-                if (!follower.isBusy()){if(delay.milliseconds() > 600){
+                if (!follower.isBusy()){if(delay.milliseconds() > 700){
                     closer.close();
                     setPathState(1);}
                     break;}}
@@ -248,7 +248,7 @@ public class Autonomous_solo_red extends OpMode {
                     break;
                 }
             case 2022 :{
-                if (!follower.isBusy()){if(delay.milliseconds() > 600){
+                if (!follower.isBusy()){if(delay.milliseconds() > 700){
                     closer.close();
                     setPathState(3);}
                     break;}}
@@ -280,7 +280,7 @@ public class Autonomous_solo_red extends OpMode {
                     setPathState(204);
                     break;}
             case 204 :{
-                if (!follower.isBusy()){if(delay.milliseconds() > 600){setPathState(103);}
+                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(103);}
                     break;}}
             case 103:
                 if (!follower.isBusy()){
@@ -292,7 +292,7 @@ public class Autonomous_solo_red extends OpMode {
                     break;
                 }
             case 2044 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){
+                if (!follower.isBusy()){if(delay.milliseconds() > 700){
                     closer.close();
                     setPathState(2020);}
                     break;}}
@@ -343,7 +343,7 @@ public class Autonomous_solo_red extends OpMode {
                     break;
                 }
             case 2200 :{
-                if (!follower.isBusy()){if(delay.milliseconds() > 600){
+                if (!follower.isBusy()){if(delay.milliseconds() > 700){
                     closer.close();
                     setPathState(5);}
                     break;}}
@@ -394,7 +394,7 @@ public class Autonomous_solo_red extends OpMode {
                     break;
                 }
             case 2066 :{
-                if (!follower.isBusy()){if(delay.milliseconds() > 600){
+                if (!follower.isBusy()){if(delay.milliseconds() > 700){
                     closer.close();
 //                    delay_loop.reset();
 //                    check_final = true;

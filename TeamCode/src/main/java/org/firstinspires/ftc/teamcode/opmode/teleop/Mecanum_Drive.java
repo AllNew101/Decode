@@ -79,6 +79,7 @@ public class Mecanum_Drive extends OpMode {
     boolean check_far = false;
     boolean check_reverse = false;
     boolean error = false;
+    boolean error_sen = false;
     boolean can_reverse = true;
     boolean lock = true;
     int previous_key = 0;
@@ -190,16 +191,19 @@ public class Mecanum_Drive extends OpMode {
             );
         }
 
-        if (gamepad2.dpadDownWasPressed()){
+        if (gamepad2.psWasPressed()){
             if (!error){
                 error = true;
+                error_sen = true;
                 mode = 0;}
             else {
                 error = false;
+                error_sen = false;
                 mode = 1;
             }
         }
-        if (!error){distance_sensor.check_led();}
+        if (gamepad2.dpadDownWasPressed()){error_sen = !error_sen;}
+        if (!error_sen){distance_sensor.check_led();}
 
         if (gamepad2.squareWasPressed()) {
             check_X = !check_X;
@@ -376,10 +380,10 @@ public class Mecanum_Drive extends OpMode {
             }
         }else{
             if(gamepad2.dpad_right){
-                Turret.turn(-0.35,0);
+                Turret.turn(0.35,0);
             }
             else if (gamepad2.dpad_left){
-                Turret.turn(0.35,0);
+                Turret.turn(-0.35,0);
             }
             else {Turret.stop();}
         }
