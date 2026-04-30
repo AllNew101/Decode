@@ -28,12 +28,12 @@ public class PIDF_Shooter {
     public static double defau = 58.6;
     public static double kD = 0.0001;
     public static double kI = 0;
-    public static double kP = 0.038;
+    public static double kP = 0.034;
     public static double kS = 0.043;
-    public static double kV = 0.00398;
-    public static double secondary_kD = 0.000012;
+    public static double kV = 0.004;
+    public static double secondary_kD = 0.0000125;
     public static double secondary_kI = 0;
-    public static double secondary_kP = 0.032;
+    public static double secondary_kP = 0.028;
     public static double time_delay = 0.1;
 
 

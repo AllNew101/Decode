@@ -65,30 +65,29 @@ public class Autonomous_solo_red extends OpMode {
     boolean check_delay2 = false;
     private final Pose startPose = new Pose(125.500, -132.000, Math.toRadians(-145));
     private final Pose scorepreload = new Pose(90.000, -100.000, Math.toRadians(-90));
-    private final Pose keep1 = new Pose(85.000, -125.00, Math.toRadians(-90));
+    private final Pose keep1 = new Pose(85.000, -127.00, Math.toRadians(-90));
     private final Pose shoot1 = new Pose(90.000, -104.000, Math.toRadians(-90));
     private final Pose Pre_keep2 = new Pose(60.000, -100.000, Math.toRadians(-90));
     private final Pose keep2 = new Pose(64.000, -126.000, Math.toRadians(-90));
     private final Pose shoot2 = new Pose(86.000, -98.000, Math.toRadians(-90));
-//    private final Pose Pre_keep3 = new Pose(39.000, -100.000, Math.toRadians(-90));
-//    private final Pose keep3 = new Pose(39.000, -128.000, Math.toRadians(-90));
     private final Pose keep3 = new Pose(22.000, -125.000, Math.toRadians(-180));
-    private final Pose keepopen = new Pose(74.000 ,-132.000, Math.toRadians(-180));
-    private final Pose shoot3 = new Pose(76.000, -90.000, Math.toRadians(-90));
-    /////////////////////////////////////////////////////////////////////////////////////
+//    private final Pose keepopen = new Pose(74.000 ,-133.000, Math.toRadians(-180));//open
+    private final Pose keepopen = new Pose(74.000 ,-128.000, Math.toRadians(-180));//not open
+    private final Pose shoot3 = new Pose(78.000, -94.000, Math.toRadians(-90));
+    //////////////////////////////////////////////////////////////////////////////////////
 //    private final Pose openhuman = new Pose(74.000, -127.000, Math.toRadians(-198));
 //    private final Pose keepopen = new Pose(14.000, -134.000, Math.toRadians(-180));
 //    private final Pose keepopensec = new Pose(12.000, -127.500, Math.toRadians(-180));
     ///////////////////////////////////////////////////////////1//////////////////////////
-    private final Pose keeploop = new Pose(16.000, -136.000, Math.toRadians(-180));
+    private final Pose keeploop = new Pose(16.000, -138.000, Math.toRadians(-180));
     private final Pose keeploopsec = new Pose(12.000, -138.000, Math.toRadians(-180));
-    private final Pose shootloop = new Pose(74.000, -92.000, Math.toRadians(-90));
+    private final Pose shootloop = new Pose(76.000, -96.000, Math.toRadians(-90));
     ///////////////////////////////////////////////////////////////////////////////////
     private final Pose Final = new Pose(74,-96,Math.toRadians(-90));
     //Bazier zone
 
     private final Pose keepopen_BE = new Pose(70.000,-100.000,Math.toRadians(-180));
-    private final Pose keeploop_BE = new Pose(85.000,-138.500,Math.toRadians(-180));
+    private final Pose keeploop_BE = new Pose(80.000,-138.500,Math.toRadians(-180));
 
     ////////////////////////////////////////////////////////////////////////////////////////
     private PathChain Path1,Path2,Path3,Path4,Path44,Path5,Path6,Path7,Path8,Path88,Path9,Path10,Path101,Path11,go_prekeep3,keeping3,keepopening3,shooting3,finish;
@@ -350,7 +349,7 @@ public class Autonomous_solo_red extends OpMode {
             //////////////////////////////////////////////////////////////////////////
             case 5:
                 if (!follower.isBusy()){
-                    setMecState(1);
+//                    setMecState(1);
                     intake_PID.intake(1);
                     delay.reset();
                     follower.setMaxPower(0.8);
@@ -472,7 +471,7 @@ public class Autonomous_solo_red extends OpMode {
         switch (pathMec) {
             case 1:
                 tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, 4, Turret.get_limit(),1);
-                Ying.run_shooter(103, false, false);
+                Ying.run_shooter(108, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
             case 2:
@@ -482,7 +481,7 @@ public class Autonomous_solo_red extends OpMode {
                 break;
             case 3:
                 tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, 1, Turret.get_limit(),1);
-                Ying.run_shooter(118, false, false);
+                Ying.run_shooter(120, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
         }

@@ -65,14 +65,14 @@ public class Autonomous_co_op_red extends OpMode {
     boolean check_delay2 = false;
     private final Pose startPose = new Pose(125.500, -132.000, Math.toRadians(-145));
     private final Pose scorepreload = new Pose(90.000, -100.000, Math.toRadians(-90));
-    private final Pose keep1 = new Pose(85.000, -125.00, Math.toRadians(-90));
+    private final Pose keep1 = new Pose(85.000, -127.00, Math.toRadians(-90));
     private final Pose shoot1 = new Pose(90.000, -104.000, Math.toRadians(-90));
     private final Pose Pre_keep2 = new Pose(60.000, -100.000, Math.toRadians(-90));
     private final Pose keep2 = new Pose(64.000, -126.000, Math.toRadians(-90));
     private final Pose shoot2 = new Pose(86.000, -98.000, Math.toRadians(-90));
     //    private final Pose Pre_keep3 = new Pose(39.000, -100.000, Math.toRadians(-90));
 //    private final Pose keep3 = new Pose(39.000, -128.000, Math.toRadians(-90));
-    private final Pose keep3 = new Pose(26.000, -125.000, Math.toRadians(-180));
+    private final Pose keep3 = new Pose(38.000, -125.000, Math.toRadians(-180));
     private final Pose keepopen = new Pose(74.000 ,-132.000, Math.toRadians(-180));
     private final Pose shoot3 = new Pose(76.000, -90.000, Math.toRadians(-90));
     /////////////////////////////////////////////////////////////////////////////////////
@@ -80,9 +80,9 @@ public class Autonomous_co_op_red extends OpMode {
 //    private final Pose keepopen = new Pose(14.000, -134.000, Math.toRadians(-180));
 //    private final Pose keepopensec = new Pose(12.000, -127.500, Math.toRadians(-180));
     ///////////////////////////////////////////////////////////1//////////////////////////
-    private final Pose keeploop = new Pose(26.000, -136.000, Math.toRadians(-180));
+    private final Pose keeploop = new Pose(38.000, -138.000, Math.toRadians(-180));
     private final Pose keeploopsec = new Pose(12.000, -138.000, Math.toRadians(-180));
-    private final Pose shootloop = new Pose(74.000, -92.000, Math.toRadians(-90));
+    private final Pose shootloop = new Pose(76.000, -96.000, Math.toRadians(-90));
     ///////////////////////////////////////////////////////////////////////////////////
     private final Pose Final = new Pose(74,-96,Math.toRadians(-90));
     //Bazier zone
@@ -350,7 +350,7 @@ public class Autonomous_co_op_red extends OpMode {
             //////////////////////////////////////////////////////////////////////////
             case 5:
                 if (!follower.isBusy()){
-                    setMecState(1);
+//                    setMecState(1);
                     intake_PID.intake(1);
                     delay.reset();
                     follower.setMaxPower(0.8);

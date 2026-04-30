@@ -53,16 +53,16 @@ public class Autonomous_far_red extends OpMode {
     private int pathState, pathMec, pathMec2;
 
 
-    double maximum = 0.4;
-    double minimum = 0.36;
+    double maximum = 0.35;
+    double minimum = 0.35;
     double tracking;
     double count = 0;
     private final Pose startPose = new Pose(8.000, -98.000, Math.toRadians(-90));
     private final Pose Pre_keep1 = new Pose(34.000, -100.00, Math.toRadians(-90));
     private final Pose keep1 = new Pose(40.000, -120.00, Math.toRadians(-90));
     private final Pose shoot1 = new Pose(16.000, -92.00, Math.toRadians(-90));
-    private final Pose keep_loop = new Pose(7.000, -128.000, Math.toRadians(-90));
-    private final Pose keep_loopsec = new Pose(24.000, -128.000, Math.toRadians(-90));
+    private final Pose keep_loop = new Pose(4.000, -128.000, Math.toRadians(-90));
+    private final Pose keep_loopsec = new Pose(10.000, -128.000, Math.toRadians(-90));
     private final Pose shoot_loop = new Pose(16.000, -92.000, Math.toRadians(-90));
     ////////////////////////////////////////////////////////////////////////////////////////
     private final Pose Final = new Pose(14.000, -98.000, Math.toRadians(-90));
@@ -141,7 +141,7 @@ public class Autonomous_far_red extends OpMode {
             }
             case 101:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.72);
+                    intake_PID.intake(0.78);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -183,7 +183,7 @@ public class Autonomous_far_red extends OpMode {
                     break;}}
             case 103:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.72);
+                    intake_PID.intake(0.78);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -223,7 +223,7 @@ public class Autonomous_far_red extends OpMode {
                     break;}}
             case 104:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.72);
+                    intake_PID.intake(0.78);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -265,7 +265,7 @@ public class Autonomous_far_red extends OpMode {
                     break;}}
             case 105:
                 if (!follower.isBusy()){
-                    intake_PID.intake(0.72);
+                    intake_PID.intake(0.78);
                     closer.open();
                     setMecintake_augularState(1);
                     delay.reset();
@@ -307,12 +307,12 @@ public class Autonomous_far_red extends OpMode {
     public void mechanicPathUpdate(){
         switch (pathMec) {
             case 1:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, 1, Turret.get_limit(),1);
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, 3, Turret.get_limit(),1);
                 Ying.run_shooter(130, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
             case 2:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, -2, Turret.get_limit(),1);
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), true, follower.getPose().getHeading() / Math.PI * 180, 0, Turret.get_limit(),1);
                 Ying.run_shooter(130, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;

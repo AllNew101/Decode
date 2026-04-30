@@ -286,8 +286,8 @@ public class Mecanum_Drive extends OpMode {
             check_far = !check_far;
             if (check_far){
                 //// curve 4.7
-                maximum = 0.45;
-                minimum = 0.45;
+                maximum = 0.35;
+                minimum = 0.35;
                 ratio_shooter = 1.17;// shoot speed far
                 speed_intake_far = 0.8;
 

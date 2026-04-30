@@ -13,10 +13,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
-import org.firstinspires.ftc.teamcode.opmode.system.PIDF_intake;
 import org.firstinspires.ftc.teamcode.opmode.system.Closer;
 import org.firstinspires.ftc.teamcode.opmode.system.Distance_Sensor;
 import org.firstinspires.ftc.teamcode.opmode.system.PIDF_Shooter;
+import org.firstinspires.ftc.teamcode.opmode.system.PIDF_intake;
 import org.firstinspires.ftc.teamcode.opmode.system.Turret;
 import org.firstinspires.ftc.teamcode.opmode.system.angular_set;
 import org.firstinspires.ftc.teamcode.opmode.system.localization_limelight;
@@ -30,8 +30,8 @@ import java.util.function.Supplier;
  * git commit -m "***********" */
 
 @Config
-@Autonomous(name = "BLUE CO-OP")
-public class Autonomous_co_op_blue extends OpMode {
+@Autonomous(name = "BLUE TEST")
+public class Test_blue extends OpMode {
 
     private DcMotor rightRear;
     private DcMotor rightFront;
@@ -57,8 +57,8 @@ public class Autonomous_co_op_blue extends OpMode {
 //    double maximum = 0.36;
 //    double minimum = 0.3;
     //// curve 5
-    double maximum = 0.3;
-    double minimum = 0.26;
+    double maximum = 0.34;
+    double minimum = 0.3;
     double tracking;
     double count = 0;
     boolean check_delay = false;
@@ -73,17 +73,17 @@ public class Autonomous_co_op_blue extends OpMode {
     private final Pose shoot2 = new Pose(90.000, -32.000, Math.toRadians(90));
     //    private final Pose Pre_keep3 = new Pose(39.000, -40.000, Math.toRadians(90));
 //    private final Pose keep3 = new Pose(36.000, -8.000, Math.toRadians(90));
-    private final Pose keep3 = new Pose(38.000, -18.000, Math.toRadians(180));
+    private final Pose keep3 = new Pose(20.000, -18.000, Math.toRadians(180));
     private final Pose keepopen = new Pose(72.000, -13.000, Math.toRadians(180));
-    private final Pose shoot3 = new Pose(78.000, -46.000, Math.toRadians(90));
+    private final Pose shoot3 = new Pose(80.000, -40.000, Math.toRadians(90));
     /////////////////////////////////////////////////////////////////////////////////////
 //    private final Pose openhuman = new Pose(74.000, -12.000, Math.toRadians(198));
 //    private final Pose keepopen = new Pose(14.000, 0.000, Math.toRadians(180));
 //    private final Pose keepopensec = new Pose(12.000, -17.500, Math.toRadians(180));
     ///////////////////////////////////////////////////////////1//////////////////////////
-    private final Pose keeploop = new Pose(38.000, -2.000, Math.toRadians(180));
+    private final Pose keeploop = new Pose(20.000, -2.000, Math.toRadians(180));
     private final Pose keeploopsec = new Pose(12.000, -6.000, Math.toRadians(180));
-    private final Pose shootloop = new Pose(78.000, -46.000, Math.toRadians(90));
+    private final Pose shootloop = new Pose(78.000, -42.000, Math.toRadians(90));
     ///////////////////////////////////////////////////////////////////////////////////
     private final Pose Final = new Pose(76.000, -36.000, Math.toRadians(90));
     //Bazier zone
@@ -203,7 +203,7 @@ public class Autonomous_co_op_blue extends OpMode {
             }
             case 201 :{
                 if (!follower.isBusy()){
-                    if(delay.seconds() > 1){setPathState(101);}
+                    if(delay.milliseconds() > 800){setPathState(101);}
                     break;}
             }
             case 101:
@@ -238,7 +238,7 @@ public class Autonomous_co_op_blue extends OpMode {
                     break;}
 
             case 202 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(102);}
+                if (!follower.isBusy()){if(delay.milliseconds() > 800){setPathState(102);}
                     break;}}
             case 102:
                 if (!follower.isBusy()){
@@ -272,7 +272,7 @@ public class Autonomous_co_op_blue extends OpMode {
                     setPathState(203);
                     break;}
             case 203 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1.5){setPathState(4);}
+                if (!follower.isBusy()){if(delay.milliseconds() > 800){setPathState(4);}
                     break;}}
             case 4:
                 if (!follower.isBusy()){
@@ -333,7 +333,7 @@ public class Autonomous_co_op_blue extends OpMode {
                     setPathState(220);
                     break;}
             case 220 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(120);}
+                if (!follower.isBusy()){if(delay.milliseconds() > 800){setPathState(120);}
                     break;}}
             case 120:
                 if (!follower.isBusy()){
@@ -384,7 +384,7 @@ public class Autonomous_co_op_blue extends OpMode {
                     setPathState(206);
                 }
             case 206 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(104);}
+                if (!follower.isBusy()){if(delay.milliseconds() > 800){setPathState(104);}
                     break;}}
             case 104:
                 if (!follower.isBusy()){
@@ -408,7 +408,7 @@ public class Autonomous_co_op_blue extends OpMode {
                 if (!follower.isBusy()){
                     count += 1;
                     closer.close();
-                    if (count < 2){
+                    if (count < 3){
                         follower.setMaxPower(1);
                         follower.followPath(Path8);
                         setPathState(9);}
@@ -445,7 +445,7 @@ public class Autonomous_co_op_blue extends OpMode {
 
                 }
             case 207 :{
-                if (!follower.isBusy()){if(delay.seconds() > 1){setPathState(105);}
+                if (!follower.isBusy()){if(delay.milliseconds() > 800){setPathState(105);}
                     break;}}
             case 105:
                 if (!follower.isBusy()){
@@ -479,12 +479,12 @@ public class Autonomous_co_op_blue extends OpMode {
                 break;
             case 2:
                 tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -9, Turret.get_limit(),1);
-                Ying.run_shooter(110, false, false);
+                Ying.run_shooter(108, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
             case 3:
                 tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -9, Turret.get_limit(),1);
-                Ying.run_shooter(116, false, false);
+                Ying.run_shooter(118, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
         }

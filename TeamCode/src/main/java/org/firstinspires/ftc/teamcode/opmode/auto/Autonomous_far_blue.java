@@ -63,12 +63,12 @@ public class Autonomous_far_blue extends OpMode {
     private final Pose startPose = new Pose(8.000, -30.000, Math.toRadians(90));
     private final Pose Pre_keep1 = new Pose(34.000, -30.00, Math.toRadians(90));
     private final Pose keep1 = new Pose(36.000, -2.00, Math.toRadians(90));
-    private final Pose shoot1 = new Pose(20.000, -34.000, Math.toRadians(90));
+    private final Pose shoot1 = new Pose(20.000, -38.000, Math.toRadians(90));
     private final Pose keep_loop = new Pose(8.000, 2.000, Math.toRadians(90)); //ชิดกำแพง
     private final Pose keep_loopsec = new Pose(28.000, 2.000, Math.toRadians(90)); //ไม่ชิดกำแพง
-    private final Pose shoot_loop = new Pose(20.000, -34.000, Math.toRadians(90));
+    private final Pose shoot_loop = new Pose(20.000, -38.000, Math.toRadians(90));
     ///////////////////////////////////////////////////////////////////////////////////
-    private final Pose Final = new Pose(16,-18,Math.toRadians(90));
+    private final Pose Final = new Pose(16,-12,Math.toRadians(90));
     //Bazier zone
 
 
@@ -317,7 +317,7 @@ public class Autonomous_far_blue extends OpMode {
                 Turret.to_position(tracking, 0,1);
                 break;
             case 2:
-                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -13, Turret.get_limit(),1);
+                tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -11, Turret.get_limit(),1);
                 Ying.run_shooter(130, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;

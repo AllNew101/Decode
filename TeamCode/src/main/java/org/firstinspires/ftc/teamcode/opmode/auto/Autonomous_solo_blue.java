@@ -66,16 +66,16 @@ public class Autonomous_solo_blue extends OpMode {
     boolean check_final =false;
     private final Pose startPose = new Pose(125.500, -12.000, Math.toRadians(145));
     private final Pose scorepreload = new Pose(90.000, -40.000, Math.toRadians(90));
-    private final Pose keep1 = new Pose(84.000, -16.000, Math.toRadians(90));
+    private final Pose keep1 = new Pose(84.000, -14.000, Math.toRadians(90));
     private final Pose shoot1 = new Pose(90.000, -32, Math.toRadians(90));
     private final Pose Pre_keep2 = new Pose(56.000, -46.000, Math.toRadians(90));
     private final Pose keep2 = new Pose(64.800, -15.500, Math.toRadians(92));
     private final Pose shoot2 = new Pose(90.000, -32.000, Math.toRadians(90));
-//    private final Pose Pre_keep3 = new Pose(39.000, -40.000, Math.toRadians(90));
-//    private final Pose keep3 = new Pose(36.000, -8.000, Math.toRadians(90));
+
     private final Pose keep3 = new Pose(20.000, -18.000, Math.toRadians(180));
-    private final Pose keepopen = new Pose(72.000, -13.000, Math.toRadians(180));
-    private final Pose shoot3 = new Pose(78.000, -42.000, Math.toRadians(90));
+//    private final Pose keepopen = new Pose(72.000, -13.000, Math.toRadians(180)); // open
+    private final Pose keepopen = new Pose(72.000, -18.000, Math.toRadians(180)); // no open
+    private final Pose shoot3 = new Pose(80.000, -40.000, Math.toRadians(90));
     /////////////////////////////////////////////////////////////////////////////////////
 //    private final Pose openhuman = new Pose(74.000, -12.000, Math.toRadians(198));
 //    private final Pose keepopen = new Pose(14.000, 0.000, Math.toRadians(180));
@@ -83,7 +83,7 @@ public class Autonomous_solo_blue extends OpMode {
     ///////////////////////////////////////////////////////////1//////////////////////////
     private final Pose keeploop = new Pose(20.000, -2.000, Math.toRadians(180));
     private final Pose keeploopsec = new Pose(12.000, -6.000, Math.toRadians(180));
-    private final Pose shootloop = new Pose(76.000, -44.000, Math.toRadians(90));
+    private final Pose shootloop = new Pose(78.000, -42.000, Math.toRadians(90));
     ///////////////////////////////////////////////////////////////////////////////////
     private final Pose Final = new Pose(76.000, -36.000, Math.toRadians(90));
     //Bazier zone
@@ -352,7 +352,7 @@ public class Autonomous_solo_blue extends OpMode {
             //////////////////////////////////////////////////////////////////////////
             case 5:
                 if (!follower.isBusy()){
-                    setMecState(1);
+//                    setMecState(1);
                     intake_PID.intake(1);
                     delay.reset();
                     follower.setMaxPower(0.8);
@@ -479,12 +479,12 @@ public class Autonomous_solo_blue extends OpMode {
                 break;
             case 2:
                 tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -9, Turret.get_limit(),1);
-                Ying.run_shooter(108, false, false);
+                Ying.run_shooter(110, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
             case 3:
                 tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), false, follower.getPose().getHeading() / Math.PI * 180, -9, Turret.get_limit(),1);
-                Ying.run_shooter(116, false, false);
+                Ying.run_shooter(118, false, false);
                 Turret.to_position(tracking, 0,1);
                 break;
         }
