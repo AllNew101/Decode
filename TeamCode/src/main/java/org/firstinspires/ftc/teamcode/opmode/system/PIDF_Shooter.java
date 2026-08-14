@@ -85,8 +85,6 @@ public class PIDF_Shooter {
 
             omega = ((((current - previous_current) / PPR) * (2 * Math.PI))) / delta_time;
 
-
-
             velocity = omega * (radian / 1000);
             previous_current = -1 * shooter.getCurrentPosition();
             previous_time = current_time;
@@ -110,8 +108,10 @@ public class PIDF_Shooter {
         integral += error * delta_time;
         derivative = (error - previousError) / delta_time;
 
-        if (Math.abs(velocity_info() * Math.cos(Math.toRadians(defau)) - targetVelocity) > 30) {output = kP * error + kI * integral + kD * derivative + (kV * targetVelocity + kS);}
-        else {output = secondary_kP * error + secondary_kI * integral + secondary_kD * derivative + (kV * targetVelocity + kS);}
+        if (Math.abs(velocity_info() * Math.cos(Math.toRadians(defau)) - targetVelocity) > 30)
+        {output = kP * error + kI * integral + kD * derivative + (kV * targetVelocity + kS);}
+        else
+        {output = secondary_kP * error + secondary_kI * integral + secondary_kD * derivative + (kV * targetVelocity + kS);}
 
         previousError = error;
         return output;

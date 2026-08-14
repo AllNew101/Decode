@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
@@ -26,6 +25,7 @@ import org.firstinspires.ftc.teamcode.opmode.auto.Master_variable;
 import org.firstinspires.ftc.teamcode.opmode.Calculate.Dynamics;
 import java.util.function.Supplier;
 
+
 @Config
 @TeleOp
 public class Mecanum_Drive extends OpMode {
@@ -40,7 +40,7 @@ public class Mecanum_Drive extends OpMode {
     private telemetryX telemetryX;
     private Distance_Sensor distance_sensor;
     private Distance distance;
-    private localization_limelight camera;
+//    private localization_limelight camera;
     private PIDF_intake intake_PID;
     private gamepad gamepad0;
     ElapsedTime time;
@@ -84,6 +84,7 @@ public class Mecanum_Drive extends OpMode {
     boolean lock = true;
     int previous_key = 0;
     boolean is_inside = true;
+    boolean check_bumper1 = true;
     double adj, tracking;
     double x = 72;
     double y = -72;
@@ -109,7 +110,7 @@ public class Mecanum_Drive extends OpMode {
         closer = new Closer();
         time = new ElapsedTime();
         distance_sensor = new Distance_Sensor();
-        camera = new localization_limelight();
+//        camera = new localization_limelight();
         intake_PID = new PIDF_intake();
         gamepad0 = new gamepad();
 
@@ -128,7 +129,7 @@ public class Mecanum_Drive extends OpMode {
         telemetryX.init(telemetry);
         closer.init_angular(hardwareMap);
         distance_sensor.init_Distance_senser(hardwareMap);
-        camera.init(hardwareMap);
+//        camera.init(hardwareMap);
 
         follower = Constants.createFollower(hardwareMap);
 
@@ -151,7 +152,7 @@ public class Mecanum_Drive extends OpMode {
                 break;
 
             default:
-                startingPose = new Pose(72, -72, Math.toRadians(0));
+                startingPose = new Pose(80, -88, Math.toRadians(0));
         }
         if (master.getStarting_auto() == 0){Turret.init_turret(hardwareMap, time);}
         else {Turret.init_turret_teleop(hardwareMap, time);}
@@ -234,6 +235,7 @@ public class Mecanum_Drive extends OpMode {
             is_trigger = true;
 
             if (check_X) {
+
                 closer.open();
                 check_intake = true;
                 gamepad2.rumble(100);
@@ -246,6 +248,7 @@ public class Mecanum_Drive extends OpMode {
                     intake_PID.intake_far(speed_intake_far); // origin0.7
                 }
             } else if (!check_X) {
+
                 closer.close();
                 gamepad2.stopRumble();
                 angle.setPosition(maximum);
@@ -256,7 +259,7 @@ public class Mecanum_Drive extends OpMode {
         tracking = distance.targeting(follower.getPose().getX(), follower.getPose().getY(), is_red, follower.getPose().getHeading() / Math.PI * 180, offset, Turret.get_limit(),mode);
 
         adj = Ying.distance_adjustment(follower.getPose().getX(), follower.getPose().getY(), is_red);
-        esti = camera.getRobotPoseFromCamera(follower.getPose().getHeading());
+        //esti = camera.getRobotPoseFromCamera(follower.getPose().getHeading());
 
         if (gamepad2.right_bumper) {
             ratio_shooter += speed_eshooter;
@@ -273,6 +276,9 @@ public class Mecanum_Drive extends OpMode {
             manual = !manual;
         }
         if (gamepad2.circleWasPressed()) {
+            check_shooter = !check_shooter;
+        }
+        if (gamepad1.squareWasPressed()) {
             check_shooter = !check_shooter;
         }
         if (gamepad1.crossWasPressed()) {
@@ -309,7 +315,8 @@ public class Mecanum_Drive extends OpMode {
 
         if (check_intake && !check_X) {
             if (distance_sensor.led_status()){
-                intake_PID.intake(0.7);
+                intake_PID.intake(1);
+//                intake_PID.intake(0.7);
             }else{
                 intake_PID.intake(1);
                 check_out = false;}
@@ -331,6 +338,13 @@ public class Mecanum_Drive extends OpMode {
             offset += speed_offset;
 
         }
+        if (gamepad1.dpad_left) {
+            offset -= speed_offset;
+
+        } else if (gamepad1.dpad_right) {
+            offset += speed_offset;
+
+        }
 
 
         if (check_shooter) {
@@ -344,10 +358,10 @@ public class Mecanum_Drive extends OpMode {
               check_loca = false;
         }
 
-        if (check_loca) {
-            estimate = new Pose(esti[1], esti[2], esti[3]);
-            follower.setPose(estimate);
-        }
+//        if (check_loca) {
+//            estimate = new Pose(esti[1], esti[2], esti[3]);
+//            follower.setPose(estimate);
+//        }
 
 
         if (gamepad2.triangleWasPressed()) {
@@ -360,16 +374,11 @@ public class Mecanum_Drive extends OpMode {
         }
         if(mode > 2){mode = 1;}
 
-        if (gamepad1.squareWasPressed()){
-            check_reverse = !check_reverse;
-        }
-        if(check_reverse){
-            multiplier[0] = -1;
-            multiplier[1] = -1;
-        }
-        else{
-            multiplier[0] = 1;   
-            multiplier[1] = 1;
+        if (gamepad1.right_bumper && check_bumper1){
+            check_turret = !check_turret;
+            check_bumper1 = false;
+        }else if (!gamepad1.right_bumper){
+            check_bumper1 = true;
         }
 
         if (!error) {
@@ -406,7 +415,7 @@ public class Mecanum_Drive extends OpMode {
 
 
         telemetryX.addData("mode",mode,2);
-        telemetryX.addData("check_cameraWorking" , esti[0],2);
+//        telemetryX.addData("check_cameraWorking" , esti[0],2);
         telemetryX.addData("velocity_X",Ying.getVelocity_X(),2);
         telemetryX.addData("target (m/s)",adj * ratio_shooter,2);
         telemetryX.addData("speed_shoot_near",speed_intake_near,2);
@@ -414,6 +423,7 @@ public class Mecanum_Drive extends OpMode {
         telemetryX.addData("check_far",check_far,2);
         telemetryX.addData("Maximum",maximum,2);
         telemetryX.addData("ERROR_TURRET",error,2);
+        telemetryX.addData("Closer",check_X,2);
 
         if (Ying.get_critical()){telemetryX.addData("Danger!!!!","Shooter is in manual mode",2);}
         if (is_red){
@@ -462,10 +472,10 @@ public class Mecanum_Drive extends OpMode {
                 telemetryX.addData("Center_dissen",distance_sensor.get_Center_dis(),2);
                 break;
             case 7:
-                telemetryX.addData("available",esti[0],2);
-                telemetryX.addData("X",esti[1],2);
-                telemetryX.addData("Y",esti[2],2);
-                telemetryX.addData("heading",esti[3],2);
+//                telemetryX.addData("available",esti[0],2);
+//                telemetryX.addData("X",esti[1],2);
+//                telemetryX.addData("Y",esti[2],2);
+//                telemetryX.addData("heading",esti[3],2);
                 break;
             case 8:
                 telemetryX.addData("velo",intake_PID.get_velocity(),2);

@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.opmode.Calculate.Distance;
 @Config
 public class Turret {
     DcMotor turret;
-    AnalogInput poten;
+//    AnalogInput poten;
     private double  derivative, previousError, delta_time , time_current , previous_time;
     boolean critical;
     boolean checking = false;
@@ -26,14 +26,15 @@ public class Turret {
 
 
     public static double condition = 15;
-    public static double kD = 0.1;
-    public static double kD_secondary = 0.01;
+    public static double kD = 0.18;
+    public static double kD_secondary = 0.03;
     public static double kP = 0.03;
-    public static double kP_secondary = 0.035;
+    public static double kP_secondary = 0.02;
     public static double kS = 0.17;
     public static double kShooter = -0.000025;
     public static double limit = 179;
     public static double middle_poten = 1.365;
+
 
 
 
@@ -51,17 +52,15 @@ public class Turret {
     private double output = 0;
     private double offset = 0;
     public void init_turret(HardwareMap hardwareMap, ElapsedTime Time) {
-        poten = hardwareMap.get(AnalogInput.class, "poten");
+//        poten = hardwareMap.get(AnalogInput.class, "poten");
         turret = hardwareMap.get(DcMotor.class, "Turret");
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setDirection(DcMotorSimple.Direction.REVERSE);
-
-
         time = Time;
     }
     public void init_turret_teleop(HardwareMap hardwareMap, ElapsedTime Time) {
-        poten = hardwareMap.get(AnalogInput.class, "poten");
+//        poten = hardwareMap.get(AnalogInput.class, "poten");
         turret = hardwareMap.get(DcMotor.class, "Turret");
 
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -73,7 +72,7 @@ public class Turret {
     public void to_position(double target, double velocity_shooter, int mode){
         if (mode == 1 || mode == 2){
             double error = target - (convert_current_to_degree(turret.getCurrentPosition()));
-            if (Math.abs(error) < 1){error = 0;}
+//            if (Math.abs(error) < 1){error = 0;}
             double output = 0;
 
             time_current = time.seconds();
@@ -82,15 +81,16 @@ public class Turret {
             derivative = (error - previousError) / delta_time;
 
             if (mode == 1){if (Math.abs(error) > 170){error = 0;}}
-
-            if (Math.abs(error) > condition) {
-                output = kP * error + kD * derivative + kS * Math.signum(error) + kShooter * velocity_shooter * Math.signum(error);
-            }
-            else {
-                output = kP_secondary * error + kD_secondary * derivative + kS * Math.signum(error) + kShooter * velocity_shooter * Math.signum(error);
-                if (output > 0.3){power_turret = 0.3;}
-                else if(output < -0.3){power_turret = -0.3;}
-            }
+            if (Math.abs(error) > 4 ){
+                if (Math.abs(error) > condition) {
+                    output = kP * error + kD * derivative + kS * Math.signum(error) + kShooter * velocity_shooter * Math.signum(error);
+                }
+                else {
+                    output = kP_secondary * error + kD_secondary * derivative + kS * Math.signum(error) + kShooter * velocity_shooter * Math.signum(error);
+                    if (output > 0.3){power_turret = 0.3;}
+                    else if(output < -0.3){power_turret = -0.3;}
+                }
+                }
 
 
 
@@ -135,7 +135,6 @@ public class Turret {
         else{
             turret.setPower(power_turret);}
     }
-
 
     public void stop(){
         turret.setPower(0);

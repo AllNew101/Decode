@@ -22,7 +22,7 @@ public class Constants {
     public static double breaking = 1;
     public static double breaking_start = 1;
 
-    public static FollowerConstants followerConstants = new FollowerConstants()
+    public static FollowerConstants     followerConstants = new FollowerConstants()
             .forwardZeroPowerAcceleration(-31.942)
             .lateralZeroPowerAcceleration(-66.909)
             .useSecondaryTranslationalPIDF(true)

@@ -20,7 +20,7 @@ public class Distance_Sensor {
 
     public void init_Distance_senser (HardwareMap hardwareMap) {
         Front_Dissen = hardwareMap.get(DistanceSensor.class,"dis_sen");
-        Center_Dissen = hardwareMap.get(DistanceSensor.class,"Dis_sen2");
+        Center_Dissen = hardwareMap.get(DistanceSensor.class,"dis_sen2");
         LED = hardwareMap.get(Servo.class , "LED");
 
     }

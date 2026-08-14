@@ -11,21 +11,22 @@ public class Distance {
     public static double[] blue = {123, -18 , 50.0};
 
     private double[] target = {0.0 , 0.0 , 0.0};
+
     public double[] distance(double X, double Y, boolean is_red){
         if (is_red){target = red;}
         else{target = blue;}
         double delta_X = target[0] - X;
         double delta_Y = Y - target[1];
         double displacement = Math.sqrt(Math.pow(delta_X,2) + Math.pow(delta_Y,2));
-        double theta = Math.atan2(delta_Y,delta_X) / Math.PI * 180;
+        double theta = Math.floor(Math.atan2(delta_Y,delta_X) / Math.PI * 180);
         double[] distances = {delta_X, delta_Y, theta, displacement};
 
         return distances;
     }
 
     public double targeting(double X, double Y, boolean is_red , double theta, double offset, double limit, int mode){
-        double stabilizer = theta;
-        double targeting = distance(X ,Y ,is_red)[2];
+        double stabilizer = theta; //robot_heading
+        double targeting = distance(X ,Y ,is_red)[2]; //atan2
         double result = targeting + stabilizer + offset;
 
             //Red
@@ -36,7 +37,6 @@ public class Distance {
         else if (Math.abs(result) > limit && !is_red) {
                 result = limit;
         }
-
 
         return AngleUnit.normalizeDegrees(result);
     }
